@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>PaySimpleSdk</id>
+    <version>0.5.0-beta</version>
+    <title>PaySimple SDK</title>
+    <authors>Scott Lance</authors>
+    <owners>Scott Lance</owners>
+    <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
+    <projectUrl>https://bitbucket.org/scottlance/paysimple</projectUrl>    
+    <description>PaySimple SDK is a fully asyncronous and validatable SDK designed around the PaySimple API v4</description>    
+    <copyright>Copyright 2015</copyright>
+    <tags>PaySimple</tags>
+    <dependencies>
+      <dependency id="FluentValidation" version="5.6.3.0" />      
+      <dependency id="Newtonsoft.Json" version="6.0.8" />      
+    </dependencies>    
+  </metadata>
+</package>
