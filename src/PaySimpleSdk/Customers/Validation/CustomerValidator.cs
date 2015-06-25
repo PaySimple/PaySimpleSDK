@@ -35,7 +35,6 @@ namespace PaySimpleSdk.Customers.Validation
             RuleFor(m => m.FirstName).NotEmpty().WithMessage("FirstName is required").Length(0, 150).WithMessage("FirstName cannot exceed 150 characters");
             RuleFor(m => m.LastName).NotEmpty().WithMessage("LastName is required").Length(0, 150).WithMessage("LastName cannot exceed 150 characters");
             RuleFor(m => m.MiddleName).Length(0, 150).WithMessage("MiddleName cannot exceed 150 characters");
-            RuleFor(m => m.BillingAddress).NotNull().WithMessage("BillingAddress is required");
             RuleFor(m => m.ShippingAddress).NotNull().When(c => !c.ShippingSameAsBilling).WithMessage("ShippingAddress is required if ShippingSameAsBilling is set to false");
             RuleFor(m => m.Company).Length(0, 50).WithMessage("Company cannot exceed 50 characters");
             RuleFor(m => m.CustomerAccount).Length(0, 28).WithMessage("CustomerAccount cannot exceed 28 characters");

@@ -122,27 +122,7 @@ namespace PaySimpleSdkTests.CustomerTests.ValidationTests
             Assert.True(result.Errors.Any(e => e.ErrorMessage == "MiddleName cannot exceed 150 characters"));
         }
 
-        // *************************************************************************************************
-
-        [Fact]
-        public void BillingAddress_Is_Null_Generates_Error()
-        {
-            // Arrange            
-            var customer = new Customer
-            {
-                BillingAddress = null
-            };
-
-            var validator = new CustomerValidator();
-
-            // Act
-            var result = validator.Validate(customer);
-
-            // Assert
-            Assert.True(result.Errors.Any(e => e.ErrorMessage == "BillingAddress is required"));
-        }
-
-        // *************************************************************************************************
+        // *************************************************************************************************      
 
         [Fact]
         public void ShippingSameAsBilling_Is_True_Shipping_Address_Is_Null_Generates_Error()
