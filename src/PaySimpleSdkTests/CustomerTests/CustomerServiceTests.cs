@@ -153,7 +153,7 @@ namespace PaySimpleSdkTests.CustomerTests
                 .ReturnsAsync(new Result<SearchResults>());
 
             // Act
-            await service.FindCustomer(query);
+            await service.FindCustomerAsync(query);
 
             // Assert
             Assert.Equal(string.Format("{0}/v4/globalSearch?Query={1}", settings.BaseUrl, HttpUtility.UrlEncode(query)), endpoint.AbsoluteUri);
@@ -166,7 +166,7 @@ namespace PaySimpleSdkTests.CustomerTests
             var query = "Sheldon Cooper";
 
             // Act
-            await service.FindCustomer(query);
+            await service.FindCustomerAsync(query);
 
             // Assert
             webServiceRequest.Verify(m => m.GetDeserializedAsync<Result<SearchResults>>(It.IsAny<Uri>()));

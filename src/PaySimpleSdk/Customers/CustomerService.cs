@@ -61,7 +61,7 @@ namespace PaySimpleSdk.Customers
             await webServiceRequest.DeleteAsync(new Uri(endpoint));
         }
 
-        public async Task<Result<SearchResults>> FindCustomer(string query)
+        public async Task<Result<SearchResults>> FindCustomerAsync(string query)
         {
             var endpoint = string.Format("{0}{1}?Query={2}", settings.BaseUrl, Endpoints.GlobalSearch, HttpUtility.UrlEncode(query));
             return await webServiceRequest.GetDeserializedAsync<Result<SearchResults>>(new Uri(endpoint));
