@@ -193,9 +193,6 @@ UpgradeLog*.htm
 # Microsoft Fakes
 FakesAssemblies/
 
-# Exclude the TestHarness project
-[Tt]est[Hh]arness
-
 # Exclude Jmconfig and Jtconfig files
 *.jmconfig
 *.jtconfig
