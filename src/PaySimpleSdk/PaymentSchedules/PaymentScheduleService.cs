@@ -24,7 +24,6 @@
 // The most recent version of this license can be found at: http://opensource.org/licenses/MIT
 #endregion
 
-using PaySimpleSdk.Accounts;
 using PaySimpleSdk.Helpers;
 using PaySimpleSdk.Models;
 using PaySimpleSdk.Payments;
@@ -44,7 +43,7 @@ namespace PaySimpleSdk.PaymentSchedules
         internal PaymentScheduleService(IPaySimpleSettings settings, IValidationService validationService, IWebServiceRequest webServiceRequest, IServiceFactory serviceFactory)
             : base(settings, validationService, webServiceRequest, serviceFactory)
         { }
-
+        /*
         public async Task<Result<NewAccountPaymentPlan<T>>> CreateNewAccountPaymentPlanAsync<T>(NewAccountPaymentPlan<T> accountPaymentPlan)
             where T : Account, new()
         {
@@ -100,14 +99,14 @@ namespace PaySimpleSdk.PaymentSchedules
 
             return result;
         }
-
+        */
         public async Task<Result<PaymentPlan>> CreatePaymentPlanAsync(PaymentPlan paymentPlan)
         {
             validationService.Validate(paymentPlan);
             var endpoint = string.Format("{0}{1}", settings.BaseUrl, Endpoints.PaymentPlan);
             return await webServiceRequest.PostDeserializedAsync<PaymentPlan, Result<PaymentPlan>>(new Uri(endpoint), paymentPlan);
         }
-
+        /*
         public async Task<Result<NewAccountRecurringPayment<T>>> CreateNewAccountRecurringPaymentAsync<T>(NewAccountRecurringPayment<T> accountRecurringPayment)
             where T : Account, new()
         {
@@ -163,7 +162,7 @@ namespace PaySimpleSdk.PaymentSchedules
 
             return result;
         }
-
+        */
         public async Task<Result<RecurringPayment>> CreateRecurringPaymentAsync(RecurringPayment recurringPayment)
         {
             validationService.Validate(recurringPayment);

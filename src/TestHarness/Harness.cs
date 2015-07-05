@@ -49,8 +49,8 @@ namespace TestHarness
 
         public Harness()
         {
-            var apiKey = "";
-            var username = "";
+            var apiKey = "yoCeyJdlWPCFCTw8nc6fFmW4R3hgGwjbmyCh6ksaLtuNg2OXEXMIrT1mObTU06Y10iAQVZ6ExLCOdLZhbfemwKeMcpjit015DVXLJvkzl7mKeC6CMJWwzZQ0lNTkHkS0";
+            var username = "APIUser137403";
             settings = new PaySimpleSettings(apiKey, username, "https://sandbox-api.paysimple.com");
             accountService = new AccountService(settings);
             customerService = new CustomerService(settings);
@@ -63,7 +63,7 @@ namespace TestHarness
             try
             {
                 // Run this for PaySimple Certification
-                await Certification();
+                //await Certification();
             }
             catch (PaySimpleException ex)
             {
@@ -106,7 +106,7 @@ namespace TestHarness
                 var createAchResult = await CreateAchAccountAsync(ach);
 
                 // Add for payments certification
-                accounts.AchAccounts = new List<Ach> { createAchResult.Response };
+                accounts.AchAccounts = new List<Ach> { createAchResult };
 
                 // Sample Error: Attempt to create the same ACH account
                 var recreateAchResult = await CreateAchAccountAsync(ach);
@@ -135,7 +135,7 @@ namespace TestHarness
                 var createCCResult = await CreateCreditCardAccountAsync(creditCard);
 
                 // Add for payments certification
-                accounts.CreditCardAccounts = new List<CreditCard> { createCCResult.Response };
+                accounts.CreditCardAccounts = new List<CreditCard> { createCCResult };
 
                 var invalidCreditCard = new CreditCard
                 {
@@ -161,7 +161,7 @@ namespace TestHarness
             return accounts;
         }
 
-        public async Task<Result<Ach>> CreateAchAccountAsync(Ach account)
+        public async Task<Ach> CreateAchAccountAsync(Ach account)
         {
             var result = await accountService.CreateAchAccountAsync(account);
 
@@ -171,7 +171,7 @@ namespace TestHarness
             return result;
         }
 
-        public async Task<Result<CreditCard>> CreateCreditCardAccountAsync(CreditCard account)
+        public async Task<CreditCard> CreateCreditCardAccountAsync(CreditCard account)
         {
             var result = await accountService.CreateCreditCardAccountAsync(account);
 
@@ -191,7 +191,7 @@ namespace TestHarness
             await accountService.DeleteCreditCardAccountAsync(accountId);
         }
 
-        public async Task<Result<Ach>> GetAchAccountAsync(int accountId)
+        public async Task<Ach> GetAchAccountAsync(int accountId)
         {
             var result = await accountService.GetAchAccountAsync(accountId);
 
@@ -201,7 +201,7 @@ namespace TestHarness
             return result;
         }
 
-        public async Task<Result<CreditCard>> GetCreditCardAccountAsync(int accountId)
+        public async Task<CreditCard> GetCreditCardAccountAsync(int accountId)
         {
             var result = await accountService.GetCreditCardAccountAsync(accountId);
 
@@ -211,7 +211,7 @@ namespace TestHarness
             return result;
         }
 
-        public async Task<Result<Ach>> UpdateAchAccountAsync(Ach account)
+        public async Task<Ach> UpdateAchAccountAsync(Ach account)
         {
             var result = await accountService.UpdateAchAccountAsync(account);
 
@@ -221,7 +221,7 @@ namespace TestHarness
             return result;
         }
 
-        public async Task<Result<CreditCard>> UpdateCreditCardAccountAsync(CreditCard account)
+        public async Task<CreditCard> UpdateCreditCardAccountAsync(CreditCard account)
         {
             var result = await accountService.UpdateCreditCardAccountAsync(account);
 
@@ -514,55 +514,55 @@ namespace TestHarness
                 DumpObject("PaySimpleEndpointException", ex.EndpointErrors);
             }
         }
+        /*
+                public async Task<Result<NewAccountPayment<T>>> CreateNewAccountPaymentAsync<T>(NewAccountPayment<T> accountPayment)
+                    where T : Account, new()
+                {
+                    try
+                    {
+                        var result = await paymentService.CreateNewAccountPaymentAsync<T>(accountPayment);
 
-        public async Task<Result<NewAccountPayment<T>>> CreateNewAccountPaymentAsync<T>(NewAccountPayment<T> accountPayment)
-            where T : Account, new()
-        {
-            try
-            {
-                var result = await paymentService.CreateNewAccountPaymentAsync<T>(accountPayment);
+                        if (result != null)
+                            DumpObject("CreateNewAccountPaymentAsync", result);
 
-                if (result != null)
-                    DumpObject("CreateNewAccountPaymentAsync", result);
+                        return result;
+                    }
+                    catch (PaySimpleException ex)
+                    {
+                        DumpObject("PaySimpleException", ex.ValidationErrors);
+                    }
+                    catch (PaySimpleEndpointException ex)
+                    {
+                        DumpObject("PaySimpleEndpointException", ex.EndpointErrors);
+                    }
 
-                return result;
-            }
-            catch (PaySimpleException ex)
-            {
-                DumpObject("PaySimpleException", ex.ValidationErrors);
-            }
-            catch (PaySimpleEndpointException ex)
-            {
-                DumpObject("PaySimpleEndpointException", ex.EndpointErrors);
-            }
+                    return null;
+                }
 
-            return null;
-        }
+                public async Task<Result<NewCustomerPayment<T>>> CreateNewCustomerPaymentAsync<T>(NewCustomerPayment<T> customerPayment)
+                    where T : Account, new()
+                {
+                    try
+                    {
+                        var result = await paymentService.CreateNewCustomerPaymentAsync<T>(customerPayment);
 
-        public async Task<Result<NewCustomerPayment<T>>> CreateNewCustomerPaymentAsync<T>(NewCustomerPayment<T> customerPayment)
-            where T : Account, new()
-        {
-            try
-            {
-                var result = await paymentService.CreateNewCustomerPaymentAsync<T>(customerPayment);
+                        if (result != null)
+                            DumpObject("CreateNewCustomerPaymentAsync", result);
 
-                if (result != null)
-                    DumpObject("CreateNewCustomerPaymentAsync", result);
+                        return result;
+                    }
+                    catch (PaySimpleException ex)
+                    {
+                        DumpObject("PaySimpleException", ex.ValidationErrors);
+                    }
+                    catch (PaySimpleEndpointException ex)
+                    {
+                        DumpObject("PaySimpleEndpointException", ex.EndpointErrors);
+                    }
 
-                return result;
-            }
-            catch (PaySimpleException ex)
-            {
-                DumpObject("PaySimpleException", ex.ValidationErrors);
-            }
-            catch (PaySimpleEndpointException ex)
-            {
-                DumpObject("PaySimpleEndpointException", ex.EndpointErrors);
-            }
-
-            return null;
-        }
-
+                    return null;
+                }
+        */
         public async Task<Result<Payment>> CreatePaymentAsync(Payment payment)
         {
             var result = await paymentService.CreatePaymentAsync(payment);
@@ -616,7 +616,7 @@ namespace TestHarness
         #endregion
 
         #region Payment Schedule Service Methods
-
+        /*
         public async Task<Result<NewAccountPaymentPlan<T>>> CreateNewAccountPaymentPlanAsync<T>(NewAccountPaymentPlan<T> accountPaymentPlan)
             where T : Account, new()
         {
@@ -664,7 +664,7 @@ namespace TestHarness
 
             return null;
         }
-
+*/
         public async Task<Result<PaymentPlan>> CreatePaymentPlanAsync(PaymentPlan paymentPlan)
         {
             var result = await paymentScheduleService.CreatePaymentPlanAsync(paymentPlan);
@@ -674,55 +674,55 @@ namespace TestHarness
 
             return result;
         }
+        /*
+                public async Task<Result<NewAccountRecurringPayment<T>>> CreateNewAccountRecurringPaymentAsync<T>(NewAccountRecurringPayment<T> accountRecurringPayment)
+                    where T : Account, new()
+                {
+                    try
+                    {
+                        var result = await paymentScheduleService.CreateNewAccountRecurringPaymentAsync<T>(accountRecurringPayment);
 
-        public async Task<Result<NewAccountRecurringPayment<T>>> CreateNewAccountRecurringPaymentAsync<T>(NewAccountRecurringPayment<T> accountRecurringPayment)
-            where T : Account, new()
-        {
-            try
-            {
-                var result = await paymentScheduleService.CreateNewAccountRecurringPaymentAsync<T>(accountRecurringPayment);
+                        if (result != null)
+                            DumpObject("CreateNewAccountRecurringPaymentAsync", result);
 
-                if (result != null)
-                    DumpObject("CreateNewAccountRecurringPaymentAsync", result);
+                        return result;
+                    }
+                    catch (PaySimpleException ex)
+                    {
+                        DumpObject("PaySimpleException", ex.ValidationErrors);
+                    }
+                    catch (PaySimpleEndpointException ex)
+                    {
+                        DumpObject("PaySimpleEndpointException", ex.EndpointErrors);
+                    }
 
-                return result;
-            }
-            catch (PaySimpleException ex)
-            {
-                DumpObject("PaySimpleException", ex.ValidationErrors);
-            }
-            catch (PaySimpleEndpointException ex)
-            {
-                DumpObject("PaySimpleEndpointException", ex.EndpointErrors);
-            }
+                    return null;
+                }
 
-            return null;
-        }
+                public async Task<Result<NewCustomerRecurringPayment<T>>> CreateNewCustomerRecurringPaymentAsync<T>(NewCustomerRecurringPayment<T> customerRecurringPayment)
+                    where T : Account, new()
+                {
+                    try
+                    {
+                        var result = await paymentScheduleService.CreateNewCustomerRecurringPaymentAsync<T>(customerRecurringPayment);
 
-        public async Task<Result<NewCustomerRecurringPayment<T>>> CreateNewCustomerRecurringPaymentAsync<T>(NewCustomerRecurringPayment<T> customerRecurringPayment)
-            where T : Account, new()
-        {
-            try
-            {
-                var result = await paymentScheduleService.CreateNewCustomerRecurringPaymentAsync<T>(customerRecurringPayment);
+                        if (result != null)
+                            DumpObject("CreateNewCustomerRecurringPaymentAsync", result);
 
-                if (result != null)
-                    DumpObject("CreateNewCustomerRecurringPaymentAsync", result);
+                        return result;
+                    }
+                    catch (PaySimpleException ex)
+                    {
+                        DumpObject("PaySimpleException", ex.ValidationErrors);
+                    }
+                    catch (PaySimpleEndpointException ex)
+                    {
+                        DumpObject("PaySimpleEndpointException", ex.EndpointErrors);
+                    }
 
-                return result;
-            }
-            catch (PaySimpleException ex)
-            {
-                DumpObject("PaySimpleException", ex.ValidationErrors);
-            }
-            catch (PaySimpleEndpointException ex)
-            {
-                DumpObject("PaySimpleEndpointException", ex.EndpointErrors);
-            }
-
-            return null;
-        }
-
+                    return null;
+                }
+        */
         public async Task<Result<RecurringPayment>> CreateRecurringPaymentAsync(RecurringPayment recurringPayment)
         {
             var result = await paymentScheduleService.CreateRecurringPaymentAsync(recurringPayment);

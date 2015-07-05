@@ -35,8 +35,8 @@ namespace PaySimpleSdk.Payments
 {
     public interface IPaymentService
     {
-        Task<Result<NewAccountPayment<T>>> CreateNewAccountPaymentAsync<T>(NewAccountPayment<T> accountPayment) where T : Account, new();
-        Task<Result<NewCustomerPayment<T>>> CreateNewCustomerPaymentAsync<T>(NewCustomerPayment<T> customerPayment) where T : Account, new();
+        //Task<Result<NewAccountPayment<T>>> CreateNewAccountPaymentAsync<T>(NewAccountPayment<T> accountPayment) where T : Account, new();
+        //Task<Result<NewCustomerPayment<T>>> CreateNewCustomerPaymentAsync<T>(NewCustomerPayment<T> customerPayment) where T : Account, new();
         Task<Result<Payment>> CreatePaymentAsync(Payment payment);
         Task<Result<Payment>> GetPaymentAsync(int paymentId);
         Task<Result<IEnumerable<Payment>>> GetPaymentsAsync(DateTime? startDate = null, DateTime? endDate = null, IEnumerable<PaymentStatus> status = null, PaymentSort sortBy = PaymentSort.PaymentId, SortDirection direction = SortDirection.DESC, int page = 1, int pageSize = 200, bool lite = false);

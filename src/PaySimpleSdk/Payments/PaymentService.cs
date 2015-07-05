@@ -24,7 +24,6 @@
 // The most recent version of this license can be found at: http://opensource.org/licenses/MIT
 #endregion
 
-using PaySimpleSdk.Accounts;
 using PaySimpleSdk.Helpers;
 using PaySimpleSdk.Models;
 using PaySimpleSdk.Validation;
@@ -44,7 +43,7 @@ namespace PaySimpleSdk.Payments
         internal PaymentService(IPaySimpleSettings settings, IValidationService validationService, IWebServiceRequest webServiceRequest, IServiceFactory serviceFactory)
             : base(settings, validationService, webServiceRequest, serviceFactory)
         { }
-
+        /*
         public async Task<Result<NewAccountPayment<T>>> CreateNewAccountPaymentAsync<T>(NewAccountPayment<T> accountPayment)
             where T : Account, new()
         {
@@ -100,6 +99,7 @@ namespace PaySimpleSdk.Payments
 
             return result;
         }
+        */
 
         public async Task<Result<Payment>> CreatePaymentAsync(Payment payment)
         {
