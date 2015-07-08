@@ -63,7 +63,7 @@ namespace PaySimpleSdkTests.PaymentScheduleTests
 
             accountService.Setup(m => m.CreateAchAccountAsync(It.IsAny<Ach>())).ReturnsAsync(new Ach { Id = 1 });
             accountService.Setup(m => m.CreateCreditCardAccountAsync(It.IsAny<CreditCard>())).ReturnsAsync(new CreditCard { Id = 1 });
-            customerService.Setup(m => m.CreateCustomerAsync(It.IsAny<Customer>())).ReturnsAsync(new Result<Customer>() { Response = new Customer { Id = 1 } });
+            customerService.Setup(m => m.CreateCustomerAsync(It.IsAny<Customer>())).ReturnsAsync(new Customer { Id = 1 });
             serviceFactory.Setup(m => m.GetAccountService()).Returns(accountService.Object);
             serviceFactory.Setup(m => m.GetCustomerService()).Returns(customerService.Object);
 

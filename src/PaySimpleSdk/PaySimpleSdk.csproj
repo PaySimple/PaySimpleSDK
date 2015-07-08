@@ -83,6 +83,7 @@
     <Compile Include="Models\ErrorResult.cs" />
     <Compile Include="Models\Interfaces\IPaySimpleSettings.cs" />
     <Compile Include="Helpers\Interfaces\IServiceFactory.cs" />
+    <Compile Include="Models\PagedResult.cs" />
     <Compile Include="Models\PaySimpleSettings.cs" />
     <Compile Include="Models\Result.cs" />
     <Compile Include="Models\ServiceBase.cs" />
