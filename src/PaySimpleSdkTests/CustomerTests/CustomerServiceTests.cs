@@ -68,6 +68,9 @@ namespace PaySimpleSdkTests.CustomerTests
             // Arrange
             var customer = new Customer();
 
+            webServiceRequest.Setup(m => m.PostDeserializedAsync<Customer, Result<Customer>>(It.IsAny<Uri>(), It.IsAny<Customer>()))                
+                .ReturnsAsync(new Result<Customer>());
+
             // Act
             await service.CreateCustomerAsync(customer);
 
@@ -98,6 +101,9 @@ namespace PaySimpleSdkTests.CustomerTests
         {
             // Arrange
             var customer = new Customer();
+
+            webServiceRequest.Setup(m => m.PostDeserializedAsync<Customer, Result<Customer>>(It.IsAny<Uri>(), It.IsAny<Customer>()))               
+                .ReturnsAsync(new Result<Customer>());
 
             // Act
             await service.CreateCustomerAsync(customer);
@@ -148,9 +154,9 @@ namespace PaySimpleSdkTests.CustomerTests
             var query = "Sheldon Cooper";
             Uri endpoint = null;
 
-            webServiceRequest.Setup(m => m.GetDeserializedAsync<PagedResult<CustomerSearchResult>>(It.IsAny<Uri>()))
+            webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<SearchResult>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new PagedResult<CustomerSearchResult>());
+                .ReturnsAsync(new Result<SearchResult> { Response = new SearchResult { Results = new List<CustomerSearchResult>() } } );
 
             // Act
             await service.FindCustomerAsync(query);
@@ -165,11 +171,14 @@ namespace PaySimpleSdkTests.CustomerTests
             // Arrange
             var query = "Sheldon Cooper";
 
+            webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<SearchResult>>(It.IsAny<Uri>()))               
+               .ReturnsAsync(new Result<SearchResult> { Response = new SearchResult { Results = new List<CustomerSearchResult>() } });
+
             // Act
             await service.FindCustomerAsync(query);
 
             // Assert
-            webServiceRequest.Verify(m => m.GetDeserializedAsync<PagedResult<CustomerSearchResult>>(It.IsAny<Uri>()));
+            webServiceRequest.Verify(m => m.GetDeserializedAsync<Result<SearchResult>>(It.IsAny<Uri>()));
         }
 
         // *************************************************************************************************
@@ -197,6 +206,9 @@ namespace PaySimpleSdkTests.CustomerTests
         {
             // Arrange
             var customerId = 1;
+
+            webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<AccountList>>(It.IsAny<Uri>()))                
+                .ReturnsAsync(new Result<AccountList>());
 
             // Act
             await service.GetAllAccountsAsync(customerId);
@@ -230,6 +242,8 @@ namespace PaySimpleSdkTests.CustomerTests
         {
             // Arrange
             var customerId = 1;
+            webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<Customer>>(It.IsAny<Uri>()))                
+                .ReturnsAsync(new Result<Customer>());
 
             // Act
             await service.GetCustomerAsync(customerId);
@@ -248,7 +262,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<Customer>>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<Customer>>());
+                .ReturnsAsync(new Result<IEnumerable<Customer>> { ResultData = new Meta(), Response = new List<Customer>() });
 
             // Act
             await service.GetCustomersAsync();
@@ -265,7 +279,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<Customer>>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<Customer>>());
+                .ReturnsAsync(new Result<IEnumerable<Customer>> { ResultData = new Meta(), Response = new List<Customer>() });
 
             // Act
             await service.GetCustomersAsync(lite: false);
@@ -282,7 +296,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<Customer>>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<Customer>>());
+                .ReturnsAsync(new Result<IEnumerable<Customer>> { ResultData = new Meta(), Response = new List<Customer>() });
 
             // Act
             await service.GetCustomersAsync(lite: true);
@@ -298,8 +312,8 @@ namespace PaySimpleSdkTests.CustomerTests
             Uri endpoint = null;
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<Customer>>>(It.IsAny<Uri>()))
-                .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<Customer>>());
+               .Callback((Uri a) => endpoint = a)
+               .ReturnsAsync(new Result<IEnumerable<Customer>> { ResultData = new Meta(), Response = new List<Customer>() });
 
             // Act
             await service.GetCustomersAsync(sortBy: CustomerSort.FirstName);
@@ -316,7 +330,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<Customer>>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<Customer>>());
+                .ReturnsAsync(new Result<IEnumerable<Customer>> { ResultData = new Meta(), Response = new List<Customer>() });
 
             // Act
             await service.GetCustomersAsync(sortBy: CustomerSort.MiddleName);
@@ -332,8 +346,8 @@ namespace PaySimpleSdkTests.CustomerTests
             Uri endpoint = null;
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<Customer>>>(It.IsAny<Uri>()))
-                .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<Customer>>());
+               .Callback((Uri a) => endpoint = a)
+               .ReturnsAsync(new Result<IEnumerable<Customer>> { ResultData = new Meta(), Response = new List<Customer>() });
 
             // Act
             await service.GetCustomersAsync(sortBy: CustomerSort.Company);
@@ -349,8 +363,8 @@ namespace PaySimpleSdkTests.CustomerTests
             Uri endpoint = null;
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<Customer>>>(It.IsAny<Uri>()))
-                .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<Customer>>());
+               .Callback((Uri a) => endpoint = a)
+               .ReturnsAsync(new Result<IEnumerable<Customer>> { ResultData = new Meta(), Response = new List<Customer>() });
 
             // Act
             await service.GetCustomersAsync(sortBy: CustomerSort.BillingAddressCity);
@@ -367,7 +381,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<Customer>>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<Customer>>());
+                .ReturnsAsync(new Result<IEnumerable<Customer>> { ResultData = new Meta(), Response = new List<Customer>() });
 
             // Act
             await service.GetCustomersAsync(sortBy: CustomerSort.BillingAddressState);
@@ -383,8 +397,8 @@ namespace PaySimpleSdkTests.CustomerTests
             Uri endpoint = null;
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<Customer>>>(It.IsAny<Uri>()))
-                .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<Customer>>());
+               .Callback((Uri a) => endpoint = a)
+               .ReturnsAsync(new Result<IEnumerable<Customer>> { ResultData = new Meta(), Response = new List<Customer>() });
 
             // Act
             await service.GetCustomersAsync(sortBy: CustomerSort.BillingAddressZip);
@@ -400,8 +414,8 @@ namespace PaySimpleSdkTests.CustomerTests
             Uri endpoint = null;
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<Customer>>>(It.IsAny<Uri>()))
-                .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<Customer>>());
+               .Callback((Uri a) => endpoint = a)
+               .ReturnsAsync(new Result<IEnumerable<Customer>> { ResultData = new Meta(), Response = new List<Customer>() });
 
             // Act
             await service.GetCustomersAsync(sortBy: CustomerSort.BillingAddressCountry);
@@ -417,8 +431,8 @@ namespace PaySimpleSdkTests.CustomerTests
             Uri endpoint = null;
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<Customer>>>(It.IsAny<Uri>()))
-                .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<Customer>>());
+               .Callback((Uri a) => endpoint = a)
+               .ReturnsAsync(new Result<IEnumerable<Customer>> { ResultData = new Meta(), Response = new List<Customer>() });
 
             // Act
             await service.GetCustomersAsync(sortBy: CustomerSort.ShippingAddressCity);
@@ -434,8 +448,8 @@ namespace PaySimpleSdkTests.CustomerTests
             Uri endpoint = null;
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<Customer>>>(It.IsAny<Uri>()))
-                .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<Customer>>());
+               .Callback((Uri a) => endpoint = a)
+               .ReturnsAsync(new Result<IEnumerable<Customer>> { ResultData = new Meta(), Response = new List<Customer>() });
 
             // Act
             await service.GetCustomersAsync(sortBy: CustomerSort.ShippingAddressState);
@@ -451,8 +465,8 @@ namespace PaySimpleSdkTests.CustomerTests
             Uri endpoint = null;
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<Customer>>>(It.IsAny<Uri>()))
-                .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<Customer>>());
+               .Callback((Uri a) => endpoint = a)
+               .ReturnsAsync(new Result<IEnumerable<Customer>> { ResultData = new Meta(), Response = new List<Customer>() });
 
             // Act
             await service.GetCustomersAsync(sortBy: CustomerSort.ShippingAddressZip);
@@ -468,8 +482,8 @@ namespace PaySimpleSdkTests.CustomerTests
             Uri endpoint = null;
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<Customer>>>(It.IsAny<Uri>()))
-                .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<Customer>>());
+               .Callback((Uri a) => endpoint = a)
+               .ReturnsAsync(new Result<IEnumerable<Customer>> { ResultData = new Meta(), Response = new List<Customer>() });
 
             // Act
             await service.GetCustomersAsync(sortBy: CustomerSort.ShippingAddressCountry);
@@ -485,8 +499,8 @@ namespace PaySimpleSdkTests.CustomerTests
             Uri endpoint = null;
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<Customer>>>(It.IsAny<Uri>()))
-                .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<Customer>>());
+               .Callback((Uri a) => endpoint = a)
+               .ReturnsAsync(new Result<IEnumerable<Customer>> { ResultData = new Meta(), Response = new List<Customer>() });
 
             // Act
             await service.GetCustomersAsync(direction: SortDirection.DESC);
@@ -502,8 +516,8 @@ namespace PaySimpleSdkTests.CustomerTests
             Uri endpoint = null;
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<Customer>>>(It.IsAny<Uri>()))
-                .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<Customer>>());
+               .Callback((Uri a) => endpoint = a)
+               .ReturnsAsync(new Result<IEnumerable<Customer>> { ResultData = new Meta(), Response = new List<Customer>() });
 
             // Act
             await service.GetCustomersAsync(page: 2);
@@ -519,8 +533,8 @@ namespace PaySimpleSdkTests.CustomerTests
             Uri endpoint = null;
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<Customer>>>(It.IsAny<Uri>()))
-                .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<Customer>>());
+               .Callback((Uri a) => endpoint = a)
+               .ReturnsAsync(new Result<IEnumerable<Customer>> { ResultData = new Meta(), Response = new List<Customer>() });
 
             // Act
             await service.GetCustomersAsync(pageSize: 15);
@@ -532,6 +546,10 @@ namespace PaySimpleSdkTests.CustomerTests
         [Fact]
         public async Task GetCustomersAsync_Verify_WebServiceRequest_GetDeserializedAsync()
         {
+            // Arrange
+            webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<Customer>>>(It.IsAny<Uri>()))            
+               .ReturnsAsync(new Result<IEnumerable<Customer>> { ResultData = new Meta(), Response = new List<Customer>() });
+
             // Act
             await service.GetCustomersAsync();
 
@@ -565,6 +583,9 @@ namespace PaySimpleSdkTests.CustomerTests
             // Arrange
             var customerId = 1;
 
+            webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<Ach>>>(It.IsAny<Uri>()))             
+              .ReturnsAsync(new Result<IEnumerable<Ach>>());
+
             // Act
             await service.GetAchAccountsAsync(customerId);
 
@@ -597,6 +618,8 @@ namespace PaySimpleSdkTests.CustomerTests
         {
             // Arrange
             var customerId = 1;
+            webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<CreditCard>>>(It.IsAny<Uri>()))               
+               .ReturnsAsync(new Result<IEnumerable<CreditCard>>());
 
             // Act
             await service.GetCreditCardAccountsAsync(customerId);
@@ -616,7 +639,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<PaymentPlan>>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<PaymentPlan>>());
+                .ReturnsAsync(new Result<IEnumerable<PaymentPlan>> { ResultData = new Meta(), Response = new List<PaymentPlan>() });
 
             // Act
             await service.GetPaymentPlansAsync(customerId);
@@ -635,7 +658,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<PaymentPlan>>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<PaymentPlan>>());
+                .ReturnsAsync(new Result<IEnumerable<PaymentPlan>> { ResultData = new Meta(), Response = new List<PaymentPlan>() });
 
             // Act
             await service.GetPaymentPlansAsync(customerId, startDate: startDate);
@@ -654,7 +677,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<PaymentPlan>>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<PaymentPlan>>());
+                .ReturnsAsync(new Result<IEnumerable<PaymentPlan>> { ResultData = new Meta(), Response = new List<PaymentPlan>() });
 
             // Act
             await service.GetPaymentPlansAsync(customerId, endDate: endDate);
@@ -672,8 +695,8 @@ namespace PaySimpleSdkTests.CustomerTests
             Uri endpoint = null;
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<PaymentPlan>>>(It.IsAny<Uri>()))
-                .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<PaymentPlan>>());
+                 .Callback((Uri a) => endpoint = a)
+                 .ReturnsAsync(new Result<IEnumerable<PaymentPlan>> { ResultData = new Meta(), Response = new List<PaymentPlan>() });
 
             // Act
             await service.GetPaymentPlansAsync(customerId, status: scheduleStatus);
@@ -692,7 +715,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<PaymentPlan>>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<PaymentPlan>>());
+                .ReturnsAsync(new Result<IEnumerable<PaymentPlan>> { ResultData = new Meta(), Response = new List<PaymentPlan>() });
 
             // Act
             await service.GetPaymentPlansAsync(customerId, status: scheduleStatus);
@@ -711,7 +734,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<PaymentPlan>>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<PaymentPlan>>());
+                .ReturnsAsync(new Result<IEnumerable<PaymentPlan>> { ResultData = new Meta(), Response = new List<PaymentPlan>() });
 
             // Act
             await service.GetPaymentPlansAsync(customerId, status: scheduleStatus);
@@ -730,7 +753,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<PaymentPlan>>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<PaymentPlan>>());
+                .ReturnsAsync(new Result<IEnumerable<PaymentPlan>> { ResultData = new Meta(), Response = new List<PaymentPlan>() });
 
             // Act
             await service.GetPaymentPlansAsync(customerId, status: scheduleStatus);
@@ -749,7 +772,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<PaymentPlan>>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<PaymentPlan>>());
+                .ReturnsAsync(new Result<IEnumerable<PaymentPlan>> { ResultData = new Meta(), Response = new List<PaymentPlan>() });
 
             // Act
             await service.GetPaymentPlansAsync(customerId, sortBy: sortBy);
@@ -767,8 +790,8 @@ namespace PaySimpleSdkTests.CustomerTests
             Uri endpoint = null;
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<PaymentPlan>>>(It.IsAny<Uri>()))
-                .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<PaymentPlan>>());
+                 .Callback((Uri a) => endpoint = a)
+                 .ReturnsAsync(new Result<IEnumerable<PaymentPlan>> { ResultData = new Meta(), Response = new List<PaymentPlan>() });
 
             // Act
             await service.GetPaymentPlansAsync(customerId, sortBy: sortBy);
@@ -787,7 +810,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<PaymentPlan>>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<PaymentPlan>>());
+                .ReturnsAsync(new Result<IEnumerable<PaymentPlan>> { ResultData = new Meta(), Response = new List<PaymentPlan>() });
 
             // Act
             await service.GetPaymentPlansAsync(customerId, sortBy: sortBy);
@@ -806,7 +829,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<PaymentPlan>>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<PaymentPlan>>());
+                .ReturnsAsync(new Result<IEnumerable<PaymentPlan>> { ResultData = new Meta(), Response = new List<PaymentPlan>() });
 
             // Act
             await service.GetPaymentPlansAsync(customerId, sortBy: sortBy);
@@ -825,7 +848,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<PaymentPlan>>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<PaymentPlan>>());
+                .ReturnsAsync(new Result<IEnumerable<PaymentPlan>> { ResultData = new Meta(), Response = new List<PaymentPlan>() });
 
             // Act
             await service.GetPaymentPlansAsync(customerId, sortBy: sortBy);
@@ -843,8 +866,8 @@ namespace PaySimpleSdkTests.CustomerTests
             Uri endpoint = null;
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<PaymentPlan>>>(It.IsAny<Uri>()))
-                .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<PaymentPlan>>());
+                 .Callback((Uri a) => endpoint = a)
+                 .ReturnsAsync(new Result<IEnumerable<PaymentPlan>> { ResultData = new Meta(), Response = new List<PaymentPlan>() });
 
             // Act
             await service.GetPaymentPlansAsync(customerId, sortBy: sortBy);
@@ -862,8 +885,8 @@ namespace PaySimpleSdkTests.CustomerTests
             Uri endpoint = null;
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<PaymentPlan>>>(It.IsAny<Uri>()))
-                .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<PaymentPlan>>());
+                 .Callback((Uri a) => endpoint = a)
+                 .ReturnsAsync(new Result<IEnumerable<PaymentPlan>> { ResultData = new Meta(), Response = new List<PaymentPlan>() });
 
             // Act
             await service.GetPaymentPlansAsync(customerId, sortBy: sortBy);
@@ -882,7 +905,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<PaymentPlan>>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<PaymentPlan>>());
+                .ReturnsAsync(new Result<IEnumerable<PaymentPlan>> { ResultData = new Meta(), Response = new List<PaymentPlan>() });
 
             // Act
             await service.GetPaymentPlansAsync(customerId, sortBy: sortBy);
@@ -901,7 +924,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<PaymentPlan>>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<PaymentPlan>>());
+                .ReturnsAsync(new Result<IEnumerable<PaymentPlan>> { ResultData = new Meta(), Response = new List<PaymentPlan>() });
 
             // Act
             await service.GetPaymentPlansAsync(customerId, direction: direction);
@@ -920,7 +943,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<PaymentPlan>>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<PaymentPlan>>());
+                .ReturnsAsync(new Result<IEnumerable<PaymentPlan>> { ResultData = new Meta(), Response = new List<PaymentPlan>() });
 
             // Act
             await service.GetPaymentPlansAsync(customerId, direction: direction);
@@ -939,7 +962,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<PaymentPlan>>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<PaymentPlan>>());
+                .ReturnsAsync(new Result<IEnumerable<PaymentPlan>> { ResultData = new Meta(), Response = new List<PaymentPlan>() });
 
             // Act
             await service.GetPaymentPlansAsync(customerId, page: page);
@@ -959,7 +982,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<PaymentPlan>>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<PaymentPlan>>());
+                .ReturnsAsync(new Result<IEnumerable<PaymentPlan>> { ResultData = new Meta(), Response = new List<PaymentPlan>() });
 
             // Act
             await service.GetPaymentPlansAsync(customerId, page: page);
@@ -978,7 +1001,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<PaymentPlan>>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<PaymentPlan>>());
+                .ReturnsAsync(new Result<IEnumerable<PaymentPlan>> { ResultData = new Meta(), Response = new List<PaymentPlan>() });
 
             // Act
             await service.GetPaymentPlansAsync(customerId, pageSize: pageSize);
@@ -997,7 +1020,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<PaymentPlan>>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<PaymentPlan>>());
+                .ReturnsAsync(new Result<IEnumerable<PaymentPlan>> { ResultData = new Meta(), Response = new List<PaymentPlan>() });
 
             // Act
             await service.GetPaymentPlansAsync(customerId, pageSize: pageSize);
@@ -1011,6 +1034,9 @@ namespace PaySimpleSdkTests.CustomerTests
         {
             // Arrange
             var customerId = 1;
+
+            webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<PaymentPlan>>>(It.IsAny<Uri>()))                
+                .ReturnsAsync(new Result<IEnumerable<PaymentPlan>> { ResultData = new Meta(), Response = new List<PaymentPlan>() });
 
             // Act
             await service.GetPaymentPlansAsync(customerId);
@@ -1030,7 +1056,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<Payment>>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<Payment>>());
+                .ReturnsAsync(new Result<IEnumerable<Payment>> { ResultData = new Meta(), Response = new List<Payment>() });
 
             // Act
             await service.GetPaymentsAsync(customerId);
@@ -1049,7 +1075,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<Payment>>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<Payment>>());
+                .ReturnsAsync(new Result<IEnumerable<Payment>> { ResultData = new Meta(), Response = new List<Payment>() });
 
             // Act
             await service.GetPaymentsAsync(customerId, startDate: startDate);
@@ -1068,7 +1094,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<Payment>>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<Payment>>());
+                .ReturnsAsync(new Result<IEnumerable<Payment>> { ResultData = new Meta(), Response = new List<Payment>() });
 
             // Act
             await service.GetPaymentsAsync(customerId, endDate: endDate);
@@ -1101,8 +1127,8 @@ namespace PaySimpleSdkTests.CustomerTests
             Uri endpoint = null;
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<Payment>>>(It.IsAny<Uri>()))
-                .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<Payment>>());
+                 .Callback((Uri a) => endpoint = a)
+                 .ReturnsAsync(new Result<IEnumerable<Payment>> { ResultData = new Meta(), Response = new List<Payment>() });
 
             // Act
             await service.GetPaymentsAsync(customerId, status: status);
@@ -1121,7 +1147,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<Payment>>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<Payment>>());
+                .ReturnsAsync(new Result<IEnumerable<Payment>> { ResultData = new Meta(), Response = new List<Payment>() });
 
             // Act
             await service.GetPaymentsAsync(customerId, sortBy: sortBy);
@@ -1140,7 +1166,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<Payment>>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<Payment>>());
+                .ReturnsAsync(new Result<IEnumerable<Payment>> { ResultData = new Meta(), Response = new List<Payment>() });
 
             // Act
             await service.GetPaymentsAsync(customerId, sortBy: sortBy);
@@ -1159,7 +1185,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<Payment>>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<Payment>>());
+                .ReturnsAsync(new Result<IEnumerable<Payment>> { ResultData = new Meta(), Response = new List<Payment>() });
 
             // Act
             await service.GetPaymentsAsync(customerId, sortBy: sortBy);
@@ -1178,7 +1204,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<Payment>>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<Payment>>());
+                .ReturnsAsync(new Result<IEnumerable<Payment>> { ResultData = new Meta(), Response = new List<Payment>() });
 
             // Act
             await service.GetPaymentsAsync(customerId, sortBy: sortBy);
@@ -1197,7 +1223,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<Payment>>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<Payment>>());
+                .ReturnsAsync(new Result<IEnumerable<Payment>> { ResultData = new Meta(), Response = new List<Payment>() });
 
             // Act
             await service.GetPaymentsAsync(customerId, sortBy: sortBy);
@@ -1216,7 +1242,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<Payment>>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<Payment>>());
+                .ReturnsAsync(new Result<IEnumerable<Payment>> { ResultData = new Meta(), Response = new List<Payment>() });
 
             // Act
             await service.GetPaymentsAsync(customerId, sortBy: sortBy);
@@ -1235,7 +1261,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<Payment>>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<Payment>>());
+                .ReturnsAsync(new Result<IEnumerable<Payment>> { ResultData = new Meta(), Response = new List<Payment>() });
 
             // Act
             await service.GetPaymentsAsync(customerId, sortBy: sortBy);
@@ -1254,7 +1280,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<Payment>>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<Payment>>());
+                .ReturnsAsync(new Result<IEnumerable<Payment>> { ResultData = new Meta(), Response = new List<Payment>() });
 
             // Act
             await service.GetPaymentsAsync(customerId, sortBy: sortBy);
@@ -1273,7 +1299,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<Payment>>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<Payment>>());
+                .ReturnsAsync(new Result<IEnumerable<Payment>> { ResultData = new Meta(), Response = new List<Payment>() });
 
             // Act
             await service.GetPaymentsAsync(customerId, direction: direction);
@@ -1292,7 +1318,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<Payment>>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<Payment>>());
+                .ReturnsAsync(new Result<IEnumerable<Payment>> { ResultData = new Meta(), Response = new List<Payment>() });
 
             // Act
             await service.GetPaymentsAsync(customerId, direction: direction);
@@ -1311,7 +1337,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<Payment>>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<Payment>>());
+                .ReturnsAsync(new Result<IEnumerable<Payment>> { ResultData = new Meta(), Response = new List<Payment>() });
 
             // Act
             await service.GetPaymentsAsync(customerId, page: page);
@@ -1331,7 +1357,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<Payment>>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<Payment>>());
+                .ReturnsAsync(new Result<IEnumerable<Payment>> { ResultData = new Meta(), Response = new List<Payment>() });
 
             // Act
             await service.GetPaymentsAsync(customerId, page: page);
@@ -1350,7 +1376,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<Payment>>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<Payment>>());
+                .ReturnsAsync(new Result<IEnumerable<Payment>> { ResultData = new Meta(), Response = new List<Payment>() });
 
             // Act
             await service.GetPaymentsAsync(customerId, pageSize: pageSize);
@@ -1369,7 +1395,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<Payment>>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<Payment>>());
+                .ReturnsAsync(new Result<IEnumerable<Payment>> { ResultData = new Meta(), Response = new List<Payment>() });
 
             // Act
             await service.GetPaymentsAsync(customerId, pageSize: pageSize);
@@ -1383,6 +1409,9 @@ namespace PaySimpleSdkTests.CustomerTests
         {
             // Arrange
             var customerId = 1;
+
+            webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<Payment>>>(It.IsAny<Uri>()))                
+                .ReturnsAsync(new Result<IEnumerable<Payment>> { ResultData = new Meta(), Response = new List<Payment>() });
 
             // Act
             await service.GetPaymentsAsync(customerId);
@@ -1402,7 +1431,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<PaymentScheduleList>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<PaymentScheduleList>());
+                .ReturnsAsync(new Result<PaymentScheduleList> { ResultData = new Meta(), Response = new PaymentScheduleList() });
 
             // Act
             await service.GetPaymentSchedulesAsync(customerId);
@@ -1421,7 +1450,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<PaymentScheduleList>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<PaymentScheduleList>());
+                .ReturnsAsync(new Result<PaymentScheduleList> { ResultData = new Meta(), Response = new PaymentScheduleList() });
 
             // Act
             await service.GetPaymentSchedulesAsync(customerId, startDate: startDate);
@@ -1440,7 +1469,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<PaymentScheduleList>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<PaymentScheduleList>());
+                .ReturnsAsync(new Result<PaymentScheduleList> { ResultData = new Meta(), Response = new PaymentScheduleList() });
 
             // Act
             await service.GetPaymentSchedulesAsync(customerId, endDate: endDate);
@@ -1459,7 +1488,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<PaymentScheduleList>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<PaymentScheduleList>());
+                .ReturnsAsync(new Result<PaymentScheduleList> { ResultData = new Meta(), Response = new PaymentScheduleList() });
 
             // Act
             await service.GetPaymentSchedulesAsync(customerId, status: scheduleStatus);
@@ -1478,7 +1507,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<PaymentScheduleList>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<PaymentScheduleList>());
+                .ReturnsAsync(new Result<PaymentScheduleList> { ResultData = new Meta(), Response = new PaymentScheduleList() });
 
             // Act
             await service.GetPaymentSchedulesAsync(customerId, status: scheduleStatus);
@@ -1497,7 +1526,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<PaymentScheduleList>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<PaymentScheduleList>());
+                .ReturnsAsync(new Result<PaymentScheduleList> { ResultData = new Meta(), Response = new PaymentScheduleList() });
 
             // Act
             await service.GetPaymentSchedulesAsync(customerId, status: scheduleStatus);
@@ -1516,7 +1545,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<PaymentScheduleList>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<PaymentScheduleList>());
+                .ReturnsAsync(new Result<PaymentScheduleList> { ResultData = new Meta(), Response = new PaymentScheduleList() });
 
             // Act
             await service.GetPaymentSchedulesAsync(customerId, status: scheduleStatus);
@@ -1535,7 +1564,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<PaymentScheduleList>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<PaymentScheduleList>());
+                .ReturnsAsync(new Result<PaymentScheduleList> { ResultData = new Meta(), Response = new PaymentScheduleList() });
 
             // Act
             await service.GetPaymentSchedulesAsync(customerId, sortBy: sortBy);
@@ -1554,7 +1583,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<PaymentScheduleList>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<PaymentScheduleList>());
+                .ReturnsAsync(new Result<PaymentScheduleList> { ResultData = new Meta(), Response = new PaymentScheduleList() });
 
             // Act
             await service.GetPaymentSchedulesAsync(customerId, sortBy: sortBy);
@@ -1573,7 +1602,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<PaymentScheduleList>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<PaymentScheduleList>());
+                .ReturnsAsync(new Result<PaymentScheduleList> { ResultData = new Meta(), Response = new PaymentScheduleList() });
 
             // Act
             await service.GetPaymentSchedulesAsync(customerId, sortBy: sortBy);
@@ -1592,7 +1621,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<PaymentScheduleList>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<PaymentScheduleList>());
+                .ReturnsAsync(new Result<PaymentScheduleList> { ResultData = new Meta(), Response = new PaymentScheduleList() });
 
             // Act
             await service.GetPaymentSchedulesAsync(customerId, sortBy: sortBy);
@@ -1611,7 +1640,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<PaymentScheduleList>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<PaymentScheduleList>());
+                .ReturnsAsync(new Result<PaymentScheduleList> { ResultData = new Meta(), Response = new PaymentScheduleList() });
 
             // Act
             await service.GetPaymentSchedulesAsync(customerId, sortBy: sortBy);
@@ -1630,7 +1659,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<PaymentScheduleList>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<PaymentScheduleList>());
+                .ReturnsAsync(new Result<PaymentScheduleList> { ResultData = new Meta(), Response = new PaymentScheduleList() });
 
             // Act
             await service.GetPaymentSchedulesAsync(customerId, sortBy: sortBy);
@@ -1649,7 +1678,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<PaymentScheduleList>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<PaymentScheduleList>());
+                .ReturnsAsync(new Result<PaymentScheduleList> { ResultData = new Meta(), Response = new PaymentScheduleList() });
 
             // Act
             await service.GetPaymentSchedulesAsync(customerId, sortBy: sortBy);
@@ -1668,7 +1697,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<PaymentScheduleList>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<PaymentScheduleList>());
+                .ReturnsAsync(new Result<PaymentScheduleList> { ResultData = new Meta(), Response = new PaymentScheduleList() });
 
             // Act
             await service.GetPaymentSchedulesAsync(customerId, sortBy: sortBy);
@@ -1687,7 +1716,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<PaymentScheduleList>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<PaymentScheduleList>());
+                .ReturnsAsync(new Result<PaymentScheduleList> { ResultData = new Meta(), Response = new PaymentScheduleList() });
 
             // Act
             await service.GetPaymentSchedulesAsync(customerId, direction: direction);
@@ -1705,8 +1734,8 @@ namespace PaySimpleSdkTests.CustomerTests
             Uri endpoint = null;
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<PaymentScheduleList>>(It.IsAny<Uri>()))
-                .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<PaymentScheduleList>());
+                 .Callback((Uri a) => endpoint = a)
+                 .ReturnsAsync(new Result<PaymentScheduleList> { ResultData = new Meta(), Response = new PaymentScheduleList() });
 
             // Act
             await service.GetPaymentSchedulesAsync(customerId, direction: direction);
@@ -1725,7 +1754,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<PaymentScheduleList>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<PaymentScheduleList>());
+                .ReturnsAsync(new Result<PaymentScheduleList> { ResultData = new Meta(), Response = new PaymentScheduleList() });
 
             // Act
             await service.GetPaymentSchedulesAsync(customerId, page: page);
@@ -1745,7 +1774,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<PaymentScheduleList>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<PaymentScheduleList>());
+                .ReturnsAsync(new Result<PaymentScheduleList> { ResultData = new Meta(), Response = new PaymentScheduleList() });
 
             // Act
             await service.GetPaymentSchedulesAsync(customerId, page: page);
@@ -1763,8 +1792,8 @@ namespace PaySimpleSdkTests.CustomerTests
             Uri endpoint = null;
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<PaymentScheduleList>>(It.IsAny<Uri>()))
-                .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<PaymentScheduleList>());
+                 .Callback((Uri a) => endpoint = a)
+                 .ReturnsAsync(new Result<PaymentScheduleList> { ResultData = new Meta(), Response = new PaymentScheduleList() });
 
             // Act
             await service.GetPaymentSchedulesAsync(customerId, pageSize: pageSize);
@@ -1783,7 +1812,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<PaymentScheduleList>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<PaymentScheduleList>());
+                .ReturnsAsync(new Result<PaymentScheduleList> { ResultData = new Meta(), Response = new PaymentScheduleList() });
 
             // Act
             await service.GetPaymentSchedulesAsync(customerId, pageSize: pageSize);
@@ -1797,6 +1826,9 @@ namespace PaySimpleSdkTests.CustomerTests
         {
             // Arrange
             var customerId = 1;
+
+            webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<PaymentScheduleList>>(It.IsAny<Uri>()))                
+                .ReturnsAsync(new Result<PaymentScheduleList> { ResultData = new Meta(), Response = new PaymentScheduleList() });
 
             // Act
             await service.GetPaymentSchedulesAsync(customerId);
@@ -1816,7 +1848,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<RecurringPayment>>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<RecurringPayment>>());
+                .ReturnsAsync(new Result<IEnumerable<RecurringPayment>> { ResultData = new Meta(), Response = new List<RecurringPayment>() });
 
             // Act
             await service.GetRecurringPaymentSchedulesAsync(customerId);
@@ -1835,7 +1867,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<RecurringPayment>>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<RecurringPayment>>());
+                .ReturnsAsync(new Result<IEnumerable<RecurringPayment>> { ResultData = new Meta(), Response = new List<RecurringPayment>() });
 
             // Act
             await service.GetRecurringPaymentSchedulesAsync(customerId, startDate: startDate);
@@ -1854,7 +1886,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<RecurringPayment>>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<RecurringPayment>>());
+                .ReturnsAsync(new Result<IEnumerable<RecurringPayment>> { ResultData = new Meta(), Response = new List<RecurringPayment>() });
 
             // Act
             await service.GetRecurringPaymentSchedulesAsync(customerId, endDate: endDate);
@@ -1872,8 +1904,8 @@ namespace PaySimpleSdkTests.CustomerTests
             Uri endpoint = null;
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<RecurringPayment>>>(It.IsAny<Uri>()))
-                 .Callback((Uri a) => endpoint = a)
-                 .ReturnsAsync(new Result<IEnumerable<RecurringPayment>>());
+                .Callback((Uri a) => endpoint = a)
+                .ReturnsAsync(new Result<IEnumerable<RecurringPayment>> { ResultData = new Meta(), Response = new List<RecurringPayment>() });
 
             // Act
             await service.GetRecurringPaymentSchedulesAsync(customerId, status: scheduleStatus);
@@ -1892,7 +1924,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<RecurringPayment>>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<RecurringPayment>>());
+                .ReturnsAsync(new Result<IEnumerable<RecurringPayment>> { ResultData = new Meta(), Response = new List<RecurringPayment>() });
 
             // Act
             await service.GetRecurringPaymentSchedulesAsync(customerId, status: scheduleStatus);
@@ -1911,7 +1943,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<RecurringPayment>>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<RecurringPayment>>());
+                .ReturnsAsync(new Result<IEnumerable<RecurringPayment>> { ResultData = new Meta(), Response = new List<RecurringPayment>() });
 
             // Act
             await service.GetRecurringPaymentSchedulesAsync(customerId, status: scheduleStatus);
@@ -1930,7 +1962,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<RecurringPayment>>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<RecurringPayment>>());
+                .ReturnsAsync(new Result<IEnumerable<RecurringPayment>> { ResultData = new Meta(), Response = new List<RecurringPayment>() });
 
             // Act
             await service.GetRecurringPaymentSchedulesAsync(customerId, status: scheduleStatus);
@@ -1949,7 +1981,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<RecurringPayment>>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<RecurringPayment>>());
+                .ReturnsAsync(new Result<IEnumerable<RecurringPayment>> { ResultData = new Meta(), Response = new List<RecurringPayment>() });
 
             // Act
             await service.GetRecurringPaymentSchedulesAsync(customerId, sortBy: sortBy);
@@ -1968,7 +2000,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<RecurringPayment>>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<RecurringPayment>>());
+                .ReturnsAsync(new Result<IEnumerable<RecurringPayment>> { ResultData = new Meta(), Response = new List<RecurringPayment>() });
 
             // Act
             await service.GetRecurringPaymentSchedulesAsync(customerId, sortBy: sortBy);
@@ -1987,7 +2019,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<RecurringPayment>>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<RecurringPayment>>());
+                .ReturnsAsync(new Result<IEnumerable<RecurringPayment>> { ResultData = new Meta(), Response = new List<RecurringPayment>() });
 
             // Act
             await service.GetRecurringPaymentSchedulesAsync(customerId, sortBy: sortBy);
@@ -2006,7 +2038,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<RecurringPayment>>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<RecurringPayment>>());
+                .ReturnsAsync(new Result<IEnumerable<RecurringPayment>> { ResultData = new Meta(), Response = new List<RecurringPayment>() });
 
             // Act
             await service.GetRecurringPaymentSchedulesAsync(customerId, sortBy: sortBy);
@@ -2025,7 +2057,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<RecurringPayment>>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<RecurringPayment>>());
+                .ReturnsAsync(new Result<IEnumerable<RecurringPayment>> { ResultData = new Meta(), Response = new List<RecurringPayment>() });
 
             // Act
             await service.GetRecurringPaymentSchedulesAsync(customerId, sortBy: sortBy);
@@ -2044,7 +2076,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<RecurringPayment>>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<RecurringPayment>>());
+                .ReturnsAsync(new Result<IEnumerable<RecurringPayment>> { ResultData = new Meta(), Response = new List<RecurringPayment>() });
 
             // Act
             await service.GetRecurringPaymentSchedulesAsync(customerId, sortBy: sortBy);
@@ -2063,7 +2095,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<RecurringPayment>>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<RecurringPayment>>());
+                .ReturnsAsync(new Result<IEnumerable<RecurringPayment>> { ResultData = new Meta(), Response = new List<RecurringPayment>() });
 
             // Act
             await service.GetRecurringPaymentSchedulesAsync(customerId, sortBy: sortBy);
@@ -2082,7 +2114,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<RecurringPayment>>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<RecurringPayment>>());
+                .ReturnsAsync(new Result<IEnumerable<RecurringPayment>> { ResultData = new Meta(), Response = new List<RecurringPayment>() });
 
             // Act
             await service.GetRecurringPaymentSchedulesAsync(customerId, sortBy: sortBy);
@@ -2100,8 +2132,8 @@ namespace PaySimpleSdkTests.CustomerTests
             Uri endpoint = null;
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<RecurringPayment>>>(It.IsAny<Uri>()))
-                .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<RecurringPayment>>());
+                 .Callback((Uri a) => endpoint = a)
+                 .ReturnsAsync(new Result<IEnumerable<RecurringPayment>> { ResultData = new Meta(), Response = new List<RecurringPayment>() });
 
             // Act
             await service.GetRecurringPaymentSchedulesAsync(customerId, direction: direction);
@@ -2120,7 +2152,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<RecurringPayment>>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<RecurringPayment>>());
+                .ReturnsAsync(new Result<IEnumerable<RecurringPayment>> { ResultData = new Meta(), Response = new List<RecurringPayment>() });
 
             // Act
             await service.GetRecurringPaymentSchedulesAsync(customerId, direction: direction);
@@ -2139,7 +2171,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<RecurringPayment>>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<RecurringPayment>>());
+                .ReturnsAsync(new Result<IEnumerable<RecurringPayment>> { ResultData = new Meta(), Response = new List<RecurringPayment>() });
 
             // Act
             await service.GetRecurringPaymentSchedulesAsync(customerId, page: page);
@@ -2159,7 +2191,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<RecurringPayment>>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<RecurringPayment>>());
+                .ReturnsAsync(new Result<IEnumerable<RecurringPayment>> { ResultData = new Meta(), Response = new List<RecurringPayment>() });
 
             // Act
             await service.GetRecurringPaymentSchedulesAsync(customerId, page: page);
@@ -2178,7 +2210,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<RecurringPayment>>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<RecurringPayment>>());
+                .ReturnsAsync(new Result<IEnumerable<RecurringPayment>> { ResultData = new Meta(), Response = new List<RecurringPayment>() });
 
             // Act
             await service.GetRecurringPaymentSchedulesAsync(customerId, pageSize: pageSize);
@@ -2197,7 +2229,7 @@ namespace PaySimpleSdkTests.CustomerTests
 
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<RecurringPayment>>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<RecurringPayment>>());
+                .ReturnsAsync(new Result<IEnumerable<RecurringPayment>> { ResultData = new Meta(), Response = new List<RecurringPayment>() });
 
             // Act
             await service.GetRecurringPaymentSchedulesAsync(customerId, pageSize: pageSize);
@@ -2211,6 +2243,9 @@ namespace PaySimpleSdkTests.CustomerTests
         {
             // Arrange
             var customerId = 1;
+
+            webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<RecurringPayment>>>(It.IsAny<Uri>()))
+                .ReturnsAsync(new Result<IEnumerable<RecurringPayment>> { ResultData = new Meta(), Response = new List<RecurringPayment>() });
 
             // Act
             await service.GetRecurringPaymentSchedulesAsync(customerId);
@@ -2231,6 +2266,7 @@ namespace PaySimpleSdkTests.CustomerTests
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<Ach>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
                 .ReturnsAsync(new Result<Ach>());
+
             // Act
             await service.GetDefaultAchAccountAsync(customerId);
 
@@ -2243,6 +2279,9 @@ namespace PaySimpleSdkTests.CustomerTests
         {
             // Arrange
             var customerId = 1;
+
+            webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<Ach>>(It.IsAny<Uri>()))             
+                .ReturnsAsync(new Result<Ach>());
 
             // Act
             await service.GetDefaultAchAccountAsync(customerId);
@@ -2263,6 +2302,7 @@ namespace PaySimpleSdkTests.CustomerTests
             webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<CreditCard>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
                 .ReturnsAsync(new Result<CreditCard>());
+
             // Act
             await service.GetDefaultCreditCardAccountAsync(customerId);
 
@@ -2275,6 +2315,9 @@ namespace PaySimpleSdkTests.CustomerTests
         {
             // Arrange
             var customerId = 1;
+
+            webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<CreditCard>>(It.IsAny<Uri>()))
+                .ReturnsAsync(new Result<CreditCard>());
 
             // Act
             await service.GetDefaultCreditCardAccountAsync(customerId);
@@ -2326,6 +2369,9 @@ namespace PaySimpleSdkTests.CustomerTests
             // Arrange
             var customer = new Customer();
 
+            webServiceRequest.Setup(m => m.PutDeserializedAsync<Customer, Result<Customer>>(It.IsAny<Uri>(), It.IsAny<Customer>()))               
+               .ReturnsAsync(new Result<Customer>());
+
             // Act
             await service.UpdateCustomerAsync(customer);
 
@@ -2356,6 +2402,9 @@ namespace PaySimpleSdkTests.CustomerTests
         {
             // Arrange
             var customer = new Customer();
+
+            webServiceRequest.Setup(m => m.PutDeserializedAsync<Customer, Result<Customer>>(It.IsAny<Uri>(), It.IsAny<Customer>()))                
+                .ReturnsAsync(new Result<Customer>());
 
             // Act
             await service.UpdateCustomerAsync(customer);

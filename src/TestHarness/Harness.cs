@@ -62,18 +62,7 @@ namespace TestHarness
         public async Task RunMethods()
         {
             try
-            {   
-                var customers = await GetCustomersAsync();
-                foreach (var c in customers.Items)
-                {
-                    try
-                    {
-                        await GetAchAccountsAsync(c.Id);
-                    }
-                    catch (PaySimpleEndpointException ex)
-                    { }
-                }
-                
+            {              
                 // Run this for PaySimple Certification
                 //await Certification();
             }
@@ -314,7 +303,7 @@ namespace TestHarness
             await customerService.DeleteCustomerAsync(customerId);
         }
 
-        public async Task<PagedResult<IEnumerable<CustomerSearchResult>>> FindCustomer(string query)
+        public async Task<IEnumerable<CustomerSearchResult>> FindCustomer(string query)
         {
             var result = await customerService.FindCustomerAsync(query);
 
@@ -324,7 +313,7 @@ namespace TestHarness
             return result;
         }
 
-        public async Task<PagedResult<IEnumerable<Ach>>> GetAchAccountsAsync(int customerId)
+        public async Task<IEnumerable<Ach>> GetAchAccountsAsync(int customerId)
         {
             var result = await customerService.GetAchAccountsAsync(customerId);
 
@@ -334,7 +323,7 @@ namespace TestHarness
             return result;
         }
 
-        public async Task<PagedResult<AccountList>> GetAllAccountsAsync(int customerId)
+        public async Task<AccountList> GetAllAccountsAsync(int customerId)
         {
             var result = await customerService.GetAllAccountsAsync(customerId);
 
@@ -344,7 +333,7 @@ namespace TestHarness
             return result;
         }
 
-        public async Task<PagedResult<IEnumerable<CreditCard>>> GetCreditCardAccountsAsync(int customerId)
+        public async Task<IEnumerable<CreditCard>> GetCreditCardAccountsAsync(int customerId)
         {
             var result = await customerService.GetCreditCardAccountsAsync(customerId);
 

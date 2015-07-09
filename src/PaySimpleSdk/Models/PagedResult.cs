@@ -38,6 +38,10 @@ namespace PaySimpleSdk.Models
         public int ItemsPerPage { get; internal set; }
         public int TotalItems { get; internal set; }
         public int TotalPages { get; internal set; }
+
+        // PagedResult items will not always be IEnumerable.  Some PagesResult items will
+        // be an object like PaymentScheduleList where the POCO is made up of two Enumerable
+        // lists
         public T Items { get; internal set; }        
     }
     
