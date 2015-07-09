@@ -668,7 +668,7 @@ namespace TestHarness
             return null;
         }
 */
-        public async Task<Result<PaymentPlan>> CreatePaymentPlanAsync(PaymentPlan paymentPlan)
+        public async Task<PaymentPlan> CreatePaymentPlanAsync(PaymentPlan paymentPlan)
         {
             var result = await paymentScheduleService.CreatePaymentPlanAsync(paymentPlan);
 
@@ -726,7 +726,7 @@ namespace TestHarness
                     return null;
                 }
         */
-        public async Task<Result<RecurringPayment>> CreateRecurringPaymentAsync(RecurringPayment recurringPayment)
+        public async Task<RecurringPayment> CreateRecurringPaymentAsync(RecurringPayment recurringPayment)
         {
             var result = await paymentScheduleService.CreateRecurringPaymentAsync(recurringPayment);
 
@@ -746,7 +746,7 @@ namespace TestHarness
             await paymentScheduleService.DeleteRecurringPaymentAsync(recurringPaymentId);
         }
 
-        public async Task<Result<IEnumerable<RecurringPayment>>> GetAllPaymentSchedulesAsync()
+        public async Task<IEnumerable<RecurringPayment>> GetAllPaymentSchedulesAsync()
         {
             var result = await paymentScheduleService.GetAllPaymentSchedulesAsync();
 
@@ -756,7 +756,7 @@ namespace TestHarness
             return result;
         }
 
-        public async Task<Result<IEnumerable<Payment>>> GetPaymentPlanPaymentsAsync(int paymentPlanId)
+        public async Task<IEnumerable<Payment>> GetPaymentPlanPaymentsAsync(int paymentPlanId)
         {
             var result = await paymentScheduleService.GetPaymentPlanPaymentsAsync(paymentPlanId);
 
@@ -766,7 +766,7 @@ namespace TestHarness
             return result;
         }
 
-        public async Task<Result<PaymentPlan>> GetPaymentPlanScheduleAsync(int paymentPlanId)
+        public async Task<PaymentPlan> GetPaymentPlanScheduleAsync(int paymentPlanId)
         {
             var result = await paymentScheduleService.GetPaymentPlanScheduleAsync(paymentPlanId);
 
@@ -776,7 +776,7 @@ namespace TestHarness
             return result;
         }
 
-        public async Task<Result<IEnumerable<Payment>>> GetRecurringPaymentsAsync(int recurringPaymentId)
+        public async Task<IEnumerable<Payment>> GetRecurringPaymentsAsync(int recurringPaymentId)
         {
             var result = await paymentScheduleService.GetRecurringPaymentsAsync(recurringPaymentId);
 
@@ -786,7 +786,7 @@ namespace TestHarness
             return result;
         }
 
-        public async Task<Result<RecurringPayment>> GetRecurringScheduleAsync(int recurringPaymentId)
+        public async Task<RecurringPayment> GetRecurringScheduleAsync(int recurringPaymentId)
         {
             var result = await paymentScheduleService.GetRecurringScheduleAsync(recurringPaymentId);
 
@@ -826,7 +826,7 @@ namespace TestHarness
             await paymentScheduleService.SuspendRecurringPaymentAsync(recurringPaymentId);
         }
 
-        public async Task<Result<RecurringPayment>> UpdateRecurringPaymentAsync(RecurringPayment recurringPayment)
+        public async Task<RecurringPayment> UpdateRecurringPaymentAsync(RecurringPayment recurringPayment)
         {
             var result = await paymentScheduleService.UpdateRecurringPaymentAsync(recurringPayment);
 

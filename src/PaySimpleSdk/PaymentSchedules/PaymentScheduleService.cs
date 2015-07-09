@@ -100,11 +100,12 @@ namespace PaySimpleSdk.PaymentSchedules
             return result;
         }
         */
-        public async Task<Result<PaymentPlan>> CreatePaymentPlanAsync(PaymentPlan paymentPlan)
+        public async Task<PaymentPlan> CreatePaymentPlanAsync(PaymentPlan paymentPlan)
         {
             validationService.Validate(paymentPlan);
             var endpoint = string.Format("{0}{1}", settings.BaseUrl, Endpoints.PaymentPlan);
-            return await webServiceRequest.PostDeserializedAsync<PaymentPlan, Result<PaymentPlan>>(new Uri(endpoint), paymentPlan);
+            var result = await webServiceRequest.PostDeserializedAsync<PaymentPlan, Result<PaymentPlan>>(new Uri(endpoint), paymentPlan);
+            return result.Response;
         }
         /*
         public async Task<Result<NewAccountRecurringPayment<T>>> CreateNewAccountRecurringPaymentAsync<T>(NewAccountRecurringPayment<T> accountRecurringPayment)
@@ -163,11 +164,12 @@ namespace PaySimpleSdk.PaymentSchedules
             return result;
         }
         */
-        public async Task<Result<RecurringPayment>> CreateRecurringPaymentAsync(RecurringPayment recurringPayment)
+        public async Task<RecurringPayment> CreateRecurringPaymentAsync(RecurringPayment recurringPayment)
         {
             validationService.Validate(recurringPayment);
             var endpoint = string.Format("{0}{1}", settings.BaseUrl, Endpoints.RecurringPayment);
-            return await webServiceRequest.PostDeserializedAsync<RecurringPayment, Result<RecurringPayment>>(new Uri(endpoint), recurringPayment);
+            var result = await webServiceRequest.PostDeserializedAsync<RecurringPayment, Result<RecurringPayment>>(new Uri(endpoint), recurringPayment);
+            return result.Response;
         }
 
         public async Task DeletePaymentPlanAsync(int paymentPlanId)
@@ -182,33 +184,38 @@ namespace PaySimpleSdk.PaymentSchedules
             await webServiceRequest.DeleteAsync(new Uri(endpoint));
         }
 
-        public async Task<Result<IEnumerable<RecurringPayment>>> GetAllPaymentSchedulesAsync()
+        public async Task<IEnumerable<RecurringPayment>> GetAllPaymentSchedulesAsync()
         {
             var endpoint = string.Format("{0}{1}", settings.BaseUrl, Endpoints.PaymentSchedule);
-            return await webServiceRequest.GetDeserializedAsync<Result<IEnumerable<RecurringPayment>>>(new Uri(endpoint));
+            var result = await webServiceRequest.GetDeserializedAsync<Result<IEnumerable<RecurringPayment>>>(new Uri(endpoint));
+            return result.Response;
         }
-        public async Task<Result<IEnumerable<Payment>>> GetPaymentPlanPaymentsAsync(int paymentPlanId)
+        public async Task<IEnumerable<Payment>> GetPaymentPlanPaymentsAsync(int paymentPlanId)
         {
             var endpoint = string.Format("{0}{1}/{2}/payments", settings.BaseUrl, Endpoints.PaymentPlan, paymentPlanId);
-            return await webServiceRequest.GetDeserializedAsync<Result<IEnumerable<Payment>>>(new Uri(endpoint));
+            var result = await webServiceRequest.GetDeserializedAsync<Result<IEnumerable<Payment>>>(new Uri(endpoint));
+            return result.Response;
         }
 
-        public async Task<Result<PaymentPlan>> GetPaymentPlanScheduleAsync(int paymentPlanId)
+        public async Task<PaymentPlan> GetPaymentPlanScheduleAsync(int paymentPlanId)
         {
             var endpoint = string.Format("{0}{1}/{2}", settings.BaseUrl, Endpoints.PaymentPlan, paymentPlanId);
-            return await webServiceRequest.GetDeserializedAsync<Result<PaymentPlan>>(new Uri(endpoint));
+            var result = await webServiceRequest.GetDeserializedAsync<Result<PaymentPlan>>(new Uri(endpoint));
+            return result.Response;
         }
 
-        public async Task<Result<IEnumerable<Payment>>> GetRecurringPaymentsAsync(int recurringPaymentId)
+        public async Task<IEnumerable<Payment>> GetRecurringPaymentsAsync(int recurringPaymentId)
         {
             var endpoint = string.Format("{0}{1}/{2}/payments", settings.BaseUrl, Endpoints.RecurringPayment, recurringPaymentId);
-            return await webServiceRequest.GetDeserializedAsync<Result<IEnumerable<Payment>>>(new Uri(endpoint));
+            var result = await webServiceRequest.GetDeserializedAsync<Result<IEnumerable<Payment>>>(new Uri(endpoint));
+            return result.Response;
         }
 
-        public async Task<Result<RecurringPayment>> GetRecurringScheduleAsync(int recurringPaymentId)
+        public async Task<RecurringPayment> GetRecurringScheduleAsync(int recurringPaymentId)
         {
             var endpoint = string.Format("{0}{1}/{2}", settings.BaseUrl, Endpoints.RecurringPayment, recurringPaymentId);
-            return await webServiceRequest.GetDeserializedAsync<Result<RecurringPayment>>(new Uri(endpoint));
+            var result = await webServiceRequest.GetDeserializedAsync<Result<RecurringPayment>>(new Uri(endpoint));
+            return result.Response;
         }
 
         public async Task PausePaymentPlanAsync(int paymentPlanId, DateTime endDate)
@@ -247,11 +254,12 @@ namespace PaySimpleSdk.PaymentSchedules
             await webServiceRequest.PutAsync(new Uri(endpoint));
         }
 
-        public async Task<Result<RecurringPayment>> UpdateRecurringPaymentAsync(RecurringPayment recurringPayment)
+        public async Task<RecurringPayment> UpdateRecurringPaymentAsync(RecurringPayment recurringPayment)
         {
             validationService.Validate(recurringPayment);
             var endpoint = string.Format("{0}{1}", settings.BaseUrl, Endpoints.RecurringPayment);
-            return await webServiceRequest.PutDeserializedAsync<RecurringPayment, Result<RecurringPayment>>(new Uri(endpoint), recurringPayment);
+            var result = await webServiceRequest.PutDeserializedAsync<RecurringPayment, Result<RecurringPayment>>(new Uri(endpoint), recurringPayment);
+            return result.Response;
         }
     }
 }

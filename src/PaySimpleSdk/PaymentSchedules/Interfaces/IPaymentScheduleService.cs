@@ -24,7 +24,6 @@
 // The most recent version of this license can be found at: http://opensource.org/licenses/MIT
 #endregion
 
-using PaySimpleSdk.Models;
 using PaySimpleSdk.Payments;
 using System;
 using System.Collections.Generic;
@@ -36,23 +35,23 @@ namespace PaySimpleSdk.PaymentSchedules
     {
         //Task<Result<NewAccountPaymentPlan<T>>> CreateNewAccountPaymentPlanAsync<T>(NewAccountPaymentPlan<T> accountPaymentPlan) where T : Account, new();
         //Task<Result<NewCustomerPaymentPlan<T>>> CreateNewCustomerPaymentPlanAsync<T>(NewCustomerPaymentPlan<T> customerPaymentPlan) where T : Account, new();
-        Task<Result<PaymentPlan>> CreatePaymentPlanAsync(PaymentPlan paymentPlan);
+        Task<PaymentPlan> CreatePaymentPlanAsync(PaymentPlan paymentPlan);
         //Task<Result<NewAccountRecurringPayment<T>>> CreateNewAccountRecurringPaymentAsync<T>(NewAccountRecurringPayment<T> accountRecurringPayment) where T : Account, new();
         //Task<Result<NewCustomerRecurringPayment<T>>> CreateNewCustomerRecurringPaymentAsync<T>(NewCustomerRecurringPayment<T> customerRecurringPayment) where T : Account, new();
-        Task<Result<RecurringPayment>> CreateRecurringPaymentAsync(RecurringPayment recurringPayment);
+        Task<RecurringPayment> CreateRecurringPaymentAsync(RecurringPayment recurringPayment);
         Task DeletePaymentPlanAsync(int paymentPlanId);
         Task DeleteRecurringPaymentAsync(int recurringPaymentId);
-        Task<Result<IEnumerable<RecurringPayment>>> GetAllPaymentSchedulesAsync();
-        Task<Result<IEnumerable<Payment>>> GetPaymentPlanPaymentsAsync(int paymentPlanId);
-        Task<Result<PaymentPlan>> GetPaymentPlanScheduleAsync(int paymentPlanId);
-        Task<Result<IEnumerable<Payment>>> GetRecurringPaymentsAsync(int recurringPaymentId);
-        Task<Result<RecurringPayment>> GetRecurringScheduleAsync(int recurringPaymentId);
+        Task<IEnumerable<RecurringPayment>> GetAllPaymentSchedulesAsync();
+        Task<IEnumerable<Payment>> GetPaymentPlanPaymentsAsync(int paymentPlanId);
+        Task<PaymentPlan> GetPaymentPlanScheduleAsync(int paymentPlanId);
+        Task<IEnumerable<Payment>> GetRecurringPaymentsAsync(int recurringPaymentId);
+        Task<RecurringPayment> GetRecurringScheduleAsync(int recurringPaymentId);
         Task PausePaymentPlanAsync(int paymentPlanId, DateTime endDate);
         Task PauseRecurringPaymentAsync(int recurringPaymentId, DateTime endDate);
         Task ResumePaymentPlanAsync(int paymentPlanId);
         Task ResumeRecurringPaymentAsync(int recurringPaymentId);
         Task SuspendPaymentPlanAsync(int paymentPlanId);
         Task SuspendRecurringPaymentAsync(int recurringPaymentId);
-        Task<Result<RecurringPayment>> UpdateRecurringPaymentAsync(RecurringPayment recurringPayment);
+        Task<RecurringPayment> UpdateRecurringPaymentAsync(RecurringPayment recurringPayment);
     }
 }

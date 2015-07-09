@@ -29,7 +29,7 @@ using System.Collections.Generic;
 
 namespace PaySimpleSdk.Models
 {
-    public class Result<T>
+    internal class Result<T>
         where T : class
     {
         [JsonProperty("Meta")]
