@@ -24,7 +24,6 @@
 // The most recent version of this license can be found at: http://opensource.org/licenses/MIT
 #endregion
 
-using PaySimpleSdk.Accounts;
 using PaySimpleSdk.Helpers;
 using PaySimpleSdk.Models;
 using System;
@@ -37,10 +36,10 @@ namespace PaySimpleSdk.Payments
     {
         //Task<Result<NewAccountPayment<T>>> CreateNewAccountPaymentAsync<T>(NewAccountPayment<T> accountPayment) where T : Account, new();
         //Task<Result<NewCustomerPayment<T>>> CreateNewCustomerPaymentAsync<T>(NewCustomerPayment<T> customerPayment) where T : Account, new();
-        Task<Result<Payment>> CreatePaymentAsync(Payment payment);
-        Task<Result<Payment>> GetPaymentAsync(int paymentId);
-        Task<Result<IEnumerable<Payment>>> GetPaymentsAsync(DateTime? startDate = null, DateTime? endDate = null, IEnumerable<PaymentStatus> status = null, PaymentSort sortBy = PaymentSort.PaymentId, SortDirection direction = SortDirection.DESC, int page = 1, int pageSize = 200, bool lite = false);
-        Task<Result<Payment>> ReversePaymentAsync(int paymentId);
-        Task<Result<Payment>> VoidPaymentAsync(int paymentId);
+        Task<Payment> CreatePaymentAsync(Payment payment);
+        Task<Payment> GetPaymentAsync(int paymentId);
+        Task<PagedResult<IEnumerable<Payment>>> GetPaymentsAsync(DateTime? startDate = null, DateTime? endDate = null, IEnumerable<PaymentStatus> status = null, PaymentSort sortBy = PaymentSort.PaymentId, SortDirection direction = SortDirection.DESC, int page = 1, int pageSize = 200, bool lite = false);
+        Task<Payment> ReversePaymentAsync(int paymentId);
+        Task<Payment> VoidPaymentAsync(int paymentId);
     }
 }

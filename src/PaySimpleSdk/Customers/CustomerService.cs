@@ -32,7 +32,6 @@ using PaySimpleSdk.PaymentSchedules;
 using PaySimpleSdk.Validation;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
@@ -66,36 +65,36 @@ namespace PaySimpleSdk.Customers
         public async Task<IEnumerable<CustomerSearchResult>> FindCustomerAsync(string query)
         {
             var endpoint = string.Format("{0}{1}?Query={2}", settings.BaseUrl, Endpoints.GlobalSearch, HttpUtility.UrlEncode(query));
-            var results = await webServiceRequest.GetDeserializedAsync<Result<SearchResult>>(new Uri(endpoint));                       
-            return results.Response.Results;         
+            var result = await webServiceRequest.GetDeserializedAsync<Result<SearchResult>>(new Uri(endpoint));
+            return result.Response.Results;
         }
 
         public async Task<IEnumerable<Ach>> GetAchAccountsAsync(int customerId)
         {
             var endpoint = string.Format("{0}{1}/{2}/achaccounts", settings.BaseUrl, Endpoints.Customer, customerId);
-            var results = await webServiceRequest.GetDeserializedAsync<Result<IEnumerable<Ach>>>(new Uri(endpoint));
-            return results.Response;
+            var result = await webServiceRequest.GetDeserializedAsync<Result<IEnumerable<Ach>>>(new Uri(endpoint));
+            return result.Response;
         }
 
         public async Task<AccountList> GetAllAccountsAsync(int customerId)
         {
             var endpoint = string.Format("{0}{1}/{2}/accounts", settings.BaseUrl, Endpoints.Customer, customerId);
-            var results = await webServiceRequest.GetDeserializedAsync <Result<AccountList>>(new Uri(endpoint));
-            return results.Response;
+            var result = await webServiceRequest.GetDeserializedAsync<Result<AccountList>>(new Uri(endpoint));
+            return result.Response;
         }
 
         public async Task<IEnumerable<CreditCard>> GetCreditCardAccountsAsync(int customerId)
         {
             var endpoint = string.Format("{0}{1}/{2}/creditcardaccounts", settings.BaseUrl, Endpoints.Customer, customerId);
-            var results = await webServiceRequest.GetDeserializedAsync<Result<IEnumerable<CreditCard>>>(new Uri(endpoint));
-            return results.Response;
+            var result = await webServiceRequest.GetDeserializedAsync<Result<IEnumerable<CreditCard>>>(new Uri(endpoint));
+            return result.Response;
         }
 
         public async Task<Customer> GetCustomerAsync(int customerId)
         {
             var endpoint = string.Format("{0}{1}/{2}", settings.BaseUrl, Endpoints.Customer, customerId);
-            var results = await webServiceRequest.GetDeserializedAsync<Result<Customer>>(new Uri(endpoint));
-            return results.Response;
+            var result = await webServiceRequest.GetDeserializedAsync<Result<Customer>>(new Uri(endpoint));
+            return result.Response;
         }
 
         public async Task<PagedResult<IEnumerable<Customer>>> GetCustomersAsync(CustomerSort sortBy = CustomerSort.LastName, SortDirection direction = SortDirection.ASC, int page = 1, int pageSize = 200, bool lite = false)
@@ -114,23 +113,23 @@ namespace PaySimpleSdk.Customers
             if (pageSize != 200)
                 endpoint.AppendFormat("&pagesize={0}", pageSize);
 
-            var results = await webServiceRequest.GetDeserializedAsync<Result<IEnumerable<Customer>>>(new Uri(endpoint.ToString()));
-            return PagedResult.ConvertToPagedResult<IEnumerable<Customer>>(results);
+            var result = await webServiceRequest.GetDeserializedAsync<Result<IEnumerable<Customer>>>(new Uri(endpoint.ToString()));
+            return PagedResult.ConvertToPagedResult<IEnumerable<Customer>>(result);
         }
 
         public async Task<Ach> GetDefaultAchAccountAsync(int customerId)
         {
             var endpoint = string.Format("{0}{1}/{2}/defaultach", settings.BaseUrl, Endpoints.Customer, customerId);
-            var results = await webServiceRequest.GetDeserializedAsync<Result<Ach>>(new Uri(endpoint));
-            return results.Response;
+            var result = await webServiceRequest.GetDeserializedAsync<Result<Ach>>(new Uri(endpoint));
+            return result.Response;
 
         }
 
         public async Task<CreditCard> GetDefaultCreditCardAccountAsync(int customerId)
         {
             var endpoint = string.Format("{0}{1}/{2}/defaultcreditcard", settings.BaseUrl, Endpoints.Customer, customerId);
-            var results = await webServiceRequest.GetDeserializedAsync<Result<CreditCard>>(new Uri(endpoint));
-            return results.Response;
+            var result = await webServiceRequest.GetDeserializedAsync<Result<CreditCard>>(new Uri(endpoint));
+            return result.Response;
         }
 
         public async Task<PagedResult<IEnumerable<PaymentPlan>>> GetPaymentPlansAsync(int customerId, DateTime? startDate = null, DateTime? endDate = null, ScheduleStatus status = ScheduleStatus.None, ScheduleSort sortBy = ScheduleSort.Id, SortDirection direction = SortDirection.ASC, int page = 1, int pageSize = 200, bool lite = false)
@@ -158,8 +157,8 @@ namespace PaySimpleSdk.Customers
             if (pageSize != 200)
                 endpoint.AppendFormat("&pagesize={0}", pageSize);
 
-            var results = await webServiceRequest.GetDeserializedAsync<Result<IEnumerable<PaymentPlan>>>(new Uri(endpoint.ToString()));
-            return PagedResult.ConvertToPagedResult<IEnumerable<PaymentPlan>>(results);
+            var result = await webServiceRequest.GetDeserializedAsync<Result<IEnumerable<PaymentPlan>>>(new Uri(endpoint.ToString()));
+            return PagedResult.ConvertToPagedResult<IEnumerable<PaymentPlan>>(result);
         }
 
         public async Task<PagedResult<IEnumerable<Payment>>> GetPaymentsAsync(int customerId, DateTime? startDate = null, DateTime? endDate = null, IEnumerable<PaymentStatus> status = null, PaymentSort sortBy = PaymentSort.PaymentId, SortDirection direction = SortDirection.ASC, int page = 1, int pageSize = 200, bool lite = false)
@@ -193,8 +192,8 @@ namespace PaySimpleSdk.Customers
             if (pageSize != 200)
                 endpoint.AppendFormat("&pagesize={0}", pageSize);
 
-            var results = await webServiceRequest.GetDeserializedAsync<Result<IEnumerable<Payment>>>(new Uri(endpoint.ToString()));
-            return PagedResult.ConvertToPagedResult<IEnumerable<Payment>>(results);
+            var result = await webServiceRequest.GetDeserializedAsync<Result<IEnumerable<Payment>>>(new Uri(endpoint.ToString()));
+            return PagedResult.ConvertToPagedResult<IEnumerable<Payment>>(result);
         }
 
         public async Task<PagedResult<PaymentScheduleList>> GetPaymentSchedulesAsync(int customerId, DateTime? startDate = null, DateTime? endDate = null, ScheduleStatus status = ScheduleStatus.None, ScheduleSort sortBy = ScheduleSort.Id, SortDirection direction = SortDirection.ASC, int page = 1, int pageSize = 200, bool lite = false)
@@ -222,8 +221,8 @@ namespace PaySimpleSdk.Customers
             if (pageSize != 200)
                 endpoint.AppendFormat("&pagesize={0}", pageSize);
 
-            var results = await webServiceRequest.GetDeserializedAsync<Result<PaymentScheduleList>>(new Uri(endpoint.ToString()));
-            return PagedResult.ConvertToPagedResult<PaymentScheduleList>(results);
+            var result = await webServiceRequest.GetDeserializedAsync<Result<PaymentScheduleList>>(new Uri(endpoint.ToString()));
+            return PagedResult.ConvertToPagedResult<PaymentScheduleList>(result);
         }
 
         public async Task<PagedResult<IEnumerable<RecurringPayment>>> GetRecurringPaymentSchedulesAsync(int customerId, DateTime? startDate = null, DateTime? endDate = null, ScheduleStatus status = ScheduleStatus.None, ScheduleSort sortBy = ScheduleSort.Id, SortDirection direction = SortDirection.ASC, int page = 1, int pageSize = 200, bool lite = false)
@@ -251,8 +250,8 @@ namespace PaySimpleSdk.Customers
             if (pageSize != 200)
                 endpoint.AppendFormat("&pagesize={0}", pageSize);
 
-            var results = await webServiceRequest.GetDeserializedAsync<Result<IEnumerable<RecurringPayment>>>(new Uri(endpoint.ToString()));
-            return PagedResult.ConvertToPagedResult<IEnumerable<RecurringPayment>>(results);
+            var result = await webServiceRequest.GetDeserializedAsync<Result<IEnumerable<RecurringPayment>>>(new Uri(endpoint.ToString()));
+            return PagedResult.ConvertToPagedResult<IEnumerable<RecurringPayment>>(result);
         }
 
         public async Task SetDefaultAccountAsync(int customerId, int accountId)
@@ -265,8 +264,8 @@ namespace PaySimpleSdk.Customers
         {
             validationService.Validate(customer);
             var endpoint = string.Format("{0}{1}", settings.BaseUrl, Endpoints.Customer);
-            var results = await webServiceRequest.PutDeserializedAsync<Customer, Result<Customer>>(new Uri(endpoint), customer);
-            return results.Response;
+            var result = await webServiceRequest.PutDeserializedAsync<Customer, Result<Customer>>(new Uri(endpoint), customer);
+            return result.Response;
         }
     }
 }

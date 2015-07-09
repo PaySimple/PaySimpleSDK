@@ -101,20 +101,22 @@ namespace PaySimpleSdk.Payments
         }
         */
 
-        public async Task<Result<Payment>> CreatePaymentAsync(Payment payment)
+        public async Task<Payment> CreatePaymentAsync(Payment payment)
         {
             validationService.Validate(payment);
             var endpoint = string.Format("{0}{1}", settings.BaseUrl, Endpoints.Payment);
-            return await webServiceRequest.PostDeserializedAsync<Payment, Result<Payment>>(new Uri(endpoint), payment);
+            var results = await webServiceRequest.PostDeserializedAsync<Payment, Result<Payment>>(new Uri(endpoint), payment);
+            return results.Response;
         }
 
-        public async Task<Result<Payment>> GetPaymentAsync(int paymentId)
+        public async Task<Payment> GetPaymentAsync(int paymentId)
         {
             var endpoint = string.Format("{0}{1}/{2}", settings.BaseUrl, Endpoints.Payment, paymentId);
-            return await webServiceRequest.GetDeserializedAsync<Result<Payment>>(new Uri(endpoint));
+            var result = await webServiceRequest.GetDeserializedAsync<Result<Payment>>(new Uri(endpoint));
+            return result.Response;
         }
 
-        public async Task<Result<IEnumerable<Payment>>> GetPaymentsAsync(DateTime? startDate = null, DateTime? endDate = null, IEnumerable<PaymentStatus> status = null, PaymentSort sortBy = PaymentSort.PaymentId, SortDirection direction = SortDirection.DESC, int page = 1, int pageSize = 200, bool lite = false)
+        public async Task<PagedResult<IEnumerable<Payment>>> GetPaymentsAsync(DateTime? startDate = null, DateTime? endDate = null, IEnumerable<PaymentStatus> status = null, PaymentSort sortBy = PaymentSort.PaymentId, SortDirection direction = SortDirection.DESC, int page = 1, int pageSize = 200, bool lite = false)
         {
             StringBuilder endpoint = new StringBuilder(string.Format("{0}{1}?lite={2}", settings.BaseUrl, Endpoints.Payment, lite));
 
@@ -145,19 +147,22 @@ namespace PaySimpleSdk.Payments
             if (pageSize != 200)
                 endpoint.AppendFormat("&pagesize={0}", pageSize);
 
-            return await webServiceRequest.GetDeserializedAsync<Result<IEnumerable<Payment>>>(new Uri(endpoint.ToString()));
+            var result = await webServiceRequest.GetDeserializedAsync<Result<IEnumerable<Payment>>>(new Uri(endpoint.ToString()));
+            return PagedResult.ConvertToPagedResult<IEnumerable<Payment>>(result);
         }
 
-        public async Task<Result<Payment>> ReversePaymentAsync(int paymentId)
+        public async Task<Payment> ReversePaymentAsync(int paymentId)
         {
             var endpoint = string.Format("{0}{1}/{2}/reverse", settings.BaseUrl, Endpoints.Payment, paymentId);
-            return await webServiceRequest.PutAsync<Result<Payment>>(new Uri(endpoint));
+            var result = await webServiceRequest.PutAsync<Result<Payment>>(new Uri(endpoint));
+            return result.Response;
         }
 
-        public async Task<Result<Payment>> VoidPaymentAsync(int paymentId)
+        public async Task<Payment> VoidPaymentAsync(int paymentId)
         {
             var endpoint = string.Format("{0}{1}/{2}/void", settings.BaseUrl, Endpoints.Payment, paymentId);
-            return await webServiceRequest.PutAsync<Result<Payment>>(new Uri(endpoint));
+            var result = await webServiceRequest.PutAsync<Result<Payment>>(new Uri(endpoint));
+            return result.Response;
         }
     }
 }

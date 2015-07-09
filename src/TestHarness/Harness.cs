@@ -62,7 +62,9 @@ namespace TestHarness
         public async Task RunMethods()
         {
             try
-            {              
+            {
+                await GetPaymentsAsync(pageSize: 29, page: 4);
+                //await GetAllAccountsAsync(301606);
                 // Run this for PaySimple Certification
                 //await Certification();
             }
@@ -481,7 +483,7 @@ namespace TestHarness
                 var result = await CreatePaymentAsync(creditCardPayment);
 
                 // Void the payment
-                await VoidPaymentAsync(result.Response.Id.Value);
+                await VoidPaymentAsync(result.Id.Value);
 
                 // Wrong CVV
                 var failCreditCardPayment = new Payment
@@ -564,7 +566,7 @@ namespace TestHarness
                     return null;
                 }
         */
-        public async Task<Result<Payment>> CreatePaymentAsync(Payment payment)
+        public async Task<Payment> CreatePaymentAsync(Payment payment)
         {
             var result = await paymentService.CreatePaymentAsync(payment);
 
@@ -574,7 +576,7 @@ namespace TestHarness
             return result;
         }
 
-        public async Task<Result<Payment>> GetPaymentAsync(int paymentId)
+        public async Task<Payment> GetPaymentAsync(int paymentId)
         {
             var result = await paymentService.GetPaymentAsync(paymentId);
 
@@ -584,7 +586,7 @@ namespace TestHarness
             return result;
         }
 
-        public async Task<Result<IEnumerable<Payment>>> GetPaymentsAsync(DateTime? startDate = null, DateTime? endDate = null, IEnumerable<PaymentStatus> status = null, PaymentSort sortBy = PaymentSort.PaymentId, SortDirection direction = SortDirection.DESC, int page = 1, int pageSize = 200, bool lite = false)
+        public async Task<PagedResult<IEnumerable<Payment>>> GetPaymentsAsync(DateTime? startDate = null, DateTime? endDate = null, IEnumerable<PaymentStatus> status = null, PaymentSort sortBy = PaymentSort.PaymentId, SortDirection direction = SortDirection.DESC, int page = 1, int pageSize = 200, bool lite = false)
         {
             var result = await paymentService.GetPaymentsAsync(startDate, endDate, status, sortBy, direction, page, pageSize, lite);
 
@@ -594,7 +596,7 @@ namespace TestHarness
             return result;
         }
 
-        public async Task<Result<Payment>> ReversePaymentAsync(int paymentId)
+        public async Task<Payment> ReversePaymentAsync(int paymentId)
         {
             var result = await paymentService.ReversePaymentAsync(paymentId);
 
@@ -604,7 +606,7 @@ namespace TestHarness
             return result;
         }
 
-        public async Task<Result<Payment>> VoidPaymentAsync(int paymentId)
+        public async Task<Payment> VoidPaymentAsync(int paymentId)
         {
             var result = await paymentService.VoidPaymentAsync(paymentId);
 

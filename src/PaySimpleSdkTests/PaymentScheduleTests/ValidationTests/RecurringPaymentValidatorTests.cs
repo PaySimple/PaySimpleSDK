@@ -335,7 +335,7 @@ namespace PaySimpleSdkTests.PaymentScheduleTests.ValidationTests
         {
             // Arrange
             var validator = new RecurringPaymentValidator<RecurringPayment>();
-            var recurringPayment = new RecurringPayment { FirstPaymentDate = DateTime.Now.AddDays(2), StartDate = DateTime.Now.AddDays(2) };
+            var recurringPayment = new RecurringPayment { FirstPaymentDate = DateTime.Now.AddDays(3), StartDate = DateTime.Now.AddDays(2) };
 
             // Act
             var result = validator.Validate(recurringPayment);
