@@ -34,23 +34,46 @@ namespace PaySimpleSdk.Models
 {
     public class PagedResult<T>
     {
-        public int Page { get; set; }
-        public int ItemsPerPage { get; set; }
-        public int TotalItems { get; set; }
-        public IEnumerable<T> Items { get; set; }        
+        public int Page { get; internal set; }
+        public int ItemsPerPage { get; internal set; }
+        public int TotalItems { get; internal set; }
+        public int TotalPages { get; internal set; }
+        public T Items { get; internal set; }        
     }
     
     internal static class PagedResult
     {
-        public static PagedResult<T> ConvertToPagedResult<T>(Result<IEnumerable<T>> results)    
+        public static PagedResult<T2> ConvertToPagedResult<T1, T2>(Result<T1> results, T2 items)
+            where T1 : class
+            where T2 : class
+        {         
+            var pagedResult = new PagedResult<T2>
+            {            
+                Page = 1,
+                TotalPages = 1,
+                Items = items
+            };
+
+            if (results.ResultData.PagingDetails == null)
+                return pagedResult;
+
+            pagedResult.Page = results.ResultData.PagingDetails.Page;
+            pagedResult.ItemsPerPage = results.ResultData.PagingDetails.ItemsPerPage;
+            pagedResult.TotalItems = results.ResultData.PagingDetails.TotalItems;
+
+            if (pagedResult.ItemsPerPage > 0)
+                pagedResult.TotalPages = Convert.ToInt32(Math.Ceiling(Convert.ToDecimal(pagedResult.TotalItems) / Convert.ToDecimal(pagedResult.ItemsPerPage)));            
+
+            return pagedResult;
+        }
+
+        public static PagedResult<T> ConvertToPagedResult<T>(Result<T> results)       
             where T : class
         {
-
             var pagedResult = new PagedResult<T>
             {
                 Page = 1,
-                ItemsPerPage = results.Response.Count(),
-                TotalItems = results.Response.Count(),
+                TotalPages = 1,
                 Items = results.Response
             };
 
@@ -60,6 +83,9 @@ namespace PaySimpleSdk.Models
             pagedResult.Page = results.ResultData.PagingDetails.Page;
             pagedResult.ItemsPerPage = results.ResultData.PagingDetails.ItemsPerPage;
             pagedResult.TotalItems = results.ResultData.PagingDetails.TotalItems;
+
+            if (pagedResult.ItemsPerPage > 0)            
+                pagedResult.TotalPages = Convert.ToInt32(Math.Ceiling(Convert.ToDecimal(pagedResult.TotalItems ) / Convert.ToDecimal(pagedResult.ItemsPerPage)));            
 
             return pagedResult;
         }

@@ -148,9 +148,9 @@ namespace PaySimpleSdkTests.CustomerTests
             var query = "Sheldon Cooper";
             Uri endpoint = null;
 
-            webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<SearchResults>>(It.IsAny<Uri>()))
+            webServiceRequest.Setup(m => m.GetDeserializedAsync<PagedResult<CustomerSearchResult>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<SearchResults>());
+                .ReturnsAsync(new PagedResult<CustomerSearchResult>());
 
             // Act
             await service.FindCustomerAsync(query);
@@ -169,7 +169,7 @@ namespace PaySimpleSdkTests.CustomerTests
             await service.FindCustomerAsync(query);
 
             // Assert
-            webServiceRequest.Verify(m => m.GetDeserializedAsync<Result<SearchResults>>(It.IsAny<Uri>()));
+            webServiceRequest.Verify(m => m.GetDeserializedAsync<PagedResult<CustomerSearchResult>>(It.IsAny<Uri>()));
         }
 
         // *************************************************************************************************

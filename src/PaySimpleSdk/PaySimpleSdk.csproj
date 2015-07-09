@@ -60,7 +60,7 @@
     <Compile Include="Customers\Customer.cs" />
     <Compile Include="Customers\CustomerService.cs" />
     <Compile Include="Customers\Interfaces\ICustomerService.cs" />
-    <Compile Include="Customers\SearchResults.cs" />
+    <Compile Include="Customers\SearchResult.cs" />
     <Compile Include="Customers\Validation\AddressValidator.cs" />
     <Compile Include="Customers\Validation\CustomerValidator.cs" />
     <Compile Include="Exceptions\PaySimpleEndpointException.cs" />

@@ -28,14 +28,14 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 
 namespace PaySimpleSdk.Customers
-{
-    public class SearchResults
+{      
+    public class SearchResult
     {
         [JsonProperty("Results")]
-        public IEnumerable<CustomerSearch> Results { get; internal set; }
+        public IEnumerable<CustomerSearchResult> Results { get; internal set; }
     }
 
-    public class CustomerSearch
+    public class CustomerSearchResult
     {
         [JsonProperty("OriginKey")]
         public string OriginKey { get; internal set; }

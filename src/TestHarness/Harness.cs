@@ -34,6 +34,7 @@ using PaySimpleSdk.PaymentSchedules;
 using ServiceStack.Text;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -49,8 +50,8 @@ namespace TestHarness
 
         public Harness()
         {
-            var apiKey = "";
-            var username = "";
+            var apiKey = ConfigurationManager.AppSettings["apiKey"];
+            var username = ConfigurationManager.AppSettings["username"];
             settings = new PaySimpleSettings(apiKey, username, "https://sandbox-api.paysimple.com");
             accountService = new AccountService(settings);
             customerService = new CustomerService(settings);
@@ -61,8 +62,18 @@ namespace TestHarness
         public async Task RunMethods()
         {
             try
-            {
-                await FindCustomer("Scott Lance");
+            {   
+                var customers = await GetCustomersAsync();
+                foreach (var c in customers.Items)
+                {
+                    try
+                    {
+                        await GetAchAccountsAsync(c.Id);
+                    }
+                    catch (PaySimpleEndpointException ex)
+                    { }
+                }
+                
                 // Run this for PaySimple Certification
                 //await Certification();
             }
@@ -303,7 +314,7 @@ namespace TestHarness
             await customerService.DeleteCustomerAsync(customerId);
         }
 
-        public async Task<PagedResult<SearchResults>> FindCustomer(string query)
+        public async Task<PagedResult<IEnumerable<CustomerSearchResult>>> FindCustomer(string query)
         {
             var result = await customerService.FindCustomerAsync(query);
 
@@ -313,7 +324,7 @@ namespace TestHarness
             return result;
         }
 
-        public async Task<PagedResult<Ach>> GetAchAccountsAsync(int customerId)
+        public async Task<PagedResult<IEnumerable<Ach>>> GetAchAccountsAsync(int customerId)
         {
             var result = await customerService.GetAchAccountsAsync(customerId);
 
@@ -333,7 +344,7 @@ namespace TestHarness
             return result;
         }
 
-        public async Task<PagedResult<CreditCard>> GetCreditCardAccountsAsync(int customerId)
+        public async Task<PagedResult<IEnumerable<CreditCard>>> GetCreditCardAccountsAsync(int customerId)
         {
             var result = await customerService.GetCreditCardAccountsAsync(customerId);
 
@@ -353,7 +364,7 @@ namespace TestHarness
             return result;
         }
 
-        public async Task<PagedResult<Customer>> GetCustomersAsync(CustomerSort sortBy = CustomerSort.LastName, SortDirection direction = SortDirection.ASC, int page = 1, int pageSize = 200, bool lite = false)
+        public async Task<PagedResult<IEnumerable<Customer>>> GetCustomersAsync(CustomerSort sortBy = CustomerSort.LastName, SortDirection direction = SortDirection.ASC, int page = 1, int pageSize = 200, bool lite = false)
         {
             var result = await customerService.GetCustomersAsync(sortBy, direction, page, pageSize, lite);
 
@@ -383,7 +394,7 @@ namespace TestHarness
             return result;
         }
 
-        public async Task<PagedResult<PaymentPlan>> GetPaymentPlansAsync(int customerId, DateTime? startDate = null, DateTime? endDate = null, ScheduleStatus status = ScheduleStatus.None, ScheduleSort sortBy = ScheduleSort.Id, SortDirection direction = SortDirection.ASC, int page = 1, int pageSize = 200, bool lite = false)
+        public async Task<PagedResult<IEnumerable<PaymentPlan>>> GetPaymentPlansAsync(int customerId, DateTime? startDate = null, DateTime? endDate = null, ScheduleStatus status = ScheduleStatus.None, ScheduleSort sortBy = ScheduleSort.Id, SortDirection direction = SortDirection.ASC, int page = 1, int pageSize = 200, bool lite = false)
         {
             var result = await customerService.GetPaymentPlansAsync(customerId, startDate, endDate, status, sortBy, direction, page, pageSize, lite);
 
@@ -393,7 +404,7 @@ namespace TestHarness
             return result;
         }
 
-        public async Task<PagedResult<Payment>> GetPaymentsAsync(int customerId, DateTime? startDate = null, DateTime? endDate = null, IEnumerable<PaymentStatus> status = null, PaymentSort sortBy = PaymentSort.PaymentId, SortDirection direction = SortDirection.ASC, int page = 1, int pageSize = 200, bool lite = false)
+        public async Task<PagedResult<IEnumerable<Payment>>> GetPaymentsAsync(int customerId, DateTime? startDate = null, DateTime? endDate = null, IEnumerable<PaymentStatus> status = null, PaymentSort sortBy = PaymentSort.PaymentId, SortDirection direction = SortDirection.ASC, int page = 1, int pageSize = 200, bool lite = false)
         {
             var result = await customerService.GetPaymentsAsync(customerId, startDate, endDate, status, sortBy, direction, page, pageSize, lite);
 
@@ -413,7 +424,7 @@ namespace TestHarness
             return result;
         }
 
-        public async Task<PagedResult<RecurringPayment>> GetRecurringPaymentSchedulesAsync(int customerId, DateTime? startDate = null, DateTime? endDate = null, ScheduleStatus status = ScheduleStatus.Active, ScheduleSort sortBy = ScheduleSort.Id, SortDirection direction = SortDirection.ASC, int page = 1, int pageSize = 200, bool lite = false)
+        public async Task<PagedResult<IEnumerable<RecurringPayment>>> GetRecurringPaymentSchedulesAsync(int customerId, DateTime? startDate = null, DateTime? endDate = null, ScheduleStatus status = ScheduleStatus.Active, ScheduleSort sortBy = ScheduleSort.Id, SortDirection direction = SortDirection.ASC, int page = 1, int pageSize = 200, bool lite = false)
         {
             var result = await customerService.GetRecurringPaymentSchedulesAsync(customerId, startDate, endDate, status, sortBy, direction, page, pageSize, lite);
 
