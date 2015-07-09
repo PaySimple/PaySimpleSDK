@@ -271,21 +271,7 @@ namespace PaySimpleSdkTests.PaymentScheduleTests.ValidationTests
         }
 
         // *************************************************************************************************
-
-        [Fact]
-        public void FirstPaymentAmount_Is_Zero_Generates_Error()
-        {
-            // Arrange
-            var validator = new RecurringPaymentValidator<RecurringPayment>();
-            var recurringPayment = new RecurringPayment { FirstPaymentAmount = 0.00M };
-
-            // Act
-            var result = validator.Validate(recurringPayment);
-
-            // Assert
-            Assert.True(result.Errors.Any(e => e.ErrorMessage == "FirstPaymentAmount must be greater than 0"));
-        }
-
+       
         [Fact]
         public void FirstPaymentAmount_Is_Null_Is_Valid()
         {

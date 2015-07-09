@@ -63,8 +63,9 @@ namespace TestHarness
         {
             try
             {
-                await GetPaymentsAsync(pageSize: 29, page: 4);
-                //await GetAllAccountsAsync(301606);
+                // Run this to run everything
+                await RunTheGauntlet();
+
                 // Run this for PaySimple Certification
                 //await Certification();
             }
@@ -85,6 +86,452 @@ namespace TestHarness
             var customerId = await CustomerCertification();
             var accounts = await AccountCertification(customerId);
             await PaymentCertification(accounts.AchAccounts.First().Id, accounts.CreditCardAccounts.First().Id);
+        }
+
+        #endregion
+
+        #region Gauntlet
+
+        // This method is intended to run all immediately available operations
+        // (e.g. operations that can run without waiting for long running system
+        // actions like the ability to Refund a Settled payment).
+        // WILL YOUR PAYMENT SURVIVE?
+        public async Task RunTheGauntlet()
+        {
+            var warrior = new Customer
+            {
+                FirstName = "Red",
+                LastName = "Warrior",
+                Email = "rwarrior@gauntlet.com"
+            };
+
+            var valkyrie = new Customer
+            {
+                FirstName = "Blue",
+                LastName = "Valkyrie",
+                Email = "bvalkyrie@gauntlet.com"
+            };
+
+            var wizard = new Customer
+            {
+                FirstName = "Yellow",
+                LastName = "Wizard",
+                Email = "ywizard@gauntlet.com"
+            };
+
+            var elf = new Customer
+            {
+                FirstName = "Green",
+                LastName = "Elf",
+                Email = "gelf@gauntlet.com"
+            };
+
+            // Create Customer
+            warrior = await CreateCustomerAsync(warrior);
+            valkyrie = await CreateCustomerAsync(valkyrie);
+            wizard = await CreateCustomerAsync(wizard);
+            elf = await CreateCustomerAsync(elf);
+
+            if (warrior == null || valkyrie == null || wizard == null || elf == null)
+            {
+                Console.WriteLine("Failed to create customer");
+                return;
+            }
+
+            // Update Customer
+            warrior.Website = "http://www.gauntlet.com";
+            warrior.ShippingSameAsBilling = true;
+            warrior = await UpdateCustomerAsync(warrior);
+
+            if (warrior.Website != "http://www.gauntlet.com")
+            {
+                Console.WriteLine("Failed to update customer");
+                return;
+            }
+
+            // Find Customer
+            var findResult = await FindCustomerAsync("Red Warrior");
+
+            if (findResult.Count() == 0)
+            {
+                Console.WriteLine("Failed to find customer");
+                return;
+            }
+
+            // Get Customer 
+            var getCustomer = await GetCustomerAsync(warrior.Id);
+
+            if (getCustomer == null)
+            {
+                Console.WriteLine("Failed to get customer");
+                return;
+            }
+
+            // Get Customers
+            var customers = await GetCustomersAsync();
+
+            if (customers == null || customers.Items == null)
+            {
+                Console.WriteLine("Failed to get customers");
+                return;
+            }
+
+            // Create ACH Account
+            var ach = new Ach
+            {
+                CustomerId = warrior.Id,
+                RoutingNumber = "131111114",
+                AccountNumber = "751111111",
+                BankName = "PaySimple Bank"
+            };
+
+            ach = await CreateAchAccountAsync(ach);
+
+            if (ach == null)
+            {
+                Console.WriteLine("Failed to create ACH account");
+                return;
+            }
+
+            // Create Credit Card Account
+            var visa = new CreditCard
+            {
+                CustomerId = warrior.Id,
+                CreditCardNumber = "4111111111111111",
+                ExpirationDate = "12/2021",
+                Issuer = Issuer.Visa,
+                BillingZipCode = "11111"
+            };
+
+            visa = await CreateCreditCardAccountAsync(visa);
+
+            if (visa == null)
+            {
+                Console.WriteLine("Failed to create Credit Card account");
+                return;
+            }
+
+            // Update Ach Account
+            ach.AccountNumber = "751111111";
+            ach.IsCheckingAccount = true;
+            ach = await UpdateAchAccountAsync(ach);
+
+            if (ach == null)
+            {
+                Console.WriteLine("Failed to update ACH account");
+                return;
+            }
+
+            // Update Credit Card Account
+            visa.CreditCardNumber = "4111111111111111";
+            visa.ExpirationDate = "12/2022";
+            visa = await UpdateCreditCardAccountAsync(visa);
+
+            if (visa == null)
+            {
+                Console.WriteLine("Failed to update Credit Card account");
+                return;
+            }
+
+            // Get Ach Account
+            ach = await GetAchAccountAsync(ach.Id);
+
+            if (ach == null)
+            {
+                Console.WriteLine("Failed to get ACH account");
+                return;
+            }
+
+            // Get Credit Card Account
+            visa = await GetCreditCardAccountAsync(visa.Id);
+
+            if (visa == null)
+            {
+                Console.WriteLine("Failed to get Credit Card account");
+                return;
+            }
+
+            // Get All Customer Accounts
+            var customerAccounts = await GetAllAccountsAsync(warrior.Id);
+
+            if (customerAccounts == null)
+            {
+                Console.WriteLine("Failed to get customer accounts");
+                return;
+            }
+
+            // Get Customer Ach Accounts
+            var achAccounts = await GetAchAccountsAsync(warrior.Id);
+
+            if (achAccounts == null)
+            {
+                Console.WriteLine("Failed to get customer ACH accounts");
+                return;
+            }
+
+            // Get Customer Credit Card Accounts
+            var creditCardAccounts = await GetAchAccountsAsync(warrior.Id);
+
+            if (creditCardAccounts == null)
+            {
+                Console.WriteLine("Failed to get customer Credit Card accounts");
+                return;
+            }
+
+            // Get Customer Default Ach Account
+            var defaultAchAccount = await GetDefaultAchAccountAsync(warrior.Id);
+
+            if (defaultAchAccount == null)
+            {
+                Console.WriteLine("Failed to get customer default ACH account");
+                return;
+            }
+
+            // Get Customer Default Credit Card Account
+            var defaultCreditCardAccount = await GetDefaultCreditCardAccountAsync(warrior.Id);
+
+            if (defaultCreditCardAccount == null)
+            {
+                Console.WriteLine("Failed to get customer default Credit Card account");
+                return;
+            }
+
+            // Set Customer Default Account
+            await SetDefaultAccountAsync(warrior.Id, visa.Id);
+
+            // Create Payments
+            var achPayment = new Payment
+            {
+                AccountId = ach.Id,
+                Amount = 5.00M
+            };
+
+            achPayment = await CreatePaymentAsync(achPayment);
+
+            if (achPayment == null)
+            {
+                Console.WriteLine("Failed to create ACH payment");
+                return;
+            }
+
+            var creditCardPayment = new Payment
+            {
+                AccountId = visa.Id,
+                Amount = 5.00M,
+                Cvv = "995",
+
+            };
+
+            creditCardPayment = await CreatePaymentAsync(creditCardPayment);
+
+            if (creditCardPayment == null)
+            {
+                Console.WriteLine("Failed to create Credit Card payment");
+                return;
+            }
+
+            // Get Payment
+            creditCardPayment = await GetPaymentAsync(creditCardPayment.Id.Value);
+
+            if (creditCardPayment == null)
+            {
+                Console.WriteLine("Failed to get Credit Card payment");
+                return;
+            }
+
+            // Get Payments
+            var allPayments = await GetPaymentsAsync();
+
+            if (allPayments == null)
+            {
+                Console.WriteLine("Failed to get all payments");
+                return;
+            }
+
+            // Get Customer Payments
+            var payments = await GetPaymentsAsync(warrior.Id);
+
+            if (payments == null)
+            {
+                Console.WriteLine("Failed to get customer payments");
+                return;
+            }
+
+            // Create Payment Plan
+            var paymentPlan = new PaymentPlan
+            {
+                AccountId = visa.Id,
+                TotalDueAmount = 100.00M,
+                TotalNumberOfPayments = 5,
+                StartDate = DateTime.Now.AddDays(1),
+                ExecutionFrequencyType = ExecutionFrequencyType.FirstOfMonth
+            };
+
+            paymentPlan = await CreatePaymentPlanAsync(paymentPlan);
+
+            if (paymentPlan == null)
+            {
+                Console.WriteLine("Failed to create payment plan");
+                return;
+            }
+
+            // Create Recurring Payment
+            var recurringPayment = new RecurringPayment
+            {
+                AccountId = visa.Id,
+                PaymentAmount = 10.00M,
+                StartDate = DateTime.Now.AddDays(1),
+                ExecutionFrequencyType = ExecutionFrequencyType.FirstOfMonth,
+            };
+
+            recurringPayment = await CreateRecurringPaymentAsync(recurringPayment);
+
+            if (recurringPayment == null)
+            {
+                Console.WriteLine("Failed to create recurring payment");
+                return;
+            }
+
+            // Update Recurring Payment
+            var updateRecurringPayment = new RecurringPayment
+            {
+                Id = recurringPayment.Id,
+                AccountId = visa.Id,
+                PaymentAmount = 100.00M,
+                StartDate = DateTime.Now.AddDays(1),
+                ExecutionFrequencyType = ExecutionFrequencyType.FirstOfMonth
+            };
+
+            updateRecurringPayment = await UpdateRecurringPaymentAsync(updateRecurringPayment);
+
+            if (updateRecurringPayment == null)
+            {
+                Console.WriteLine("Failed to update recurring payment");
+                return;
+            }
+
+            // Get Recurring Schedule
+            recurringPayment = await GetRecurringScheduleAsync(recurringPayment.Id);
+
+            if (recurringPayment == null)
+            {
+                Console.WriteLine("Failed to get recurring schedule");
+                return;
+            }
+
+            // Get Customer Payment Plans
+            var paymentPlans = await GetPaymentPlansAsync(warrior.Id);
+
+            if (paymentPlans == null)
+            {
+                Console.WriteLine("Failed to get customer payment plans");
+                return;
+            }
+
+            // Get Customer Payment Schedules
+            var paymentSchedules = await GetPaymentSchedulesAsync(warrior.Id);
+
+            if (paymentSchedules == null)
+            {
+                Console.WriteLine("Failed to get customer payment schedules");
+                return;
+            }
+
+            // Get Customer Recurring Payment Schedules
+            var recurringPaymentSchedules = await GetRecurringPaymentSchedulesAsync(warrior.Id);
+
+            if (recurringPaymentSchedules == null)
+            {
+                Console.WriteLine("Failed to get customer recurring payment schedules");
+                return;
+            }
+
+            // Get All Payment Plan Schedules
+            var allPaymentSchedules = await GetAllPaymentSchedulesAsync();
+
+            if (allPaymentSchedules == null)
+            {
+                Console.WriteLine("Failed to get all payment schedules");
+                return;
+            }
+
+            // Get Payment Plan Payments
+            var paymentPlanPayments = await GetPaymentPlanPaymentsAsync(paymentPlan.Id);
+
+            if (paymentPlanPayments == null)
+            {
+                Console.WriteLine("Failed to get payment plan payments");
+                return;
+            }
+
+            // Get Payment Plan Schedule
+            paymentPlan = await GetPaymentPlanScheduleAsync(paymentPlan.Id);
+
+            if (paymentPlan == null)
+            {
+                Console.WriteLine("Failed to get payment plan schedule");
+                return;
+            }
+
+            // Get Recurring Payments
+            var recurringPayments = await GetRecurringPaymentsAsync(recurringPayment.Id);
+
+            if (recurringPayments == null)
+            {
+                Console.WriteLine("Failed to get recurring payments");
+                return;
+            }
+
+            // Pause Payment Plan
+            await PausePaymentPlanAsync(paymentPlan.Id, DateTime.Now.AddDays(1));
+
+            // Pause Recurring Payment
+            await PauseRecurringPaymentAsync(recurringPayment.Id, DateTime.Now.AddDays(1));
+
+            // Resume Payment Plan
+            await ResumePaymentPlanAsync(paymentPlan.Id);
+
+            // Resume Recurring Payment
+            await ResumeRecurringPaymentAsync(recurringPayment.Id);
+
+            // Suspend Payment Plan
+            await SuspendPaymentPlanAsync(paymentPlan.Id);
+
+            // Suspend Recurring Payment
+            await SuspendRecurringPaymentAsync(recurringPayment.Id);
+
+            // Void Payments
+            var voidAchPayment = await VoidPaymentAsync(achPayment.Id.Value);
+
+            if (voidAchPayment == null)
+            {
+                Console.WriteLine("Failed to void ACH payment");
+                return;
+            }
+
+            var voidCreditCardPayment = await VoidPaymentAsync(creditCardPayment.Id.Value);
+
+            if (voidCreditCardPayment == null)
+            {
+                Console.WriteLine("Failed to void Credit Card payment");
+                return;
+            }
+
+            // Delete Payment Plans
+            await DeletePaymentPlanAsync(paymentPlan.Id);
+
+            // Delete Recurring Payments
+            await DeleteRecurringPaymentAsync(recurringPayment.Id);
+
+            // Delete Accounts
+            await DeleteAchAccountAsync(ach.Id);
+            await DeleteCreditCardAccountAsync(visa.Id);
+
+            // Delete Customers
+            await DeleteCustomerAsync(warrior.Id);
+            await DeleteCustomerAsync(valkyrie.Id);
+            await DeleteCustomerAsync(wizard.Id);
+            await DeleteCustomerAsync(elf.Id);
         }
 
         #endregion
@@ -305,7 +752,7 @@ namespace TestHarness
             await customerService.DeleteCustomerAsync(customerId);
         }
 
-        public async Task<IEnumerable<CustomerSearchResult>> FindCustomer(string query)
+        public async Task<IEnumerable<CustomerSearchResult>> FindCustomerAsync(string query)
         {
             var result = await customerService.FindCustomerAsync(query);
 
