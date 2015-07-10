@@ -37,7 +37,6 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web;
 using Xunit;
 
 namespace PaySimpleSdkTests.CustomerTests
@@ -68,7 +67,7 @@ namespace PaySimpleSdkTests.CustomerTests
             // Arrange
             var customer = new Customer();
 
-            webServiceRequest.Setup(m => m.PostDeserializedAsync<Customer, Result<Customer>>(It.IsAny<Uri>(), It.IsAny<Customer>()))                
+            webServiceRequest.Setup(m => m.PostDeserializedAsync<Customer, Result<Customer>>(It.IsAny<Uri>(), It.IsAny<Customer>()))
                 .ReturnsAsync(new Result<Customer>());
 
             // Act
@@ -102,7 +101,7 @@ namespace PaySimpleSdkTests.CustomerTests
             // Arrange
             var customer = new Customer();
 
-            webServiceRequest.Setup(m => m.PostDeserializedAsync<Customer, Result<Customer>>(It.IsAny<Uri>(), It.IsAny<Customer>()))               
+            webServiceRequest.Setup(m => m.PostDeserializedAsync<Customer, Result<Customer>>(It.IsAny<Uri>(), It.IsAny<Customer>()))
                 .ReturnsAsync(new Result<Customer>());
 
             // Act
@@ -148,42 +147,6 @@ namespace PaySimpleSdkTests.CustomerTests
         // *************************************************************************************************
 
         [Fact]
-        public async Task FindCustomer_Uses_Correct_Endpoint()
-        {
-            // Arrange
-            var query = "Sheldon Cooper";
-            Uri endpoint = null;
-
-            webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<SearchResult>>(It.IsAny<Uri>()))
-                .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<SearchResult> { Response = new SearchResult { Results = new List<CustomerSearchResult>() } } );
-
-            // Act
-            await service.FindCustomerAsync(query);
-
-            // Assert
-            Assert.Equal(string.Format("{0}/v4/globalSearch?Query={1}", settings.BaseUrl, HttpUtility.UrlEncode(query)), endpoint.AbsoluteUri);
-        }
-
-        [Fact]
-        public async Task FindCustomer_Verify_WebServiceRequest_GetDeserializedAsync()
-        {
-            // Arrange
-            var query = "Sheldon Cooper";
-
-            webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<SearchResult>>(It.IsAny<Uri>()))               
-               .ReturnsAsync(new Result<SearchResult> { Response = new SearchResult { Results = new List<CustomerSearchResult>() } });
-
-            // Act
-            await service.FindCustomerAsync(query);
-
-            // Assert
-            webServiceRequest.Verify(m => m.GetDeserializedAsync<Result<SearchResult>>(It.IsAny<Uri>()));
-        }
-
-        // *************************************************************************************************
-
-        [Fact]
         public async Task GetAllAccountsAsync_Uses_Correct_Endpoint()
         {
             // Arrange
@@ -207,7 +170,7 @@ namespace PaySimpleSdkTests.CustomerTests
             // Arrange
             var customerId = 1;
 
-            webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<AccountList>>(It.IsAny<Uri>()))                
+            webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<AccountList>>(It.IsAny<Uri>()))
                 .ReturnsAsync(new Result<AccountList>());
 
             // Act
@@ -242,7 +205,7 @@ namespace PaySimpleSdkTests.CustomerTests
         {
             // Arrange
             var customerId = 1;
-            webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<Customer>>(It.IsAny<Uri>()))                
+            webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<Customer>>(It.IsAny<Uri>()))
                 .ReturnsAsync(new Result<Customer>());
 
             // Act
@@ -547,7 +510,7 @@ namespace PaySimpleSdkTests.CustomerTests
         public async Task GetCustomersAsync_Verify_WebServiceRequest_GetDeserializedAsync()
         {
             // Arrange
-            webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<Customer>>>(It.IsAny<Uri>()))            
+            webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<Customer>>>(It.IsAny<Uri>()))
                .ReturnsAsync(new Result<IEnumerable<Customer>> { ResultData = new Meta(), Response = new List<Customer>() });
 
             // Act
@@ -583,7 +546,7 @@ namespace PaySimpleSdkTests.CustomerTests
             // Arrange
             var customerId = 1;
 
-            webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<Ach>>>(It.IsAny<Uri>()))             
+            webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<Ach>>>(It.IsAny<Uri>()))
               .ReturnsAsync(new Result<IEnumerable<Ach>>());
 
             // Act
@@ -618,7 +581,7 @@ namespace PaySimpleSdkTests.CustomerTests
         {
             // Arrange
             var customerId = 1;
-            webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<CreditCard>>>(It.IsAny<Uri>()))               
+            webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<CreditCard>>>(It.IsAny<Uri>()))
                .ReturnsAsync(new Result<IEnumerable<CreditCard>>());
 
             // Act
@@ -1035,7 +998,7 @@ namespace PaySimpleSdkTests.CustomerTests
             // Arrange
             var customerId = 1;
 
-            webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<PaymentPlan>>>(It.IsAny<Uri>()))                
+            webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<PaymentPlan>>>(It.IsAny<Uri>()))
                 .ReturnsAsync(new Result<IEnumerable<PaymentPlan>> { ResultData = new Meta(), Response = new List<PaymentPlan>() });
 
             // Act
@@ -1410,7 +1373,7 @@ namespace PaySimpleSdkTests.CustomerTests
             // Arrange
             var customerId = 1;
 
-            webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<Payment>>>(It.IsAny<Uri>()))                
+            webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<Payment>>>(It.IsAny<Uri>()))
                 .ReturnsAsync(new Result<IEnumerable<Payment>> { ResultData = new Meta(), Response = new List<Payment>() });
 
             // Act
@@ -1827,7 +1790,7 @@ namespace PaySimpleSdkTests.CustomerTests
             // Arrange
             var customerId = 1;
 
-            webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<PaymentScheduleList>>(It.IsAny<Uri>()))                
+            webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<PaymentScheduleList>>(It.IsAny<Uri>()))
                 .ReturnsAsync(new Result<PaymentScheduleList> { ResultData = new Meta(), Response = new PaymentScheduleList() });
 
             // Act
@@ -2280,7 +2243,7 @@ namespace PaySimpleSdkTests.CustomerTests
             // Arrange
             var customerId = 1;
 
-            webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<Ach>>(It.IsAny<Uri>()))             
+            webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<Ach>>(It.IsAny<Uri>()))
                 .ReturnsAsync(new Result<Ach>());
 
             // Act
@@ -2369,7 +2332,7 @@ namespace PaySimpleSdkTests.CustomerTests
             // Arrange
             var customer = new Customer();
 
-            webServiceRequest.Setup(m => m.PutDeserializedAsync<Customer, Result<Customer>>(It.IsAny<Uri>(), It.IsAny<Customer>()))               
+            webServiceRequest.Setup(m => m.PutDeserializedAsync<Customer, Result<Customer>>(It.IsAny<Uri>(), It.IsAny<Customer>()))
                .ReturnsAsync(new Result<Customer>());
 
             // Act
@@ -2403,7 +2366,7 @@ namespace PaySimpleSdkTests.CustomerTests
             // Arrange
             var customer = new Customer();
 
-            webServiceRequest.Setup(m => m.PutDeserializedAsync<Customer, Result<Customer>>(It.IsAny<Uri>(), It.IsAny<Customer>()))                
+            webServiceRequest.Setup(m => m.PutDeserializedAsync<Customer, Result<Customer>>(It.IsAny<Uri>(), It.IsAny<Customer>()))
                 .ReturnsAsync(new Result<Customer>());
 
             // Act

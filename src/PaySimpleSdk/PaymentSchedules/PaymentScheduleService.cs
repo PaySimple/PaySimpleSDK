@@ -184,17 +184,17 @@ namespace PaySimpleSdk.PaymentSchedules
             await webServiceRequest.DeleteAsync(new Uri(endpoint));
         }
 
-        public async Task<IEnumerable<RecurringPayment>> GetAllPaymentSchedulesAsync()
+        public async Task<PagedResult<IEnumerable<RecurringPayment>>> GetAllPaymentSchedulesAsync()
         {
             var endpoint = string.Format("{0}{1}", settings.BaseUrl, Endpoints.PaymentSchedule);
             var result = await webServiceRequest.GetDeserializedAsync<Result<IEnumerable<RecurringPayment>>>(new Uri(endpoint));
-            return result.Response;
+            return PagedResult.ConvertToPagedResult<IEnumerable<RecurringPayment>>(result);
         }
-        public async Task<IEnumerable<Payment>> GetPaymentPlanPaymentsAsync(int paymentPlanId)
+        public async Task<PagedResult<IEnumerable<Payment>>> GetPaymentPlanPaymentsAsync(int paymentPlanId)
         {
             var endpoint = string.Format("{0}{1}/{2}/payments", settings.BaseUrl, Endpoints.PaymentPlan, paymentPlanId);
             var result = await webServiceRequest.GetDeserializedAsync<Result<IEnumerable<Payment>>>(new Uri(endpoint));
-            return result.Response;
+            return PagedResult.ConvertToPagedResult<IEnumerable<Payment>>(result);
         }
 
         public async Task<PaymentPlan> GetPaymentPlanScheduleAsync(int paymentPlanId)
@@ -204,11 +204,11 @@ namespace PaySimpleSdk.PaymentSchedules
             return result.Response;
         }
 
-        public async Task<IEnumerable<Payment>> GetRecurringPaymentsAsync(int recurringPaymentId)
+        public async Task<PagedResult<IEnumerable<Payment>>> GetRecurringPaymentsAsync(int recurringPaymentId)
         {
             var endpoint = string.Format("{0}{1}/{2}/payments", settings.BaseUrl, Endpoints.RecurringPayment, recurringPaymentId);
             var result = await webServiceRequest.GetDeserializedAsync<Result<IEnumerable<Payment>>>(new Uri(endpoint));
-            return result.Response;
+            return PagedResult.ConvertToPagedResult<IEnumerable<Payment>>(result);
         }
 
         public async Task<RecurringPayment> GetRecurringScheduleAsync(int recurringPaymentId)

@@ -24,6 +24,7 @@
 // The most recent version of this license can be found at: http://opensource.org/licenses/MIT
 #endregion
 
+using PaySimpleSdk.Accounts;
 using PaySimpleSdk.Helpers;
 using PaySimpleSdk.Models;
 using System;
@@ -34,8 +35,8 @@ namespace PaySimpleSdk.Payments
 {
     public interface IPaymentService
     {
-        //Task<Result<NewAccountPayment<T>>> CreateNewAccountPaymentAsync<T>(NewAccountPayment<T> accountPayment) where T : Account, new();
-        //Task<Result<NewCustomerPayment<T>>> CreateNewCustomerPaymentAsync<T>(NewCustomerPayment<T> customerPayment) where T : Account, new();
+        Task<NewAccountPayment<T>> CreateNewAccountPaymentAsync<T>(NewAccountPayment<T> accountPayment) where T : Account, new();
+        Task<NewCustomerPayment<T>> CreateNewCustomerPaymentAsync<T>(NewCustomerPayment<T> customerPayment) where T : Account, new();
         Task<Payment> CreatePaymentAsync(Payment payment);
         Task<Payment> GetPaymentAsync(int paymentId);
         Task<PagedResult<IEnumerable<Payment>>> GetPaymentsAsync(DateTime? startDate = null, DateTime? endDate = null, IEnumerable<PaymentStatus> status = null, PaymentSort sortBy = PaymentSort.PaymentId, SortDirection direction = SortDirection.DESC, int page = 1, int pageSize = 200, bool lite = false);

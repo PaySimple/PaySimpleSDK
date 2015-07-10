@@ -39,8 +39,7 @@ namespace PaySimpleSdk.Customers
     public interface ICustomerService
     {
         Task<Customer> CreateCustomerAsync(Customer customer);
-        Task DeleteCustomerAsync(int customerId);
-        Task<IEnumerable<CustomerSearchResult>> FindCustomerAsync(string query);
+        Task DeleteCustomerAsync(int customerId);        
         Task<IEnumerable<Ach>> GetAchAccountsAsync(int customerId);
         Task<AccountList> GetAllAccountsAsync(int customerId);
         Task<IEnumerable<CreditCard>> GetCreditCardAccountsAsync(int customerId);

@@ -62,13 +62,6 @@ namespace PaySimpleSdk.Customers
             await webServiceRequest.DeleteAsync(new Uri(endpoint));
         }
 
-        public async Task<IEnumerable<CustomerSearchResult>> FindCustomerAsync(string query)
-        {
-            var endpoint = string.Format("{0}{1}?Query={2}", settings.BaseUrl, Endpoints.GlobalSearch, HttpUtility.UrlEncode(query));
-            var result = await webServiceRequest.GetDeserializedAsync<Result<SearchResult>>(new Uri(endpoint));
-            return result.Response.Results;
-        }
-
         public async Task<IEnumerable<Ach>> GetAchAccountsAsync(int customerId)
         {
             var endpoint = string.Format("{0}{1}/{2}/achaccounts", settings.BaseUrl, Endpoints.Customer, customerId);

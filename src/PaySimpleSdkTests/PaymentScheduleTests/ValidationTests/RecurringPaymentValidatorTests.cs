@@ -143,7 +143,7 @@ namespace PaySimpleSdkTests.PaymentScheduleTests.ValidationTests
         {
             // Arrange
             var validator = new RecurringPaymentValidator<RecurringPayment>();
-            var recurringPayment = new RecurringPayment { StartDate = DateTime.Now };
+            var recurringPayment = new RecurringPayment { StartDate = DateTime.Now.AddSeconds(1) };
 
             // Act
             var result = validator.Validate(recurringPayment);
@@ -271,7 +271,7 @@ namespace PaySimpleSdkTests.PaymentScheduleTests.ValidationTests
         }
 
         // *************************************************************************************************
-       
+
         [Fact]
         public void FirstPaymentAmount_Is_Null_Is_Valid()
         {

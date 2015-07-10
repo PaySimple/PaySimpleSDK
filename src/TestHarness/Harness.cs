@@ -64,7 +64,7 @@ namespace TestHarness
             try
             {
                 // Run this to run everything
-                await RunTheGauntlet();
+                //await RunTheGauntlet();
 
                 // Run this for PaySimple Certification
                 //await Certification();
@@ -146,15 +146,6 @@ namespace TestHarness
             if (warrior.Website != "http://www.gauntlet.com")
             {
                 Console.WriteLine("Failed to update customer");
-                return;
-            }
-
-            // Find Customer
-            var findResult = await FindCustomerAsync("Red Warrior");
-
-            if (findResult.Count() == 0)
-            {
-                Console.WriteLine("Failed to find customer");
                 return;
             }
 
@@ -752,16 +743,6 @@ namespace TestHarness
             await customerService.DeleteCustomerAsync(customerId);
         }
 
-        public async Task<IEnumerable<CustomerSearchResult>> FindCustomerAsync(string query)
-        {
-            var result = await customerService.FindCustomerAsync(query);
-
-            if (result != null)
-                DumpObject("FindCustomer", result);
-
-            return result;
-        }
-
         public async Task<IEnumerable<Ach>> GetAchAccountsAsync(int customerId)
         {
             var result = await customerService.GetAchAccountsAsync(customerId);
@@ -1193,7 +1174,7 @@ namespace TestHarness
             await paymentScheduleService.DeleteRecurringPaymentAsync(recurringPaymentId);
         }
 
-        public async Task<IEnumerable<RecurringPayment>> GetAllPaymentSchedulesAsync()
+        public async Task<PagedResult<IEnumerable<RecurringPayment>>> GetAllPaymentSchedulesAsync()
         {
             var result = await paymentScheduleService.GetAllPaymentSchedulesAsync();
 
@@ -1203,7 +1184,7 @@ namespace TestHarness
             return result;
         }
 
-        public async Task<IEnumerable<Payment>> GetPaymentPlanPaymentsAsync(int paymentPlanId)
+        public async Task<PagedResult<IEnumerable<Payment>>> GetPaymentPlanPaymentsAsync(int paymentPlanId)
         {
             var result = await paymentScheduleService.GetPaymentPlanPaymentsAsync(paymentPlanId);
 
@@ -1223,7 +1204,7 @@ namespace TestHarness
             return result;
         }
 
-        public async Task<IEnumerable<Payment>> GetRecurringPaymentsAsync(int recurringPaymentId)
+        public async Task<PagedResult<IEnumerable<Payment>>> GetRecurringPaymentsAsync(int recurringPaymentId)
         {
             var result = await paymentScheduleService.GetRecurringPaymentsAsync(recurringPaymentId);
 

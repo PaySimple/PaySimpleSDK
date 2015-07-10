@@ -24,6 +24,7 @@
 // The most recent version of this license can be found at: http://opensource.org/licenses/MIT
 #endregion
 
+using PaySimpleSdk.Models;
 using PaySimpleSdk.Payments;
 using System;
 using System.Collections.Generic;
@@ -41,10 +42,10 @@ namespace PaySimpleSdk.PaymentSchedules
         Task<RecurringPayment> CreateRecurringPaymentAsync(RecurringPayment recurringPayment);
         Task DeletePaymentPlanAsync(int paymentPlanId);
         Task DeleteRecurringPaymentAsync(int recurringPaymentId);
-        Task<IEnumerable<RecurringPayment>> GetAllPaymentSchedulesAsync();
-        Task<IEnumerable<Payment>> GetPaymentPlanPaymentsAsync(int paymentPlanId);
+        Task<PagedResult<IEnumerable<RecurringPayment>>> GetAllPaymentSchedulesAsync();
+        Task<PagedResult<IEnumerable<Payment>>> GetPaymentPlanPaymentsAsync(int paymentPlanId);
         Task<PaymentPlan> GetPaymentPlanScheduleAsync(int paymentPlanId);
-        Task<IEnumerable<Payment>> GetRecurringPaymentsAsync(int recurringPaymentId);
+        Task<PagedResult<IEnumerable<Payment>>> GetRecurringPaymentsAsync(int recurringPaymentId);
         Task<RecurringPayment> GetRecurringScheduleAsync(int recurringPaymentId);
         Task PausePaymentPlanAsync(int paymentPlanId, DateTime endDate);
         Task PauseRecurringPaymentAsync(int recurringPaymentId, DateTime endDate);

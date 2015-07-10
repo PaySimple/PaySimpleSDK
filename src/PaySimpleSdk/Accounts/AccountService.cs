@@ -42,6 +42,15 @@ namespace PaySimpleSdk.Accounts
             : base(settings, validationService, webServiceRequest, serviceFactory)
         { }
 
+        public async Task<T> CreateAccountAsync<T>(T account)
+            where T : Account
+        {
+            if (typeof(T).Equals(typeof(Ach)))
+                return await CreateAchAccountAsync(account as Ach) as T;
+            else
+                return await CreateCreditCardAccountAsync(account as CreditCard) as T;
+        }
+
         public async Task<Ach> CreateAchAccountAsync(Ach account)
         {
             validationService.Validate(account);

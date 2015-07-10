@@ -24,6 +24,7 @@
 // The most recent version of this license can be found at: http://opensource.org/licenses/MIT
 #endregion
 
+using PaySimpleSdk.Accounts;
 using PaySimpleSdk.Helpers;
 using PaySimpleSdk.Models;
 using PaySimpleSdk.Validation;
@@ -43,8 +44,8 @@ namespace PaySimpleSdk.Payments
         internal PaymentService(IPaySimpleSettings settings, IValidationService validationService, IWebServiceRequest webServiceRequest, IServiceFactory serviceFactory)
             : base(settings, validationService, webServiceRequest, serviceFactory)
         { }
-        /*
-        public async Task<Result<NewAccountPayment<T>>> CreateNewAccountPaymentAsync<T>(NewAccountPayment<T> accountPayment)
+
+        public async Task<NewAccountPayment<T>> CreateNewAccountPaymentAsync<T>(NewAccountPayment<T> accountPayment)
             where T : Account, new()
         {
             // Validate objects
@@ -54,24 +55,16 @@ namespace PaySimpleSdk.Payments
 
             // Create the account
             var accountService = serviceFactory.GetAccountService();
-            var newAccountResult = await accountService.CreateAccountAsync<T>(accountPayment.Account);
-            newAccountPayment.Account = newAccountResult.Response;
+            newAccountPayment.Account = await accountService.CreateAccountAsync<T>(accountPayment.Account);
 
             // Make the Payment            
             accountPayment.Payment.AccountId = newAccountPayment.Account.Id;
-            var newPayment = await CreatePaymentAsync(accountPayment.Payment);
-            newAccountPayment.Payment = newPayment.Response;
+            newAccountPayment.Payment = await CreatePaymentAsync(accountPayment.Payment);
 
-            var result = new Result<NewAccountPayment<T>>()
-            {
-                ResultData = newPayment.ResultData,
-                Response = newAccountPayment
-            };
-
-            return result;
+            return newAccountPayment;
         }
 
-        public async Task<Result<NewCustomerPayment<T>>> CreateNewCustomerPaymentAsync<T>(NewCustomerPayment<T> customerPayment)
+        public async Task<NewCustomerPayment<T>> CreateNewCustomerPaymentAsync<T>(NewCustomerPayment<T> customerPayment)
             where T : Account, new()
         {
             // Validate objects
@@ -81,25 +74,17 @@ namespace PaySimpleSdk.Payments
 
             // Create the new Customer
             var customerService = serviceFactory.GetCustomerService();
-            var createdCustomer = await customerService.CreateCustomerAsync(customerPayment.Customer);
-            newCustomerPayment.Customer = createdCustomer.Response;
+            newCustomerPayment.Customer = await customerService.CreateCustomerAsync(customerPayment.Customer);
 
             // Create the new Account, and make the payment
-            customerPayment.Account.CustomerId = createdCustomer.Response.Id;
+            customerPayment.Account.CustomerId = newCustomerPayment.Customer.Id;
             var paymentResult = await CreateNewAccountPaymentAsync<T>(customerPayment);
 
-            newCustomerPayment.Account = paymentResult.Response.Account;
-            newCustomerPayment.Payment = paymentResult.Response.Payment;
+            newCustomerPayment.Account = paymentResult.Account;
+            newCustomerPayment.Payment = paymentResult.Payment;
 
-            var result = new Result<NewCustomerPayment<T>>()
-            {
-                ResultData = paymentResult.ResultData,
-                Response = newCustomerPayment
-            };
-
-            return result;
+            return newCustomerPayment;
         }
-        */
 
         public async Task<Payment> CreatePaymentAsync(Payment payment)
         {
