@@ -42,11 +42,11 @@ namespace PaySimpleSdk.Customers
         [JsonProperty("City")]
         public string City { get; set; }
         [JsonProperty("StateCode"), JsonConverter(typeof(TypeEnumConverter<StateCode, BiLookup<StateCode, string>>))]
-        public StateCode StateCode { get; set; }
+        public StateCode? StateCode { get; set; }
         [JsonProperty("ZipCode")]
         public string ZipCode { get; set; }
         [JsonProperty("Country"), JsonConverter(typeof(TypeEnumConverter<CountryCode, BiLookup<CountryCode, string>>))]
-        public CountryCode Country { get; set; }
+        public CountryCode? Country { get; set; }
 
         public IEnumerable<ValidationError> Validate()
         {

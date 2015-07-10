@@ -47,7 +47,7 @@ namespace PaySimpleSdk.Payments
         [JsonProperty("CVV")]
         public string Cvv { get; set; }
         [JsonProperty("PaymentSubType"), JsonConverter(typeof(TypeEnumConverter<PaymentSubType, BiLookup<PaymentSubType, string>>))]
-        public PaymentSubType PaymentSubType { get; set; }
+        public PaymentSubType? PaymentSubType { get; set; }
         [JsonProperty("InvoiceId")]
         public int? InvoiceId { get; set; }
         [JsonProperty("InvoiceNumber")]
@@ -77,10 +77,10 @@ namespace PaySimpleSdk.Payments
         [JsonProperty("ReferenceId")]
         public int ReferenceId { get; internal set; }
         [JsonProperty("Status"), JsonConverter(typeof(TypeEnumConverter<Status, BiLookup<Status, string>>))]
-        public Status Status { get; internal set; }
+        public Status? Status { get; internal set; }
         [JsonProperty("RecurringScheduleId")]
         public int RecurringScheduleId { get; internal set; }
-        [JsonProperty("PaymentType")]
+        [JsonProperty("PaymentType"), JsonConverter(typeof(TypeEnumConverter<PaymentType, BiLookup<PaymentType, string>>))]
         public PaymentType PaymentType { get; internal set; }
         [JsonProperty("ProviderAuthCode")]
         public string ProviderAuthCode { get; internal set; }

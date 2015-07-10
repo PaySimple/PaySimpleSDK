@@ -39,7 +39,7 @@ namespace PaySimpleSdk.Customers
     public interface ICustomerService
     {
         Task<Customer> CreateCustomerAsync(Customer customer);
-        Task DeleteCustomerAsync(int customerId);        
+        Task DeleteCustomerAsync(int customerId);
         Task<IEnumerable<Ach>> GetAchAccountsAsync(int customerId);
         Task<AccountList> GetAllAccountsAsync(int customerId);
         Task<IEnumerable<CreditCard>> GetCreditCardAccountsAsync(int customerId);
@@ -47,10 +47,10 @@ namespace PaySimpleSdk.Customers
         Task<PagedResult<IEnumerable<Customer>>> GetCustomersAsync(CustomerSort sortBy = CustomerSort.LastName, SortDirection direction = SortDirection.ASC, int page = 1, int pageSize = 200, bool lite = false);
         Task<Ach> GetDefaultAchAccountAsync(int customerId);
         Task<CreditCard> GetDefaultCreditCardAccountAsync(int customerId);
-        Task<PagedResult<IEnumerable<PaymentPlan>>> GetPaymentPlansAsync(int customerId, DateTime? startDate = null, DateTime? endDate = null, ScheduleStatus status = ScheduleStatus.None, ScheduleSort sortBy = ScheduleSort.Id, SortDirection direction = SortDirection.ASC, int page = 1, int pageSize = 200, bool lite = false);
+        Task<PagedResult<IEnumerable<PaymentPlan>>> GetPaymentPlansAsync(int customerId, DateTime? startDate = null, DateTime? endDate = null, ScheduleStatus? status = null, ScheduleSort sortBy = ScheduleSort.Id, SortDirection direction = SortDirection.ASC, int page = 1, int pageSize = 200, bool lite = false);
         Task<PagedResult<IEnumerable<Payment>>> GetPaymentsAsync(int customerId, DateTime? startDate = null, DateTime? endDate = null, IEnumerable<PaymentStatus> status = null, PaymentSort sortBy = PaymentSort.PaymentId, SortDirection direction = SortDirection.ASC, int page = 1, int pageSize = 200, bool lite = false);
-        Task<PagedResult<PaymentScheduleList>> GetPaymentSchedulesAsync(int customerId, DateTime? startDate = null, DateTime? endDate = null, ScheduleStatus status = ScheduleStatus.None, ScheduleSort sortBy = ScheduleSort.Id, SortDirection direction = SortDirection.ASC, int page = 1, int pageSize = 200, bool lite = false);
-        Task<PagedResult<IEnumerable<RecurringPayment>>> GetRecurringPaymentSchedulesAsync(int customerId, DateTime? startDate = null, DateTime? endDate = null, ScheduleStatus status = ScheduleStatus.None, ScheduleSort sortBy = ScheduleSort.Id, SortDirection direction = SortDirection.ASC, int page = 1, int pageSize = 200, bool lite = false);
+        Task<PagedResult<PaymentScheduleList>> GetPaymentSchedulesAsync(int customerId, DateTime? startDate = null, DateTime? endDate = null, ScheduleStatus? status = null, ScheduleSort sortBy = ScheduleSort.Id, SortDirection direction = SortDirection.ASC, int page = 1, int pageSize = 200, bool lite = false);
+        Task<PagedResult<IEnumerable<RecurringPayment>>> GetRecurringPaymentSchedulesAsync(int customerId, DateTime? startDate = null, DateTime? endDate = null, ScheduleStatus? status = null, ScheduleSort sortBy = ScheduleSort.Id, SortDirection direction = SortDirection.ASC, int page = 1, int pageSize = 200, bool lite = false);
         Task SetDefaultAccountAsync(int customerId, int accountId);
         Task<Customer> UpdateCustomerAsync(Customer customer);
     }

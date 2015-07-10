@@ -34,7 +34,6 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace PaySimpleSdk.Customers
 {
@@ -125,7 +124,7 @@ namespace PaySimpleSdk.Customers
             return result.Response;
         }
 
-        public async Task<PagedResult<IEnumerable<PaymentPlan>>> GetPaymentPlansAsync(int customerId, DateTime? startDate = null, DateTime? endDate = null, ScheduleStatus status = ScheduleStatus.None, ScheduleSort sortBy = ScheduleSort.Id, SortDirection direction = SortDirection.ASC, int page = 1, int pageSize = 200, bool lite = false)
+        public async Task<PagedResult<IEnumerable<PaymentPlan>>> GetPaymentPlansAsync(int customerId, DateTime? startDate = null, DateTime? endDate = null, ScheduleStatus? status = null, ScheduleSort sortBy = ScheduleSort.Id, SortDirection direction = SortDirection.ASC, int page = 1, int pageSize = 200, bool lite = false)
         {
             StringBuilder endpoint = new StringBuilder(string.Format("{0}{1}/{2}/paymentplans?lite={2}", settings.BaseUrl, Endpoints.Customer, customerId, lite));
 
@@ -135,7 +134,7 @@ namespace PaySimpleSdk.Customers
             if (endDate != null)
                 endpoint.AppendFormat("&enddate={0}", endDate.Value.ToString("yyyy-MM-dd"));
 
-            if (status != ScheduleStatus.None)
+            if (status != null)
                 endpoint.Append(string.Format("&status={0}", status));
 
             if (sortBy != ScheduleSort.Id && sortBy != ScheduleSort.PaymentScheduleType)
@@ -189,7 +188,7 @@ namespace PaySimpleSdk.Customers
             return PagedResult.ConvertToPagedResult<IEnumerable<Payment>>(result);
         }
 
-        public async Task<PagedResult<PaymentScheduleList>> GetPaymentSchedulesAsync(int customerId, DateTime? startDate = null, DateTime? endDate = null, ScheduleStatus status = ScheduleStatus.None, ScheduleSort sortBy = ScheduleSort.Id, SortDirection direction = SortDirection.ASC, int page = 1, int pageSize = 200, bool lite = false)
+        public async Task<PagedResult<PaymentScheduleList>> GetPaymentSchedulesAsync(int customerId, DateTime? startDate = null, DateTime? endDate = null, ScheduleStatus? status = null, ScheduleSort sortBy = ScheduleSort.Id, SortDirection direction = SortDirection.ASC, int page = 1, int pageSize = 200, bool lite = false)
         {
             StringBuilder endpoint = new StringBuilder(string.Format("{0}{1}/{2}/paymentschedules?lite={3}", settings.BaseUrl, Endpoints.Customer, customerId, lite));
 
@@ -199,7 +198,7 @@ namespace PaySimpleSdk.Customers
             if (endDate != null)
                 endpoint.AppendFormat("&enddate={0}", endDate.Value.ToString("yyyy-MM-dd"));
 
-            if (status != ScheduleStatus.None)
+            if (status != null)
                 endpoint.Append(string.Format("&status={0}", status));
 
             if (sortBy != ScheduleSort.Id)
@@ -218,7 +217,7 @@ namespace PaySimpleSdk.Customers
             return PagedResult.ConvertToPagedResult<PaymentScheduleList>(result);
         }
 
-        public async Task<PagedResult<IEnumerable<RecurringPayment>>> GetRecurringPaymentSchedulesAsync(int customerId, DateTime? startDate = null, DateTime? endDate = null, ScheduleStatus status = ScheduleStatus.None, ScheduleSort sortBy = ScheduleSort.Id, SortDirection direction = SortDirection.ASC, int page = 1, int pageSize = 200, bool lite = false)
+        public async Task<PagedResult<IEnumerable<RecurringPayment>>> GetRecurringPaymentSchedulesAsync(int customerId, DateTime? startDate = null, DateTime? endDate = null, ScheduleStatus? status = null, ScheduleSort sortBy = ScheduleSort.Id, SortDirection direction = SortDirection.ASC, int page = 1, int pageSize = 200, bool lite = false)
         {
             StringBuilder endpoint = new StringBuilder(string.Format("{0}{1}/{2}/recurringpayments?lite={3}", settings.BaseUrl, Endpoints.Customer, customerId, lite));
 
@@ -228,7 +227,7 @@ namespace PaySimpleSdk.Customers
             if (endDate != null)
                 endpoint.AppendFormat("&enddate={0}", endDate.Value.ToString("yyyy-MM-dd"));
 
-            if (status != ScheduleStatus.None)
+            if (status != null)
                 endpoint.Append(string.Format("&status={0}", status));
 
             if (sortBy != ScheduleSort.Id)

@@ -39,7 +39,7 @@ namespace PaySimpleSdk.Helpers
 
         public T Deserialize<T>(string obj) where T : class
         {
-            return JsonConvert.DeserializeObject<T>(obj, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Objects });
+            return JsonConvert.DeserializeObject<T>(obj, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Objects, NullValueHandling = NullValueHandling.Ignore });
         }
     }
 }

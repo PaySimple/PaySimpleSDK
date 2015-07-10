@@ -64,7 +64,7 @@ namespace TestHarness
             try
             {
                 // Run this to run everything
-                //await RunTheGauntlet();
+                await RunTheGauntlet();
 
                 // Run this for PaySimple Certification
                 //await Certification();
@@ -813,7 +813,7 @@ namespace TestHarness
             return result;
         }
 
-        public async Task<PagedResult<IEnumerable<PaymentPlan>>> GetPaymentPlansAsync(int customerId, DateTime? startDate = null, DateTime? endDate = null, ScheduleStatus status = ScheduleStatus.None, ScheduleSort sortBy = ScheduleSort.Id, SortDirection direction = SortDirection.ASC, int page = 1, int pageSize = 200, bool lite = false)
+        public async Task<PagedResult<IEnumerable<PaymentPlan>>> GetPaymentPlansAsync(int customerId, DateTime? startDate = null, DateTime? endDate = null, ScheduleStatus? status = null, ScheduleSort sortBy = ScheduleSort.Id, SortDirection direction = SortDirection.ASC, int page = 1, int pageSize = 200, bool lite = false)
         {
             var result = await customerService.GetPaymentPlansAsync(customerId, startDate, endDate, status, sortBy, direction, page, pageSize, lite);
 
@@ -833,7 +833,7 @@ namespace TestHarness
             return result;
         }
 
-        public async Task<PagedResult<PaymentScheduleList>> GetPaymentSchedulesAsync(int customerId, DateTime? startDate = null, DateTime? endDate = null, ScheduleStatus status = ScheduleStatus.None, ScheduleSort sortBy = ScheduleSort.Id, SortDirection direction = SortDirection.ASC, int page = 1, int pageSize = 200, bool lite = false)
+        public async Task<PagedResult<PaymentScheduleList>> GetPaymentSchedulesAsync(int customerId, DateTime? startDate = null, DateTime? endDate = null, ScheduleStatus? status = null, ScheduleSort sortBy = ScheduleSort.Id, SortDirection direction = SortDirection.ASC, int page = 1, int pageSize = 200, bool lite = false)
         {
             var result = await customerService.GetPaymentSchedulesAsync(customerId, startDate, endDate, status, sortBy, direction, page, pageSize, lite);
 
