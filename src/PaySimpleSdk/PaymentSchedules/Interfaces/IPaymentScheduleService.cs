@@ -24,6 +24,7 @@
 // The most recent version of this license can be found at: http://opensource.org/licenses/MIT
 #endregion
 
+using PaySimpleSdk.Accounts;
 using PaySimpleSdk.Models;
 using PaySimpleSdk.Payments;
 using System;
@@ -34,11 +35,11 @@ namespace PaySimpleSdk.PaymentSchedules
 {
     public interface IPaymentScheduleService
     {
-        //Task<Result<NewAccountPaymentPlan<T>>> CreateNewAccountPaymentPlanAsync<T>(NewAccountPaymentPlan<T> accountPaymentPlan) where T : Account, new();
-        //Task<Result<NewCustomerPaymentPlan<T>>> CreateNewCustomerPaymentPlanAsync<T>(NewCustomerPaymentPlan<T> customerPaymentPlan) where T : Account, new();
+        Task<NewAccountPaymentPlan<T>> CreateNewAccountPaymentPlanAsync<T>(NewAccountPaymentPlan<T> accountPaymentPlan) where T : Account, new();
+        Task<NewCustomerPaymentPlan<T>> CreateNewCustomerPaymentPlanAsync<T>(NewCustomerPaymentPlan<T> customerPaymentPlan) where T : Account, new();
         Task<PaymentPlan> CreatePaymentPlanAsync(PaymentPlan paymentPlan);
-        //Task<Result<NewAccountRecurringPayment<T>>> CreateNewAccountRecurringPaymentAsync<T>(NewAccountRecurringPayment<T> accountRecurringPayment) where T : Account, new();
-        //Task<Result<NewCustomerRecurringPayment<T>>> CreateNewCustomerRecurringPaymentAsync<T>(NewCustomerRecurringPayment<T> customerRecurringPayment) where T : Account, new();
+        Task<NewAccountRecurringPayment<T>> CreateNewAccountRecurringPaymentAsync<T>(NewAccountRecurringPayment<T> accountRecurringPayment) where T : Account, new();
+        Task<NewCustomerRecurringPayment<T>> CreateNewCustomerRecurringPaymentAsync<T>(NewCustomerRecurringPayment<T> customerRecurringPayment) where T : Account, new();
         Task<RecurringPayment> CreateRecurringPaymentAsync(RecurringPayment recurringPayment);
         Task DeletePaymentPlanAsync(int paymentPlanId);
         Task DeleteRecurringPaymentAsync(int recurringPaymentId);

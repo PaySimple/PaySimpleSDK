@@ -672,72 +672,71 @@ namespace PaySimpleSdkTests.PaymentScheduleTests
         }
 
         // *************************************************************************************************  
-        /*
-                [Fact]
-                public async Task CreateNewCustomerPaymentPlanAsync_Verify_ServiceFactory_GetCustomerService()
-                {
-                    // Arrange
-                    var customerPaymentPlan = new NewCustomerPaymentPlan<Ach>
-                    {
-                        Customer = new Customer(),
-                        Account = new Ach(),
-                        PaymentPlan = new PaymentPlan()
-                    };
-                    accountService.Setup(m => m.CreateAccountAsync<Ach>(It.IsAny<Ach>())).ReturnsAsync(new Result<Ach>() { Response = new Ach { Id = 1 } });
-                    webServiceRequest.Setup(m => m.PostDeserializedAsync<PaymentPlan, Result<PaymentPlan>>(It.IsAny<Uri>(), It.IsAny<PaymentPlan>())).ReturnsAsync(new Result<PaymentPlan> { Response = new PaymentPlan { Id = 1 } });
+     
+        [Fact]
+        public async Task CreateNewCustomerPaymentPlanAsync_Verify_ServiceFactory_GetCustomerService()
+        {
+            // Arrange
+            var customerPaymentPlan = new NewCustomerPaymentPlan<Ach>
+            {
+                Customer = new Customer(),
+                Account = new Ach(),
+                PaymentPlan = new PaymentPlan()
+            };
+            accountService.Setup(m => m.CreateAccountAsync<Ach>(It.IsAny<Ach>())).ReturnsAsync(new Ach { Id = 1 });
+            webServiceRequest.Setup(m => m.PostDeserializedAsync<PaymentPlan, Result<PaymentPlan>>(It.IsAny<Uri>(), It.IsAny<PaymentPlan>())).ReturnsAsync(new Result<PaymentPlan> { Response = new PaymentPlan { Id = 1 } });
 
-                    // Act
-                    await service.CreateNewCustomerPaymentPlanAsync(customerPaymentPlan);
+            // Act
+            await service.CreateNewCustomerPaymentPlanAsync(customerPaymentPlan);
 
-                    // Assert
-                    serviceFactory.Verify(m => m.GetCustomerService());
-                }
+            // Assert
+            serviceFactory.Verify(m => m.GetCustomerService());
+        }
 
-                [Fact]
-                public async Task CreateNewCustomerPaymentPlanAsync_Verify_CustomerService_CreateCustomerAsync()
-                {
-                    // Arrange
-                    var customerPaymentPlan = new NewCustomerPaymentPlan<Ach>
-                    {
-                        Customer = new Customer(),
-                        Account = new Ach(),
-                        PaymentPlan = new PaymentPlan()
-                    };
-                    accountService.Setup(m => m.CreateAccountAsync<Ach>(It.IsAny<Ach>())).ReturnsAsync(new Result<Ach>() { Response = new Ach { Id = 1 } });
-                    webServiceRequest.Setup(m => m.PostDeserializedAsync<PaymentPlan, Result<PaymentPlan>>(It.IsAny<Uri>(), It.IsAny<PaymentPlan>())).ReturnsAsync(new Result<PaymentPlan> { Response = new PaymentPlan { Id = 1 } });
+        [Fact]
+        public async Task CreateNewCustomerPaymentPlanAsync_Verify_CustomerService_CreateCustomerAsync()
+        {
+            // Arrange
+            var customerPaymentPlan = new NewCustomerPaymentPlan<Ach>
+            {
+                Customer = new Customer(),
+                Account = new Ach(),
+                PaymentPlan = new PaymentPlan()
+            };
+            accountService.Setup(m => m.CreateAccountAsync<Ach>(It.IsAny<Ach>())).ReturnsAsync(new Ach { Id = 1 });
+            webServiceRequest.Setup(m => m.PostDeserializedAsync<PaymentPlan, Result<PaymentPlan>>(It.IsAny<Uri>(), It.IsAny<PaymentPlan>())).ReturnsAsync(new Result<PaymentPlan> { Response = new PaymentPlan { Id = 1 } });
 
-                    // Act
-                    await service.CreateNewCustomerPaymentPlanAsync(customerPaymentPlan);
+            // Act
+            await service.CreateNewCustomerPaymentPlanAsync(customerPaymentPlan);
 
-                    // Assert
-                    customerService.Verify(m => m.CreateCustomerAsync(It.IsAny<Customer>()));
-                }
+            // Assert
+            customerService.Verify(m => m.CreateCustomerAsync(It.IsAny<Customer>()));
+        }
 
-                [Fact]
-                public async Task CreateNewCustomerPaymentPlanAsync_Result_Has_Ids_Populated()
-                {
-                    // Arrange
-                    var customerPaymentPlan = new NewCustomerPaymentPlan<Ach>
-                    {
-                        Customer = new Customer(),
-                        Account = new Ach(),
-                        PaymentPlan = new PaymentPlan()
-                    };
-                    accountService.Setup(m => m.CreateAccountAsync<Ach>(It.IsAny<Ach>())).ReturnsAsync(new Result<Ach>() { Response = new Ach { Id = 1 } });
-                    webServiceRequest.Setup(m => m.PostDeserializedAsync<PaymentPlan, Result<PaymentPlan>>(It.IsAny<Uri>(), It.IsAny<PaymentPlan>())).ReturnsAsync(new Result<PaymentPlan> { Response = new PaymentPlan { Id = 1 } });
+        [Fact]
+        public async Task CreateNewCustomerPaymentPlanAsync_Result_Has_Ids_Populated()
+        {
+            // Arrange
+            var customerPaymentPlan = new NewCustomerPaymentPlan<Ach>
+            {
+                Customer = new Customer(),
+                Account = new Ach(),
+                PaymentPlan = new PaymentPlan()
+            };
+            accountService.Setup(m => m.CreateAccountAsync<Ach>(It.IsAny<Ach>())).ReturnsAsync(new Ach { Id = 1 });
+            webServiceRequest.Setup(m => m.PostDeserializedAsync<PaymentPlan, Result<PaymentPlan>>(It.IsAny<Uri>(), It.IsAny<PaymentPlan>())).ReturnsAsync(new Result<PaymentPlan> { Response = new PaymentPlan { Id = 1 } });
 
-                    // Act
-                    var result = await service.CreateNewCustomerPaymentPlanAsync(customerPaymentPlan);
+            // Act
+            var result = await service.CreateNewCustomerPaymentPlanAsync(customerPaymentPlan);
 
-                    // Assert
-                    Assert.Equal(1, result.Response.Customer.Id);
-                    Assert.Equal(1, result.Response.Account.Id);
-                    Assert.Equal(1, result.Response.PaymentPlan.Id);
-                }
-        */
+            // Assert
+            Assert.Equal(1, result.Customer.Id);
+            Assert.Equal(1, result.Account.Id);
+            Assert.Equal(1, result.PaymentPlan.Id);
+        }
+        
         // *************************************************************************************************  
-
-        /*
+        
         [Fact]
         public async Task CreateNewAccountPaymentPlanAsync_Verify_ServiceFactory_GetAccountService()
         {
@@ -748,7 +747,7 @@ namespace PaySimpleSdkTests.PaymentScheduleTests
                 Account = new Ach(),
                 PaymentPlan = new PaymentPlan()
             };
-            accountService.Setup(m => m.CreateAccountAsync<Ach>(It.IsAny<Ach>())).ReturnsAsync(new Result<Ach>() { Response = new Ach { Id = 1 } });
+            accountService.Setup(m => m.CreateAccountAsync<Ach>(It.IsAny<Ach>())).ReturnsAsync(new Ach { Id = 1 });
             webServiceRequest.Setup(m => m.PostDeserializedAsync<PaymentPlan, Result<PaymentPlan>>(It.IsAny<Uri>(), It.IsAny<PaymentPlan>())).ReturnsAsync(new Result<PaymentPlan> { Response = new PaymentPlan { Id = 1 } });
 
             // Act
@@ -768,7 +767,7 @@ namespace PaySimpleSdkTests.PaymentScheduleTests
                 Account = new Ach(),
                 PaymentPlan = new PaymentPlan()
             };
-            accountService.Setup(m => m.CreateAccountAsync<Ach>(It.IsAny<Ach>())).ReturnsAsync(new Result<Ach>() { Response = new Ach { Id = 1 } });
+            accountService.Setup(m => m.CreateAccountAsync<Ach>(It.IsAny<Ach>())).ReturnsAsync(new Ach { Id = 1 });
             webServiceRequest.Setup(m => m.PostDeserializedAsync<PaymentPlan, Result<PaymentPlan>>(It.IsAny<Uri>(), It.IsAny<PaymentPlan>())).ReturnsAsync(new Result<PaymentPlan> { Response = new PaymentPlan { Id = 1 } });
 
             // Act
@@ -788,7 +787,7 @@ namespace PaySimpleSdkTests.PaymentScheduleTests
                 Account = new Ach(),
                 PaymentPlan = new PaymentPlan()
             };
-            accountService.Setup(m => m.CreateAccountAsync<Ach>(It.IsAny<Ach>())).ReturnsAsync(new Result<Ach>() { Response = new Ach { Id = 1 } });
+            accountService.Setup(m => m.CreateAccountAsync<Ach>(It.IsAny<Ach>())).ReturnsAsync(new Ach { Id = 1 });
             webServiceRequest.Setup(m => m.PostDeserializedAsync<PaymentPlan, Result<PaymentPlan>>(It.IsAny<Uri>(), It.IsAny<PaymentPlan>())).ReturnsAsync(new Result<PaymentPlan> { Response = new PaymentPlan { Id = 1 } });
 
             // Act
@@ -797,129 +796,128 @@ namespace PaySimpleSdkTests.PaymentScheduleTests
             // Assert
             accountService.Verify(m => m.CreateAccountAsync(It.IsAny<Ach>()));
         }
-*/
+
         // *************************************************************************************************  
-        /*
-                [Fact]
-                public async Task CreateNewCustomerRecurringPaymentAsync_Verify_ServiceFactory_GetCustomerService()
-                {
-                    // Arrange
-                    var customerRecurringPayment = new NewCustomerRecurringPayment<Ach>
-                    {
-                        Customer = new Customer(),
-                        Account = new Ach(),
-                        RecurringPayment = new RecurringPayment()
-                    };
-                    accountService.Setup(m => m.CreateAccountAsync<Ach>(It.IsAny<Ach>())).ReturnsAsync(new Result<Ach>() { Response = new Ach { Id = 1 } });
-                    webServiceRequest.Setup(m => m.PostDeserializedAsync<RecurringPayment, Result<RecurringPayment>>(It.IsAny<Uri>(), It.IsAny<RecurringPayment>())).ReturnsAsync(new Result<RecurringPayment> { Response = new RecurringPayment { Id = 1 } });
+        
+        [Fact]
+        public async Task CreateNewCustomerRecurringPaymentAsync_Verify_ServiceFactory_GetCustomerService()
+        {
+            // Arrange
+            var customerRecurringPayment = new NewCustomerRecurringPayment<Ach>
+            {
+                Customer = new Customer(),
+                Account = new Ach(),
+                RecurringPayment = new RecurringPayment()
+            };
+            accountService.Setup(m => m.CreateAccountAsync<Ach>(It.IsAny<Ach>())).ReturnsAsync(new Ach { Id = 1 });
+            webServiceRequest.Setup(m => m.PostDeserializedAsync<RecurringPayment, Result<RecurringPayment>>(It.IsAny<Uri>(), It.IsAny<RecurringPayment>())).ReturnsAsync(new Result<RecurringPayment> { Response = new RecurringPayment { Id = 1 } });
 
-                    // Act
-                    await service.CreateNewCustomerRecurringPaymentAsync(customerRecurringPayment);
+            // Act
+            await service.CreateNewCustomerRecurringPaymentAsync(customerRecurringPayment);
 
-                    // Assert
-                    serviceFactory.Verify(m => m.GetCustomerService());
-                }
+            // Assert
+            serviceFactory.Verify(m => m.GetCustomerService());
+        }
 
-                [Fact]
-                public async Task CreateNewCustomerRecurringPaymentAsync_Verify_CustomerService_CreateCustomerAsync()
-                {
-                    // Arrange
-                    var customerRecurringPayment = new NewCustomerRecurringPayment<Ach>
-                    {
-                        Customer = new Customer(),
-                        Account = new Ach(),
-                        RecurringPayment = new RecurringPayment()
-                    };
-                    accountService.Setup(m => m.CreateAccountAsync<Ach>(It.IsAny<Ach>())).ReturnsAsync(new Result<Ach>() { Response = new Ach { Id = 1 } });
-                    webServiceRequest.Setup(m => m.PostDeserializedAsync<RecurringPayment, Result<RecurringPayment>>(It.IsAny<Uri>(), It.IsAny<RecurringPayment>())).ReturnsAsync(new Result<RecurringPayment> { Response = new RecurringPayment { Id = 1 } });
+        [Fact]
+        public async Task CreateNewCustomerRecurringPaymentAsync_Verify_CustomerService_CreateCustomerAsync()
+        {
+            // Arrange
+            var customerRecurringPayment = new NewCustomerRecurringPayment<Ach>
+            {
+                Customer = new Customer(),
+                Account = new Ach(),
+                RecurringPayment = new RecurringPayment()
+            };
+            accountService.Setup(m => m.CreateAccountAsync<Ach>(It.IsAny<Ach>())).ReturnsAsync(new Ach { Id = 1 });
+            webServiceRequest.Setup(m => m.PostDeserializedAsync<RecurringPayment, Result<RecurringPayment>>(It.IsAny<Uri>(), It.IsAny<RecurringPayment>())).ReturnsAsync(new Result<RecurringPayment> { Response = new RecurringPayment { Id = 1 } });
 
-                    // Act
-                    await service.CreateNewCustomerRecurringPaymentAsync(customerRecurringPayment);
+            // Act
+            await service.CreateNewCustomerRecurringPaymentAsync(customerRecurringPayment);
 
-                    // Assert
-                    customerService.Verify(m => m.CreateCustomerAsync(It.IsAny<Customer>()));
-                }
+            // Assert
+            customerService.Verify(m => m.CreateCustomerAsync(It.IsAny<Customer>()));
+        }
 
-                [Fact]
-                public async Task CreateNewCustomerRecurringPaymentAsync_Result_Has_Ids_Populated()
-                {
-                    // Arrange
-                    var customerRecurringPayment = new NewCustomerRecurringPayment<Ach>
-                    {
-                        Customer = new Customer(),
-                        Account = new Ach(),
-                        RecurringPayment = new RecurringPayment()
-                    };
-                    accountService.Setup(m => m.CreateAccountAsync<Ach>(It.IsAny<Ach>())).ReturnsAsync(new Result<Ach>() { Response = new Ach { Id = 1 } });
-                    webServiceRequest.Setup(m => m.PostDeserializedAsync<RecurringPayment, Result<RecurringPayment>>(It.IsAny<Uri>(), It.IsAny<RecurringPayment>())).ReturnsAsync(new Result<RecurringPayment> { Response = new RecurringPayment { Id = 1 } });
+        [Fact]
+        public async Task CreateNewCustomerRecurringPaymentAsync_Result_Has_Ids_Populated()
+        {
+            // Arrange
+            var customerRecurringPayment = new NewCustomerRecurringPayment<Ach>
+            {
+                Customer = new Customer(),
+                Account = new Ach(),
+                RecurringPayment = new RecurringPayment()
+            };
+            accountService.Setup(m => m.CreateAccountAsync<Ach>(It.IsAny<Ach>())).ReturnsAsync(new Ach { Id = 1 });
+            webServiceRequest.Setup(m => m.PostDeserializedAsync<RecurringPayment, Result<RecurringPayment>>(It.IsAny<Uri>(), It.IsAny<RecurringPayment>())).ReturnsAsync(new Result<RecurringPayment> { Response = new RecurringPayment { Id = 1 } });
 
-                    // Act
-                    var result = await service.CreateNewCustomerRecurringPaymentAsync(customerRecurringPayment);
+            // Act
+            var result = await service.CreateNewCustomerRecurringPaymentAsync(customerRecurringPayment);
 
-                    // Assert
-                    Assert.Equal(1, result.Response.Customer.Id);
-                    Assert.Equal(1, result.Response.Account.Id);
-                    Assert.Equal(1, result.Response.RecurringPayment.Id);
-                }
+            // Assert
+            Assert.Equal(1, result.Customer.Id);
+            Assert.Equal(1, result.Account.Id);
+            Assert.Equal(1, result.RecurringPayment.Id);
+        }
 
-                // *************************************************************************************************  
+        // *************************************************************************************************  
 
-                [Fact]
-                public async Task CreateNewAccountRecurringPaymentAsync_Verify_ServiceFactory_GetAccountService()
-                {
-                    // Arrange
-                    var accountRecurringPayment = new NewAccountRecurringPayment<Ach>
-                    {
-                        Account = new Ach() { CustomerId = 1 },
-                        RecurringPayment = new RecurringPayment()
-                    };
-                    accountService.Setup(m => m.CreateAccountAsync<Ach>(It.IsAny<Ach>())).ReturnsAsync(new Result<Ach>() { Response = new Ach { Id = 1 } });
-                    webServiceRequest.Setup(m => m.PostDeserializedAsync<RecurringPayment, Result<RecurringPayment>>(It.IsAny<Uri>(), It.IsAny<RecurringPayment>())).ReturnsAsync(new Result<RecurringPayment> { Response = new RecurringPayment { Id = 1 } });
+        [Fact]
+        public async Task CreateNewAccountRecurringPaymentAsync_Verify_ServiceFactory_GetAccountService()
+        {
+            // Arrange
+            var accountRecurringPayment = new NewAccountRecurringPayment<Ach>
+            {
+                Account = new Ach() { CustomerId = 1 },
+                RecurringPayment = new RecurringPayment()
+            };
+            accountService.Setup(m => m.CreateAccountAsync<Ach>(It.IsAny<Ach>())).ReturnsAsync(new Ach { Id = 1 });
+            webServiceRequest.Setup(m => m.PostDeserializedAsync<RecurringPayment, Result<RecurringPayment>>(It.IsAny<Uri>(), It.IsAny<RecurringPayment>())).ReturnsAsync(new Result<RecurringPayment> { Response = new RecurringPayment { Id = 1 } });
 
-                    // Act
-                    await service.CreateNewAccountRecurringPaymentAsync(accountRecurringPayment);
+            // Act
+            await service.CreateNewAccountRecurringPaymentAsync(accountRecurringPayment);
 
-                    // Assert
-                    serviceFactory.Verify(m => m.GetAccountService());
-                }
+            // Assert
+            serviceFactory.Verify(m => m.GetAccountService());
+        }
 
-                [Fact]
-                public async Task CreateNewAccountRecurringPaymentAsync_Account_Is_Ach_Verify_AccountService_CreateAccountAsync()
-                {
-                    // Arrange
-                    var accountRecurringPayment = new NewAccountRecurringPayment<Ach>
-                    {
-                        Account = new Ach() { CustomerId = 1 },
-                        RecurringPayment = new RecurringPayment()
-                    };
-                    accountService.Setup(m => m.CreateAccountAsync<Ach>(It.IsAny<Ach>())).ReturnsAsync(new Result<Ach>() { Response = new Ach { Id = 1 } });
-                    webServiceRequest.Setup(m => m.PostDeserializedAsync<RecurringPayment, Result<RecurringPayment>>(It.IsAny<Uri>(), It.IsAny<RecurringPayment>())).ReturnsAsync(new Result<RecurringPayment> { Response = new RecurringPayment { Id = 1 } });
+        [Fact]
+        public async Task CreateNewAccountRecurringPaymentAsync_Account_Is_Ach_Verify_AccountService_CreateAccountAsync()
+        {
+            // Arrange
+            var accountRecurringPayment = new NewAccountRecurringPayment<Ach>
+            {
+                Account = new Ach() { CustomerId = 1 },
+                RecurringPayment = new RecurringPayment()
+            };
+            accountService.Setup(m => m.CreateAccountAsync<Ach>(It.IsAny<Ach>())).ReturnsAsync(new Ach { Id = 1 });
+            webServiceRequest.Setup(m => m.PostDeserializedAsync<RecurringPayment, Result<RecurringPayment>>(It.IsAny<Uri>(), It.IsAny<RecurringPayment>())).ReturnsAsync(new Result<RecurringPayment> { Response = new RecurringPayment { Id = 1 } });
 
-                    // Act
-                    await service.CreateNewAccountRecurringPaymentAsync(accountRecurringPayment);
+            // Act
+            await service.CreateNewAccountRecurringPaymentAsync(accountRecurringPayment);
 
-                    // Assert
-                    accountService.Verify(m => m.CreateAccountAsync(It.IsAny<Ach>()));
-                }
+            // Assert
+            accountService.Verify(m => m.CreateAccountAsync(It.IsAny<Ach>()));
+        }
 
-                [Fact]
-                public async Task CreateNewAccountRecurringPaymentAsync_Account_Is_CreditCard_Verify_AccountService_CreateAccountAsync()
-                {
-                    // Arrange
-                    var accountRecurringPayment = new NewAccountRecurringPayment<CreditCard>
-                    {
-                        Account = new CreditCard() { CustomerId = 1 },
-                        RecurringPayment = new RecurringPayment()
-                    };
-                    accountService.Setup(m => m.CreateAccountAsync<CreditCard>(It.IsAny<CreditCard>())).ReturnsAsync(new Result<CreditCard>() { Response = new CreditCard { Id = 1 } });
-                    webServiceRequest.Setup(m => m.PostDeserializedAsync<RecurringPayment, Result<RecurringPayment>>(It.IsAny<Uri>(), It.IsAny<RecurringPayment>())).ReturnsAsync(new Result<RecurringPayment> { Response = new RecurringPayment { Id = 1 } });
+        [Fact]
+        public async Task CreateNewAccountRecurringPaymentAsync_Account_Is_CreditCard_Verify_AccountService_CreateAccountAsync()
+        {
+            // Arrange
+            var accountRecurringPayment = new NewAccountRecurringPayment<CreditCard>
+            {
+                Account = new CreditCard() { CustomerId = 1 },
+                RecurringPayment = new RecurringPayment()
+            };
+            accountService.Setup(m => m.CreateAccountAsync<CreditCard>(It.IsAny<CreditCard>())).ReturnsAsync(new CreditCard { Id = 1 });
+            webServiceRequest.Setup(m => m.PostDeserializedAsync<RecurringPayment, Result<RecurringPayment>>(It.IsAny<Uri>(), It.IsAny<RecurringPayment>())).ReturnsAsync(new Result<RecurringPayment> { Response = new RecurringPayment { Id = 1 } });
 
-                    // Act
-                    await service.CreateNewAccountRecurringPaymentAsync(accountRecurringPayment);
+            // Act
+            await service.CreateNewAccountRecurringPaymentAsync(accountRecurringPayment);
 
-                    // Assert
-                    accountService.Verify(m => m.CreateAccountAsync(It.IsAny<CreditCard>()));
-                }
-         */
+            // Assert
+            accountService.Verify(m => m.CreateAccountAsync(It.IsAny<CreditCard>()));
+        }       
     }
 }

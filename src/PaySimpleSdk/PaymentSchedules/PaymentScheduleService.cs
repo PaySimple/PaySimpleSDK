@@ -24,6 +24,7 @@
 // The most recent version of this license can be found at: http://opensource.org/licenses/MIT
 #endregion
 
+using PaySimpleSdk.Accounts;
 using PaySimpleSdk.Helpers;
 using PaySimpleSdk.Models;
 using PaySimpleSdk.Payments;
@@ -43,8 +44,8 @@ namespace PaySimpleSdk.PaymentSchedules
         internal PaymentScheduleService(IPaySimpleSettings settings, IValidationService validationService, IWebServiceRequest webServiceRequest, IServiceFactory serviceFactory)
             : base(settings, validationService, webServiceRequest, serviceFactory)
         { }
-        /*
-        public async Task<Result<NewAccountPaymentPlan<T>>> CreateNewAccountPaymentPlanAsync<T>(NewAccountPaymentPlan<T> accountPaymentPlan)
+        
+        public async Task<NewAccountPaymentPlan<T>> CreateNewAccountPaymentPlanAsync<T>(NewAccountPaymentPlan<T> accountPaymentPlan)
             where T : Account, new()
         {
             // Validate objects
@@ -54,24 +55,16 @@ namespace PaySimpleSdk.PaymentSchedules
 
             // Create the account
             var accountService = serviceFactory.GetAccountService();
-            var newAccountResult = await accountService.CreateAccountAsync<T>(accountPaymentPlan.Account);
-            newAccountPaymentPlan.Account = newAccountResult.Response;
+            newAccountPaymentPlan.Account = await accountService.CreateAccountAsync<T>(accountPaymentPlan.Account);             
 
             // Make the Payment            
             accountPaymentPlan.PaymentPlan.AccountId = newAccountPaymentPlan.Account.Id;
-            var newPayment = await CreatePaymentPlanAsync(accountPaymentPlan.PaymentPlan);
-            newAccountPaymentPlan.PaymentPlan = newPayment.Response;
+            newAccountPaymentPlan.PaymentPlan = await CreatePaymentPlanAsync(accountPaymentPlan.PaymentPlan);
 
-            var result = new Result<NewAccountPaymentPlan<T>>()
-            {
-                ResultData = newPayment.ResultData,
-                Response = newAccountPaymentPlan
-            };
-
-            return result;
+            return newAccountPaymentPlan;
         }
 
-        public async Task<Result<NewCustomerPaymentPlan<T>>> CreateNewCustomerPaymentPlanAsync<T>(NewCustomerPaymentPlan<T> customerPaymentPlan)
+        public async Task<NewCustomerPaymentPlan<T>> CreateNewCustomerPaymentPlanAsync<T>(NewCustomerPaymentPlan<T> customerPaymentPlan)
             where T : Account, new()
         {
             // Validate objects
@@ -81,25 +74,18 @@ namespace PaySimpleSdk.PaymentSchedules
 
             // Create the new Customer
             var customerService = serviceFactory.GetCustomerService();
-            var createdCustomer = await customerService.CreateCustomerAsync(customerPaymentPlan.Customer);
-            newCustomerPaymentPlan.Customer = createdCustomer.Response;
+            newCustomerPaymentPlan.Customer = await customerService.CreateCustomerAsync(customerPaymentPlan.Customer);            
 
             // Create the new Account, and make the payment
-            customerPaymentPlan.Account.CustomerId = createdCustomer.Response.Id;
+            customerPaymentPlan.Account.CustomerId = newCustomerPaymentPlan.Customer.Id;
             var paymentResult = await CreateNewAccountPaymentPlanAsync<T>(customerPaymentPlan);
 
-            newCustomerPaymentPlan.Account = paymentResult.Response.Account;
-            newCustomerPaymentPlan.PaymentPlan = paymentResult.Response.PaymentPlan;
+            newCustomerPaymentPlan.Account = paymentResult.Account;
+            newCustomerPaymentPlan.PaymentPlan = paymentResult.PaymentPlan;
 
-            var result = new Result<NewCustomerPaymentPlan<T>>()
-            {
-                ResultData = paymentResult.ResultData,
-                Response = newCustomerPaymentPlan
-            };
-
-            return result;
+            return newCustomerPaymentPlan;
         }
-        */
+        
         public async Task<PaymentPlan> CreatePaymentPlanAsync(PaymentPlan paymentPlan)
         {
             validationService.Validate(paymentPlan);
@@ -107,8 +93,8 @@ namespace PaySimpleSdk.PaymentSchedules
             var result = await webServiceRequest.PostDeserializedAsync<PaymentPlan, Result<PaymentPlan>>(new Uri(endpoint), paymentPlan);
             return result.Response;
         }
-        /*
-        public async Task<Result<NewAccountRecurringPayment<T>>> CreateNewAccountRecurringPaymentAsync<T>(NewAccountRecurringPayment<T> accountRecurringPayment)
+        
+        public async Task<NewAccountRecurringPayment<T>> CreateNewAccountRecurringPaymentAsync<T>(NewAccountRecurringPayment<T> accountRecurringPayment)
             where T : Account, new()
         {
             // Validate objects
@@ -118,24 +104,16 @@ namespace PaySimpleSdk.PaymentSchedules
 
             // Create the account
             var accountService = serviceFactory.GetAccountService();
-            var newAccountResult = await accountService.CreateAccountAsync<T>(accountRecurringPayment.Account);
-            newAccountRecurringPayment.Account = newAccountResult.Response;
+            newAccountRecurringPayment.Account = await accountService.CreateAccountAsync<T>(accountRecurringPayment.Account);             
 
             // Make the Payment            
             accountRecurringPayment.RecurringPayment.AccountId = newAccountRecurringPayment.Account.Id;
-            var newPayment = await CreateRecurringPaymentAsync(accountRecurringPayment.RecurringPayment);
-            newAccountRecurringPayment.RecurringPayment = newPayment.Response;
-
-            var result = new Result<NewAccountRecurringPayment<T>>()
-            {
-                ResultData = newPayment.ResultData,
-                Response = newAccountRecurringPayment
-            };
-
-            return result;
+            newAccountRecurringPayment.RecurringPayment = await CreateRecurringPaymentAsync(accountRecurringPayment.RecurringPayment);
+            
+            return newAccountRecurringPayment;
         }
 
-        public async Task<Result<NewCustomerRecurringPayment<T>>> CreateNewCustomerRecurringPaymentAsync<T>(NewCustomerRecurringPayment<T> customerRecurringPayment)
+        public async Task<NewCustomerRecurringPayment<T>> CreateNewCustomerRecurringPaymentAsync<T>(NewCustomerRecurringPayment<T> customerRecurringPayment)
             where T : Account, new()
         {
             // Validate objects
@@ -145,25 +123,18 @@ namespace PaySimpleSdk.PaymentSchedules
 
             // Create the new Customer
             var customerService = serviceFactory.GetCustomerService();
-            var createdCustomer = await customerService.CreateCustomerAsync(customerRecurringPayment.Customer);
-            newCustomerRecurringPayment.Customer = createdCustomer.Response;
+            newCustomerRecurringPayment.Customer  = await customerService.CreateCustomerAsync(customerRecurringPayment.Customer);
 
             // Create the new Account, and make the payment
-            customerRecurringPayment.Account.CustomerId = createdCustomer.Response.Id;
+            customerRecurringPayment.Account.CustomerId = newCustomerRecurringPayment.Customer.Id;
             var paymentResult = await CreateNewAccountRecurringPaymentAsync<T>(customerRecurringPayment);
 
-            newCustomerRecurringPayment.Account = paymentResult.Response.Account;
-            newCustomerRecurringPayment.RecurringPayment = paymentResult.Response.RecurringPayment;
-
-            var result = new Result<NewCustomerRecurringPayment<T>>()
-            {
-                ResultData = paymentResult.ResultData,
-                Response = newCustomerRecurringPayment
-            };
-
-            return result;
+            newCustomerRecurringPayment.Account = paymentResult.Account;
+            newCustomerRecurringPayment.RecurringPayment = paymentResult.RecurringPayment;
+            
+            return newCustomerRecurringPayment;
         }
-        */
+        
         public async Task<RecurringPayment> CreateRecurringPaymentAsync(RecurringPayment recurringPayment)
         {
             validationService.Validate(recurringPayment);
