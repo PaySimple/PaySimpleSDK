@@ -143,7 +143,7 @@ namespace PaySimpleSdkTests.PaymentScheduleTests.ValidationTests
         {
             // Arrange
             var validator = new RecurringPaymentValidator<RecurringPayment>();
-            var recurringPayment = new RecurringPayment { StartDate = DateTime.Now };
+            var recurringPayment = new RecurringPayment { StartDate = DateTime.Now.AddSeconds(1) };
 
             // Act
             var result = validator.Validate(recurringPayment);
@@ -273,20 +273,6 @@ namespace PaySimpleSdkTests.PaymentScheduleTests.ValidationTests
         // *************************************************************************************************
 
         [Fact]
-        public void FirstPaymentAmount_Is_Zero_Generates_Error()
-        {
-            // Arrange
-            var validator = new RecurringPaymentValidator<RecurringPayment>();
-            var recurringPayment = new RecurringPayment { FirstPaymentAmount = 0.00M };
-
-            // Act
-            var result = validator.Validate(recurringPayment);
-
-            // Assert
-            Assert.True(result.Errors.Any(e => e.ErrorMessage == "FirstPaymentAmount must be greater than 0"));
-        }
-
-        [Fact]
         public void FirstPaymentAmount_Is_Null_Is_Valid()
         {
             // Arrange
@@ -335,7 +321,7 @@ namespace PaySimpleSdkTests.PaymentScheduleTests.ValidationTests
         {
             // Arrange
             var validator = new RecurringPaymentValidator<RecurringPayment>();
-            var recurringPayment = new RecurringPayment { FirstPaymentDate = DateTime.Now.AddDays(2), StartDate = DateTime.Now.AddDays(2) };
+            var recurringPayment = new RecurringPayment { FirstPaymentDate = DateTime.Now.AddDays(3), StartDate = DateTime.Now.AddDays(2) };
 
             // Act
             var result = validator.Validate(recurringPayment);

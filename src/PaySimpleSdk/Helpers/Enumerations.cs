@@ -100,7 +100,6 @@ namespace PaySimpleSdk.Helpers
 
     public enum PaymentSubType
     {
-        None,
         Ccd,
         Moto,
         Ppd,
@@ -129,7 +128,6 @@ namespace PaySimpleSdk.Helpers
 
     public enum ScheduleStatus : int
     {
-        None = 0,
         Active = 1,
         Expired = 3,
         PauseUntil = 2,
@@ -239,6 +237,7 @@ namespace PaySimpleSdk.Helpers
                 case "PaymentSort": return PaymentSortStrings;
                 case "PaymentStatus": return PaymentStatusStrings;
                 case "PaymentSubType": return PaymentSubTypeStrings;
+                case "PaymentType": return PaymentTypeStrings;
                 case "ScheduleSort": return ScheduleSortStrings;
                 case "SortDirection": return SortDirectionStrings;
                 case "StateCode": return StateCodeStrings;
@@ -297,9 +296,14 @@ namespace PaySimpleSdk.Helpers
             { PaymentStatus.Voided, "voided" }
         };
 
+        public static BiLookup<PaymentType, string> PaymentTypeStrings = new BiLookup<PaymentType, string>
+        {            
+            { PaymentType.ACH, "ACH" },
+            { PaymentType.CC, "CC" }
+        };
+
         public static BiLookup<PaymentSubType, string> PaymentSubTypeStrings = new BiLookup<PaymentSubType, string>
-        {
-            { PaymentSubType.None, "" },
+        {            
             { PaymentSubType.Ccd, "Ccd" },
             { PaymentSubType.Moto, "Moto" },
             { PaymentSubType.Ppd, "Ppd" },

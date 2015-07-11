@@ -34,6 +34,7 @@ using PaySimpleSdk.PaymentSchedules;
 using ServiceStack.Text;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -49,8 +50,8 @@ namespace TestHarness
 
         public Harness()
         {
-            var apiKey = "";
-            var username = "";
+            var apiKey = ConfigurationManager.AppSettings["apiKey"];
+            var username = ConfigurationManager.AppSettings["username"];
             settings = new PaySimpleSettings(apiKey, username, "https://sandbox-api.paysimple.com");
             accountService = new AccountService(settings);
             customerService = new CustomerService(settings);
@@ -62,8 +63,11 @@ namespace TestHarness
         {
             try
             {
+                // Run this to run everything
+                await RunTheGauntlet();
+
                 // Run this for PaySimple Certification
-                await Certification();
+                //await Certification();
             }
             catch (PaySimpleException ex)
             {
@@ -82,6 +86,443 @@ namespace TestHarness
             var customerId = await CustomerCertification();
             var accounts = await AccountCertification(customerId);
             await PaymentCertification(accounts.AchAccounts.First().Id, accounts.CreditCardAccounts.First().Id);
+        }
+
+        #endregion
+
+        #region Gauntlet
+
+        // This method is intended to run all immediately available operations
+        // (e.g. operations that can run without waiting for long running system
+        // actions like the ability to Refund a Settled payment).
+        // WILL YOUR PAYMENT SURVIVE?
+        public async Task RunTheGauntlet()
+        {
+            var warrior = new Customer
+            {
+                FirstName = "Red",
+                LastName = "Warrior",
+                Email = "rwarrior@gauntlet.com"
+            };
+
+            var valkyrie = new Customer
+            {
+                FirstName = "Blue",
+                LastName = "Valkyrie",
+                Email = "bvalkyrie@gauntlet.com"
+            };
+
+            var wizard = new Customer
+            {
+                FirstName = "Yellow",
+                LastName = "Wizard",
+                Email = "ywizard@gauntlet.com"
+            };
+
+            var elf = new Customer
+            {
+                FirstName = "Green",
+                LastName = "Elf",
+                Email = "gelf@gauntlet.com"
+            };
+
+            // Create Customer
+            warrior = await CreateCustomerAsync(warrior);
+            valkyrie = await CreateCustomerAsync(valkyrie);
+            wizard = await CreateCustomerAsync(wizard);
+            elf = await CreateCustomerAsync(elf);
+
+            if (warrior == null || valkyrie == null || wizard == null || elf == null)
+            {
+                Console.WriteLine("Failed to create customer");
+                return;
+            }
+
+            // Update Customer
+            warrior.Website = "http://www.gauntlet.com";
+            warrior.ShippingSameAsBilling = true;
+            warrior = await UpdateCustomerAsync(warrior);
+
+            if (warrior.Website != "http://www.gauntlet.com")
+            {
+                Console.WriteLine("Failed to update customer");
+                return;
+            }
+
+            // Get Customer 
+            var getCustomer = await GetCustomerAsync(warrior.Id);
+
+            if (getCustomer == null)
+            {
+                Console.WriteLine("Failed to get customer");
+                return;
+            }
+
+            // Get Customers
+            var customers = await GetCustomersAsync();
+
+            if (customers == null || customers.Items == null)
+            {
+                Console.WriteLine("Failed to get customers");
+                return;
+            }
+
+            // Create ACH Account
+            var ach = new Ach
+            {
+                CustomerId = warrior.Id,
+                RoutingNumber = "131111114",
+                AccountNumber = "751111111",
+                BankName = "PaySimple Bank"
+            };
+
+            ach = await CreateAchAccountAsync(ach);
+
+            if (ach == null)
+            {
+                Console.WriteLine("Failed to create ACH account");
+                return;
+            }
+
+            // Create Credit Card Account
+            var visa = new CreditCard
+            {
+                CustomerId = warrior.Id,
+                CreditCardNumber = "4111111111111111",
+                ExpirationDate = "12/2021",
+                Issuer = Issuer.Visa,
+                BillingZipCode = "11111"
+            };
+
+            visa = await CreateCreditCardAccountAsync(visa);
+
+            if (visa == null)
+            {
+                Console.WriteLine("Failed to create Credit Card account");
+                return;
+            }
+
+            // Update Ach Account
+            ach.AccountNumber = "751111111";
+            ach.IsCheckingAccount = true;
+            ach = await UpdateAchAccountAsync(ach);
+
+            if (ach == null)
+            {
+                Console.WriteLine("Failed to update ACH account");
+                return;
+            }
+
+            // Update Credit Card Account
+            visa.CreditCardNumber = "4111111111111111";
+            visa.ExpirationDate = "12/2022";
+            visa = await UpdateCreditCardAccountAsync(visa);
+
+            if (visa == null)
+            {
+                Console.WriteLine("Failed to update Credit Card account");
+                return;
+            }
+
+            // Get Ach Account
+            ach = await GetAchAccountAsync(ach.Id);
+
+            if (ach == null)
+            {
+                Console.WriteLine("Failed to get ACH account");
+                return;
+            }
+
+            // Get Credit Card Account
+            visa = await GetCreditCardAccountAsync(visa.Id);
+
+            if (visa == null)
+            {
+                Console.WriteLine("Failed to get Credit Card account");
+                return;
+            }
+
+            // Get All Customer Accounts
+            var customerAccounts = await GetAllAccountsAsync(warrior.Id);
+
+            if (customerAccounts == null)
+            {
+                Console.WriteLine("Failed to get customer accounts");
+                return;
+            }
+
+            // Get Customer Ach Accounts
+            var achAccounts = await GetAchAccountsAsync(warrior.Id);
+
+            if (achAccounts == null)
+            {
+                Console.WriteLine("Failed to get customer ACH accounts");
+                return;
+            }
+
+            // Get Customer Credit Card Accounts
+            var creditCardAccounts = await GetAchAccountsAsync(warrior.Id);
+
+            if (creditCardAccounts == null)
+            {
+                Console.WriteLine("Failed to get customer Credit Card accounts");
+                return;
+            }
+
+            // Get Customer Default Ach Account
+            var defaultAchAccount = await GetDefaultAchAccountAsync(warrior.Id);
+
+            if (defaultAchAccount == null)
+            {
+                Console.WriteLine("Failed to get customer default ACH account");
+                return;
+            }
+
+            // Get Customer Default Credit Card Account
+            var defaultCreditCardAccount = await GetDefaultCreditCardAccountAsync(warrior.Id);
+
+            if (defaultCreditCardAccount == null)
+            {
+                Console.WriteLine("Failed to get customer default Credit Card account");
+                return;
+            }
+
+            // Set Customer Default Account
+            await SetDefaultAccountAsync(warrior.Id, visa.Id);
+
+            // Create Payments
+            var achPayment = new Payment
+            {
+                AccountId = ach.Id,
+                Amount = 5.00M
+            };
+
+            achPayment = await CreatePaymentAsync(achPayment);
+
+            if (achPayment == null)
+            {
+                Console.WriteLine("Failed to create ACH payment");
+                return;
+            }
+
+            var creditCardPayment = new Payment
+            {
+                AccountId = visa.Id,
+                Amount = 5.00M,
+                Cvv = "995",
+
+            };
+
+            creditCardPayment = await CreatePaymentAsync(creditCardPayment);
+
+            if (creditCardPayment == null)
+            {
+                Console.WriteLine("Failed to create Credit Card payment");
+                return;
+            }
+
+            // Get Payment
+            creditCardPayment = await GetPaymentAsync(creditCardPayment.Id.Value);
+
+            if (creditCardPayment == null)
+            {
+                Console.WriteLine("Failed to get Credit Card payment");
+                return;
+            }
+
+            // Get Payments
+            var allPayments = await GetPaymentsAsync();
+
+            if (allPayments == null)
+            {
+                Console.WriteLine("Failed to get all payments");
+                return;
+            }
+
+            // Get Customer Payments
+            var payments = await GetPaymentsAsync(warrior.Id);
+
+            if (payments == null)
+            {
+                Console.WriteLine("Failed to get customer payments");
+                return;
+            }
+
+            // Create Payment Plan
+            var paymentPlan = new PaymentPlan
+            {
+                AccountId = visa.Id,
+                TotalDueAmount = 100.00M,
+                TotalNumberOfPayments = 5,
+                StartDate = DateTime.Now.AddDays(1),
+                ExecutionFrequencyType = ExecutionFrequencyType.FirstOfMonth
+            };
+
+            paymentPlan = await CreatePaymentPlanAsync(paymentPlan);
+
+            if (paymentPlan == null)
+            {
+                Console.WriteLine("Failed to create payment plan");
+                return;
+            }
+
+            // Create Recurring Payment
+            var recurringPayment = new RecurringPayment
+            {
+                AccountId = visa.Id,
+                PaymentAmount = 10.00M,
+                StartDate = DateTime.Now.AddDays(1),
+                ExecutionFrequencyType = ExecutionFrequencyType.FirstOfMonth,
+            };
+
+            recurringPayment = await CreateRecurringPaymentAsync(recurringPayment);
+
+            if (recurringPayment == null)
+            {
+                Console.WriteLine("Failed to create recurring payment");
+                return;
+            }
+
+            // Update Recurring Payment
+            var updateRecurringPayment = new RecurringPayment
+            {
+                Id = recurringPayment.Id,
+                AccountId = visa.Id,
+                PaymentAmount = 100.00M,
+                StartDate = DateTime.Now.AddDays(1),
+                ExecutionFrequencyType = ExecutionFrequencyType.FirstOfMonth
+            };
+
+            updateRecurringPayment = await UpdateRecurringPaymentAsync(updateRecurringPayment);
+
+            if (updateRecurringPayment == null)
+            {
+                Console.WriteLine("Failed to update recurring payment");
+                return;
+            }
+
+            // Get Recurring Schedule
+            recurringPayment = await GetRecurringScheduleAsync(recurringPayment.Id);
+
+            if (recurringPayment == null)
+            {
+                Console.WriteLine("Failed to get recurring schedule");
+                return;
+            }
+
+            // Get Customer Payment Plans
+            var paymentPlans = await GetPaymentPlansAsync(warrior.Id);
+
+            if (paymentPlans == null)
+            {
+                Console.WriteLine("Failed to get customer payment plans");
+                return;
+            }
+
+            // Get Customer Payment Schedules
+            var paymentSchedules = await GetPaymentSchedulesAsync(warrior.Id);
+
+            if (paymentSchedules == null)
+            {
+                Console.WriteLine("Failed to get customer payment schedules");
+                return;
+            }
+
+            // Get Customer Recurring Payment Schedules
+            var recurringPaymentSchedules = await GetRecurringPaymentSchedulesAsync(warrior.Id);
+
+            if (recurringPaymentSchedules == null)
+            {
+                Console.WriteLine("Failed to get customer recurring payment schedules");
+                return;
+            }
+
+            // Get All Payment Plan Schedules
+            var allPaymentSchedules = await GetAllPaymentSchedulesAsync();
+
+            if (allPaymentSchedules == null)
+            {
+                Console.WriteLine("Failed to get all payment schedules");
+                return;
+            }
+
+            // Get Payment Plan Payments
+            var paymentPlanPayments = await GetPaymentPlanPaymentsAsync(paymentPlan.Id);
+
+            if (paymentPlanPayments == null)
+            {
+                Console.WriteLine("Failed to get payment plan payments");
+                return;
+            }
+
+            // Get Payment Plan Schedule
+            paymentPlan = await GetPaymentPlanScheduleAsync(paymentPlan.Id);
+
+            if (paymentPlan == null)
+            {
+                Console.WriteLine("Failed to get payment plan schedule");
+                return;
+            }
+
+            // Get Recurring Payments
+            var recurringPayments = await GetRecurringPaymentsAsync(recurringPayment.Id);
+
+            if (recurringPayments == null)
+            {
+                Console.WriteLine("Failed to get recurring payments");
+                return;
+            }
+
+            // Pause Payment Plan
+            await PausePaymentPlanAsync(paymentPlan.Id, DateTime.Now.AddDays(1));
+
+            // Pause Recurring Payment
+            await PauseRecurringPaymentAsync(recurringPayment.Id, DateTime.Now.AddDays(1));
+
+            // Resume Payment Plan
+            await ResumePaymentPlanAsync(paymentPlan.Id);
+
+            // Resume Recurring Payment
+            await ResumeRecurringPaymentAsync(recurringPayment.Id);
+
+            // Suspend Payment Plan
+            await SuspendPaymentPlanAsync(paymentPlan.Id);
+
+            // Suspend Recurring Payment
+            await SuspendRecurringPaymentAsync(recurringPayment.Id);
+
+            // Void Payments
+            var voidAchPayment = await VoidPaymentAsync(achPayment.Id.Value);
+
+            if (voidAchPayment == null)
+            {
+                Console.WriteLine("Failed to void ACH payment");
+                return;
+            }
+
+            var voidCreditCardPayment = await VoidPaymentAsync(creditCardPayment.Id.Value);
+
+            if (voidCreditCardPayment == null)
+            {
+                Console.WriteLine("Failed to void Credit Card payment");
+                return;
+            }
+
+            // Delete Payment Plans
+            await DeletePaymentPlanAsync(paymentPlan.Id);
+
+            // Delete Recurring Payments
+            await DeleteRecurringPaymentAsync(recurringPayment.Id);
+
+            // Delete Accounts
+            await DeleteAchAccountAsync(ach.Id);
+            await DeleteCreditCardAccountAsync(visa.Id);
+
+            // Delete Customers
+            await DeleteCustomerAsync(warrior.Id);
+            await DeleteCustomerAsync(valkyrie.Id);
+            await DeleteCustomerAsync(wizard.Id);
+            await DeleteCustomerAsync(elf.Id);
         }
 
         #endregion
@@ -106,7 +547,7 @@ namespace TestHarness
                 var createAchResult = await CreateAchAccountAsync(ach);
 
                 // Add for payments certification
-                accounts.AchAccounts = new List<Ach> { createAchResult.Response };
+                accounts.AchAccounts = new List<Ach> { createAchResult };
 
                 // Sample Error: Attempt to create the same ACH account
                 var recreateAchResult = await CreateAchAccountAsync(ach);
@@ -135,7 +576,7 @@ namespace TestHarness
                 var createCCResult = await CreateCreditCardAccountAsync(creditCard);
 
                 // Add for payments certification
-                accounts.CreditCardAccounts = new List<CreditCard> { createCCResult.Response };
+                accounts.CreditCardAccounts = new List<CreditCard> { createCCResult };
 
                 var invalidCreditCard = new CreditCard
                 {
@@ -161,7 +602,7 @@ namespace TestHarness
             return accounts;
         }
 
-        public async Task<Result<Ach>> CreateAchAccountAsync(Ach account)
+        public async Task<Ach> CreateAchAccountAsync(Ach account)
         {
             var result = await accountService.CreateAchAccountAsync(account);
 
@@ -171,7 +612,7 @@ namespace TestHarness
             return result;
         }
 
-        public async Task<Result<CreditCard>> CreateCreditCardAccountAsync(CreditCard account)
+        public async Task<CreditCard> CreateCreditCardAccountAsync(CreditCard account)
         {
             var result = await accountService.CreateCreditCardAccountAsync(account);
 
@@ -191,7 +632,7 @@ namespace TestHarness
             await accountService.DeleteCreditCardAccountAsync(accountId);
         }
 
-        public async Task<Result<Ach>> GetAchAccountAsync(int accountId)
+        public async Task<Ach> GetAchAccountAsync(int accountId)
         {
             var result = await accountService.GetAchAccountAsync(accountId);
 
@@ -201,7 +642,7 @@ namespace TestHarness
             return result;
         }
 
-        public async Task<Result<CreditCard>> GetCreditCardAccountAsync(int accountId)
+        public async Task<CreditCard> GetCreditCardAccountAsync(int accountId)
         {
             var result = await accountService.GetCreditCardAccountAsync(accountId);
 
@@ -211,7 +652,7 @@ namespace TestHarness
             return result;
         }
 
-        public async Task<Result<Ach>> UpdateAchAccountAsync(Ach account)
+        public async Task<Ach> UpdateAchAccountAsync(Ach account)
         {
             var result = await accountService.UpdateAchAccountAsync(account);
 
@@ -221,7 +662,7 @@ namespace TestHarness
             return result;
         }
 
-        public async Task<Result<CreditCard>> UpdateCreditCardAccountAsync(CreditCard account)
+        public async Task<CreditCard> UpdateCreditCardAccountAsync(CreditCard account)
         {
             var result = await accountService.UpdateCreditCardAccountAsync(account);
 
@@ -257,7 +698,7 @@ namespace TestHarness
                 };
 
                 var results = await CreateCustomerAsync(customer);
-                customerId = results.Response.Id;
+                customerId = results.Id;
 
                 // Create Invalid Customer
                 var invalidCustomer = new Customer
@@ -287,7 +728,7 @@ namespace TestHarness
             return customerId;
         }
 
-        public async Task<Result<Customer>> CreateCustomerAsync(Customer customer)
+        public async Task<Customer> CreateCustomerAsync(Customer customer)
         {
             var result = await customerService.CreateCustomerAsync(customer);
 
@@ -302,17 +743,7 @@ namespace TestHarness
             await customerService.DeleteCustomerAsync(customerId);
         }
 
-        public async Task<Result<SearchResults>> FindCustomer(string query)
-        {
-            var result = await customerService.FindCustomerAsync(query);
-
-            if (result != null)
-                DumpObject("FindCustomer", result);
-
-            return result;
-        }
-
-        public async Task<Result<IEnumerable<Ach>>> GetAchAccountsAsync(int customerId)
+        public async Task<IEnumerable<Ach>> GetAchAccountsAsync(int customerId)
         {
             var result = await customerService.GetAchAccountsAsync(customerId);
 
@@ -322,7 +753,7 @@ namespace TestHarness
             return result;
         }
 
-        public async Task<Result<AccountList>> GetAllAccountsAsync(int customerId)
+        public async Task<AccountList> GetAllAccountsAsync(int customerId)
         {
             var result = await customerService.GetAllAccountsAsync(customerId);
 
@@ -332,7 +763,7 @@ namespace TestHarness
             return result;
         }
 
-        public async Task<Result<IEnumerable<CreditCard>>> GetCreditCardAccountsAsync(int customerId)
+        public async Task<IEnumerable<CreditCard>> GetCreditCardAccountsAsync(int customerId)
         {
             var result = await customerService.GetCreditCardAccountsAsync(customerId);
 
@@ -342,7 +773,7 @@ namespace TestHarness
             return result;
         }
 
-        public async Task<Result<Customer>> GetCustomerAsync(int customerId)
+        public async Task<Customer> GetCustomerAsync(int customerId)
         {
             var result = await customerService.GetCustomerAsync(customerId);
 
@@ -352,7 +783,7 @@ namespace TestHarness
             return result;
         }
 
-        public async Task<Result<IEnumerable<Customer>>> GetCustomersAsync(CustomerSort sortBy = CustomerSort.LastName, SortDirection direction = SortDirection.ASC, int page = 1, int pageSize = 200, bool lite = false)
+        public async Task<PagedResult<IEnumerable<Customer>>> GetCustomersAsync(CustomerSort sortBy = CustomerSort.LastName, SortDirection direction = SortDirection.ASC, int page = 1, int pageSize = 200, bool lite = false)
         {
             var result = await customerService.GetCustomersAsync(sortBy, direction, page, pageSize, lite);
 
@@ -362,7 +793,7 @@ namespace TestHarness
             return result;
         }
 
-        public async Task<Result<Ach>> GetDefaultAchAccountAsync(int customerId)
+        public async Task<Ach> GetDefaultAchAccountAsync(int customerId)
         {
             var result = await customerService.GetDefaultAchAccountAsync(customerId);
 
@@ -372,7 +803,7 @@ namespace TestHarness
             return result;
         }
 
-        public async Task<Result<CreditCard>> GetDefaultCreditCardAccountAsync(int customerId)
+        public async Task<CreditCard> GetDefaultCreditCardAccountAsync(int customerId)
         {
             var result = await customerService.GetDefaultCreditCardAccountAsync(customerId);
 
@@ -382,7 +813,7 @@ namespace TestHarness
             return result;
         }
 
-        public async Task<Result<IEnumerable<PaymentPlan>>> GetPaymentPlansAsync(int customerId, DateTime? startDate = null, DateTime? endDate = null, ScheduleStatus status = ScheduleStatus.None, ScheduleSort sortBy = ScheduleSort.Id, SortDirection direction = SortDirection.ASC, int page = 1, int pageSize = 200, bool lite = false)
+        public async Task<PagedResult<IEnumerable<PaymentPlan>>> GetPaymentPlansAsync(int customerId, DateTime? startDate = null, DateTime? endDate = null, ScheduleStatus? status = null, ScheduleSort sortBy = ScheduleSort.Id, SortDirection direction = SortDirection.ASC, int page = 1, int pageSize = 200, bool lite = false)
         {
             var result = await customerService.GetPaymentPlansAsync(customerId, startDate, endDate, status, sortBy, direction, page, pageSize, lite);
 
@@ -392,7 +823,7 @@ namespace TestHarness
             return result;
         }
 
-        public async Task<Result<IEnumerable<Payment>>> GetPaymentsAsync(int customerId, DateTime? startDate = null, DateTime? endDate = null, IEnumerable<PaymentStatus> status = null, PaymentSort sortBy = PaymentSort.PaymentId, SortDirection direction = SortDirection.ASC, int page = 1, int pageSize = 200, bool lite = false)
+        public async Task<PagedResult<IEnumerable<Payment>>> GetPaymentsAsync(int customerId, DateTime? startDate = null, DateTime? endDate = null, IEnumerable<PaymentStatus> status = null, PaymentSort sortBy = PaymentSort.PaymentId, SortDirection direction = SortDirection.ASC, int page = 1, int pageSize = 200, bool lite = false)
         {
             var result = await customerService.GetPaymentsAsync(customerId, startDate, endDate, status, sortBy, direction, page, pageSize, lite);
 
@@ -402,7 +833,7 @@ namespace TestHarness
             return result;
         }
 
-        public async Task<Result<PaymentScheduleList>> GetPaymentSchedulesAsync(int customerId, DateTime? startDate = null, DateTime? endDate = null, ScheduleStatus status = ScheduleStatus.None, ScheduleSort sortBy = ScheduleSort.Id, SortDirection direction = SortDirection.ASC, int page = 1, int pageSize = 200, bool lite = false)
+        public async Task<PagedResult<PaymentScheduleList>> GetPaymentSchedulesAsync(int customerId, DateTime? startDate = null, DateTime? endDate = null, ScheduleStatus? status = null, ScheduleSort sortBy = ScheduleSort.Id, SortDirection direction = SortDirection.ASC, int page = 1, int pageSize = 200, bool lite = false)
         {
             var result = await customerService.GetPaymentSchedulesAsync(customerId, startDate, endDate, status, sortBy, direction, page, pageSize, lite);
 
@@ -412,7 +843,7 @@ namespace TestHarness
             return result;
         }
 
-        public async Task<Result<IEnumerable<RecurringPayment>>> GetRecurringPaymentSchedulesAsync(int customerId, DateTime? startDate = null, DateTime? endDate = null, ScheduleStatus status = ScheduleStatus.Active, ScheduleSort sortBy = ScheduleSort.Id, SortDirection direction = SortDirection.ASC, int page = 1, int pageSize = 200, bool lite = false)
+        public async Task<PagedResult<IEnumerable<RecurringPayment>>> GetRecurringPaymentSchedulesAsync(int customerId, DateTime? startDate = null, DateTime? endDate = null, ScheduleStatus status = ScheduleStatus.Active, ScheduleSort sortBy = ScheduleSort.Id, SortDirection direction = SortDirection.ASC, int page = 1, int pageSize = 200, bool lite = false)
         {
             var result = await customerService.GetRecurringPaymentSchedulesAsync(customerId, startDate, endDate, status, sortBy, direction, page, pageSize, lite);
 
@@ -427,7 +858,7 @@ namespace TestHarness
             await customerService.SetDefaultAccountAsync(customerId, accountId);
         }
 
-        public async Task<Result<Customer>> UpdateCustomerAsync(Customer customer)
+        public async Task<Customer> UpdateCustomerAsync(Customer customer)
         {
             var result = await customerService.UpdateCustomerAsync(customer);
 
@@ -480,7 +911,7 @@ namespace TestHarness
                 var result = await CreatePaymentAsync(creditCardPayment);
 
                 // Void the payment
-                await VoidPaymentAsync(result.Response.Id.Value);
+                await VoidPaymentAsync(result.Id.Value);
 
                 // Wrong CVV
                 var failCreditCardPayment = new Payment
@@ -514,56 +945,56 @@ namespace TestHarness
                 DumpObject("PaySimpleEndpointException", ex.EndpointErrors);
             }
         }
+        /*
+                public async Task<Result<NewAccountPayment<T>>> CreateNewAccountPaymentAsync<T>(NewAccountPayment<T> accountPayment)
+                    where T : Account, new()
+                {
+                    try
+                    {
+                        var result = await paymentService.CreateNewAccountPaymentAsync<T>(accountPayment);
 
-        public async Task<Result<NewAccountPayment<T>>> CreateNewAccountPaymentAsync<T>(NewAccountPayment<T> accountPayment)
-            where T : Account, new()
-        {
-            try
-            {
-                var result = await paymentService.CreateNewAccountPaymentAsync<T>(accountPayment);
+                        if (result != null)
+                            DumpObject("CreateNewAccountPaymentAsync", result);
 
-                if (result != null)
-                    DumpObject("CreateNewAccountPaymentAsync", result);
+                        return result;
+                    }
+                    catch (PaySimpleException ex)
+                    {
+                        DumpObject("PaySimpleException", ex.ValidationErrors);
+                    }
+                    catch (PaySimpleEndpointException ex)
+                    {
+                        DumpObject("PaySimpleEndpointException", ex.EndpointErrors);
+                    }
 
-                return result;
-            }
-            catch (PaySimpleException ex)
-            {
-                DumpObject("PaySimpleException", ex.ValidationErrors);
-            }
-            catch (PaySimpleEndpointException ex)
-            {
-                DumpObject("PaySimpleEndpointException", ex.EndpointErrors);
-            }
+                    return null;
+                }
 
-            return null;
-        }
+                public async Task<Result<NewCustomerPayment<T>>> CreateNewCustomerPaymentAsync<T>(NewCustomerPayment<T> customerPayment)
+                    where T : Account, new()
+                {
+                    try
+                    {
+                        var result = await paymentService.CreateNewCustomerPaymentAsync<T>(customerPayment);
 
-        public async Task<Result<NewCustomerPayment<T>>> CreateNewCustomerPaymentAsync<T>(NewCustomerPayment<T> customerPayment)
-            where T : Account, new()
-        {
-            try
-            {
-                var result = await paymentService.CreateNewCustomerPaymentAsync<T>(customerPayment);
+                        if (result != null)
+                            DumpObject("CreateNewCustomerPaymentAsync", result);
 
-                if (result != null)
-                    DumpObject("CreateNewCustomerPaymentAsync", result);
+                        return result;
+                    }
+                    catch (PaySimpleException ex)
+                    {
+                        DumpObject("PaySimpleException", ex.ValidationErrors);
+                    }
+                    catch (PaySimpleEndpointException ex)
+                    {
+                        DumpObject("PaySimpleEndpointException", ex.EndpointErrors);
+                    }
 
-                return result;
-            }
-            catch (PaySimpleException ex)
-            {
-                DumpObject("PaySimpleException", ex.ValidationErrors);
-            }
-            catch (PaySimpleEndpointException ex)
-            {
-                DumpObject("PaySimpleEndpointException", ex.EndpointErrors);
-            }
-
-            return null;
-        }
-
-        public async Task<Result<Payment>> CreatePaymentAsync(Payment payment)
+                    return null;
+                }
+        */
+        public async Task<Payment> CreatePaymentAsync(Payment payment)
         {
             var result = await paymentService.CreatePaymentAsync(payment);
 
@@ -573,7 +1004,7 @@ namespace TestHarness
             return result;
         }
 
-        public async Task<Result<Payment>> GetPaymentAsync(int paymentId)
+        public async Task<Payment> GetPaymentAsync(int paymentId)
         {
             var result = await paymentService.GetPaymentAsync(paymentId);
 
@@ -583,7 +1014,7 @@ namespace TestHarness
             return result;
         }
 
-        public async Task<Result<IEnumerable<Payment>>> GetPaymentsAsync(DateTime? startDate = null, DateTime? endDate = null, IEnumerable<PaymentStatus> status = null, PaymentSort sortBy = PaymentSort.PaymentId, SortDirection direction = SortDirection.DESC, int page = 1, int pageSize = 200, bool lite = false)
+        public async Task<PagedResult<IEnumerable<Payment>>> GetPaymentsAsync(DateTime? startDate = null, DateTime? endDate = null, IEnumerable<PaymentStatus> status = null, PaymentSort sortBy = PaymentSort.PaymentId, SortDirection direction = SortDirection.DESC, int page = 1, int pageSize = 200, bool lite = false)
         {
             var result = await paymentService.GetPaymentsAsync(startDate, endDate, status, sortBy, direction, page, pageSize, lite);
 
@@ -593,7 +1024,7 @@ namespace TestHarness
             return result;
         }
 
-        public async Task<Result<Payment>> ReversePaymentAsync(int paymentId)
+        public async Task<Payment> ReversePaymentAsync(int paymentId)
         {
             var result = await paymentService.ReversePaymentAsync(paymentId);
 
@@ -603,7 +1034,7 @@ namespace TestHarness
             return result;
         }
 
-        public async Task<Result<Payment>> VoidPaymentAsync(int paymentId)
+        public async Task<Payment> VoidPaymentAsync(int paymentId)
         {
             var result = await paymentService.VoidPaymentAsync(paymentId);
 
@@ -616,7 +1047,7 @@ namespace TestHarness
         #endregion
 
         #region Payment Schedule Service Methods
-
+        /*
         public async Task<Result<NewAccountPaymentPlan<T>>> CreateNewAccountPaymentPlanAsync<T>(NewAccountPaymentPlan<T> accountPaymentPlan)
             where T : Account, new()
         {
@@ -664,8 +1095,8 @@ namespace TestHarness
 
             return null;
         }
-
-        public async Task<Result<PaymentPlan>> CreatePaymentPlanAsync(PaymentPlan paymentPlan)
+*/
+        public async Task<PaymentPlan> CreatePaymentPlanAsync(PaymentPlan paymentPlan)
         {
             var result = await paymentScheduleService.CreatePaymentPlanAsync(paymentPlan);
 
@@ -674,56 +1105,56 @@ namespace TestHarness
 
             return result;
         }
+        /*
+                public async Task<Result<NewAccountRecurringPayment<T>>> CreateNewAccountRecurringPaymentAsync<T>(NewAccountRecurringPayment<T> accountRecurringPayment)
+                    where T : Account, new()
+                {
+                    try
+                    {
+                        var result = await paymentScheduleService.CreateNewAccountRecurringPaymentAsync<T>(accountRecurringPayment);
 
-        public async Task<Result<NewAccountRecurringPayment<T>>> CreateNewAccountRecurringPaymentAsync<T>(NewAccountRecurringPayment<T> accountRecurringPayment)
-            where T : Account, new()
-        {
-            try
-            {
-                var result = await paymentScheduleService.CreateNewAccountRecurringPaymentAsync<T>(accountRecurringPayment);
+                        if (result != null)
+                            DumpObject("CreateNewAccountRecurringPaymentAsync", result);
 
-                if (result != null)
-                    DumpObject("CreateNewAccountRecurringPaymentAsync", result);
+                        return result;
+                    }
+                    catch (PaySimpleException ex)
+                    {
+                        DumpObject("PaySimpleException", ex.ValidationErrors);
+                    }
+                    catch (PaySimpleEndpointException ex)
+                    {
+                        DumpObject("PaySimpleEndpointException", ex.EndpointErrors);
+                    }
 
-                return result;
-            }
-            catch (PaySimpleException ex)
-            {
-                DumpObject("PaySimpleException", ex.ValidationErrors);
-            }
-            catch (PaySimpleEndpointException ex)
-            {
-                DumpObject("PaySimpleEndpointException", ex.EndpointErrors);
-            }
+                    return null;
+                }
 
-            return null;
-        }
+                public async Task<Result<NewCustomerRecurringPayment<T>>> CreateNewCustomerRecurringPaymentAsync<T>(NewCustomerRecurringPayment<T> customerRecurringPayment)
+                    where T : Account, new()
+                {
+                    try
+                    {
+                        var result = await paymentScheduleService.CreateNewCustomerRecurringPaymentAsync<T>(customerRecurringPayment);
 
-        public async Task<Result<NewCustomerRecurringPayment<T>>> CreateNewCustomerRecurringPaymentAsync<T>(NewCustomerRecurringPayment<T> customerRecurringPayment)
-            where T : Account, new()
-        {
-            try
-            {
-                var result = await paymentScheduleService.CreateNewCustomerRecurringPaymentAsync<T>(customerRecurringPayment);
+                        if (result != null)
+                            DumpObject("CreateNewCustomerRecurringPaymentAsync", result);
 
-                if (result != null)
-                    DumpObject("CreateNewCustomerRecurringPaymentAsync", result);
+                        return result;
+                    }
+                    catch (PaySimpleException ex)
+                    {
+                        DumpObject("PaySimpleException", ex.ValidationErrors);
+                    }
+                    catch (PaySimpleEndpointException ex)
+                    {
+                        DumpObject("PaySimpleEndpointException", ex.EndpointErrors);
+                    }
 
-                return result;
-            }
-            catch (PaySimpleException ex)
-            {
-                DumpObject("PaySimpleException", ex.ValidationErrors);
-            }
-            catch (PaySimpleEndpointException ex)
-            {
-                DumpObject("PaySimpleEndpointException", ex.EndpointErrors);
-            }
-
-            return null;
-        }
-
-        public async Task<Result<RecurringPayment>> CreateRecurringPaymentAsync(RecurringPayment recurringPayment)
+                    return null;
+                }
+        */
+        public async Task<RecurringPayment> CreateRecurringPaymentAsync(RecurringPayment recurringPayment)
         {
             var result = await paymentScheduleService.CreateRecurringPaymentAsync(recurringPayment);
 
@@ -743,7 +1174,7 @@ namespace TestHarness
             await paymentScheduleService.DeleteRecurringPaymentAsync(recurringPaymentId);
         }
 
-        public async Task<Result<IEnumerable<RecurringPayment>>> GetAllPaymentSchedulesAsync()
+        public async Task<PagedResult<IEnumerable<RecurringPayment>>> GetAllPaymentSchedulesAsync()
         {
             var result = await paymentScheduleService.GetAllPaymentSchedulesAsync();
 
@@ -753,7 +1184,7 @@ namespace TestHarness
             return result;
         }
 
-        public async Task<Result<IEnumerable<Payment>>> GetPaymentPlanPaymentsAsync(int paymentPlanId)
+        public async Task<PagedResult<IEnumerable<Payment>>> GetPaymentPlanPaymentsAsync(int paymentPlanId)
         {
             var result = await paymentScheduleService.GetPaymentPlanPaymentsAsync(paymentPlanId);
 
@@ -763,7 +1194,7 @@ namespace TestHarness
             return result;
         }
 
-        public async Task<Result<PaymentPlan>> GetPaymentPlanScheduleAsync(int paymentPlanId)
+        public async Task<PaymentPlan> GetPaymentPlanScheduleAsync(int paymentPlanId)
         {
             var result = await paymentScheduleService.GetPaymentPlanScheduleAsync(paymentPlanId);
 
@@ -773,7 +1204,7 @@ namespace TestHarness
             return result;
         }
 
-        public async Task<Result<IEnumerable<Payment>>> GetRecurringPaymentsAsync(int recurringPaymentId)
+        public async Task<PagedResult<IEnumerable<Payment>>> GetRecurringPaymentsAsync(int recurringPaymentId)
         {
             var result = await paymentScheduleService.GetRecurringPaymentsAsync(recurringPaymentId);
 
@@ -783,7 +1214,7 @@ namespace TestHarness
             return result;
         }
 
-        public async Task<Result<RecurringPayment>> GetRecurringScheduleAsync(int recurringPaymentId)
+        public async Task<RecurringPayment> GetRecurringScheduleAsync(int recurringPaymentId)
         {
             var result = await paymentScheduleService.GetRecurringScheduleAsync(recurringPaymentId);
 
@@ -823,7 +1254,7 @@ namespace TestHarness
             await paymentScheduleService.SuspendRecurringPaymentAsync(recurringPaymentId);
         }
 
-        public async Task<Result<RecurringPayment>> UpdateRecurringPaymentAsync(RecurringPayment recurringPayment)
+        public async Task<RecurringPayment> UpdateRecurringPaymentAsync(RecurringPayment recurringPayment)
         {
             var result = await paymentScheduleService.UpdateRecurringPaymentAsync(recurringPayment);
 

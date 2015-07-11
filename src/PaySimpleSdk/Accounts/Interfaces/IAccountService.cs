@@ -24,21 +24,20 @@
 // The most recent version of this license can be found at: http://opensource.org/licenses/MIT
 #endregion
 
-using PaySimpleSdk.Models;
 using System.Threading.Tasks;
 
 namespace PaySimpleSdk.Accounts
 {
     public interface IAccountService
     {
-        Task<Result<T>> CreateAccountAsync<T>(T account) where T : Account;
-        Task<Result<Ach>> CreateAchAccountAsync(Ach account);
-        Task<Result<CreditCard>> CreateCreditCardAccountAsync(CreditCard account);
+        Task<T> CreateAccountAsync<T>(T account) where T : Account;
+        Task<Ach> CreateAchAccountAsync(Ach account);
+        Task<CreditCard> CreateCreditCardAccountAsync(CreditCard account);
         Task DeleteAchAccountAsync(int accountId);
         Task DeleteCreditCardAccountAsync(int accountId);
-        Task<Result<Ach>> GetAchAccountAsync(int accountId);
-        Task<Result<CreditCard>> GetCreditCardAccountAsync(int accountId);
-        Task<Result<Ach>> UpdateAchAccountAsync(Ach account);
-        Task<Result<CreditCard>> UpdateCreditCardAccountAsync(CreditCard account);
+        Task<Ach> GetAchAccountAsync(int accountId);
+        Task<CreditCard> GetCreditCardAccountAsync(int accountId);
+        Task<Ach> UpdateAchAccountAsync(Ach account);
+        Task<CreditCard> UpdateCreditCardAccountAsync(CreditCard account);
     }
 }

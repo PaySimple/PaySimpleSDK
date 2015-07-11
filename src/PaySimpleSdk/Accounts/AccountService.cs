@@ -42,27 +42,29 @@ namespace PaySimpleSdk.Accounts
             : base(settings, validationService, webServiceRequest, serviceFactory)
         { }
 
-        public async Task<Result<T>> CreateAccountAsync<T>(T account)
+        public async Task<T> CreateAccountAsync<T>(T account)
             where T : Account
         {
-            if (account.GetType() == typeof(Ach))
-                return await CreateAchAccountAsync(account as Ach) as Result<T>;                
+            if (typeof(T).Equals(typeof(Ach)))
+                return await CreateAchAccountAsync(account as Ach) as T;
             else
-                return await CreateCreditCardAccountAsync(account as CreditCard) as Result<T>;
+                return await CreateCreditCardAccountAsync(account as CreditCard) as T;
         }
 
-        public async Task<Result<Ach>> CreateAchAccountAsync(Ach account)
+        public async Task<Ach> CreateAchAccountAsync(Ach account)
         {
             validationService.Validate(account);
             var endpoint = string.Format("{0}{1}", settings.BaseUrl, Endpoints.AchAccount);
-            return await webServiceRequest.PostDeserializedAsync<Ach, Result<Ach>>(new Uri(endpoint), account);
+            var result = await webServiceRequest.PostDeserializedAsync<Ach, Result<Ach>>(new Uri(endpoint), account);
+            return result.Response;
         }
 
-        public async Task<Result<CreditCard>> CreateCreditCardAccountAsync(CreditCard account)
+        public async Task<CreditCard> CreateCreditCardAccountAsync(CreditCard account)
         {
             validationService.Validate(account);
             var endpoint = string.Format("{0}{1}", settings.BaseUrl, Endpoints.CreditCardAccount);
-            return await webServiceRequest.PostDeserializedAsync<CreditCard, Result<CreditCard>>(new Uri(endpoint), account);
+            var result = await webServiceRequest.PostDeserializedAsync<CreditCard, Result<CreditCard>>(new Uri(endpoint), account);
+            return result.Response;
         }
 
         public async Task DeleteAchAccountAsync(int accountId)
@@ -77,30 +79,34 @@ namespace PaySimpleSdk.Accounts
             await webServiceRequest.DeleteAsync(new Uri(endpoint));
         }
 
-        public async Task<Result<Ach>> GetAchAccountAsync(int accountId)
+        public async Task<Ach> GetAchAccountAsync(int accountId)
         {
             var endpoint = string.Format("{0}{1}/{2}", settings.BaseUrl, Endpoints.AchAccount, accountId);
-            return await webServiceRequest.GetDeserializedAsync<Result<Ach>>(new Uri(endpoint));
+            var result = await webServiceRequest.GetDeserializedAsync<Result<Ach>>(new Uri(endpoint));
+            return result.Response;
         }
 
-        public async Task<Result<CreditCard>> GetCreditCardAccountAsync(int accountId)
+        public async Task<CreditCard> GetCreditCardAccountAsync(int accountId)
         {
             var endpoint = string.Format("{0}{1}/{2}", settings.BaseUrl, Endpoints.CreditCardAccount, accountId);
-            return await webServiceRequest.GetDeserializedAsync<Result<CreditCard>>(new Uri(endpoint));
+            var result = await webServiceRequest.GetDeserializedAsync<Result<CreditCard>>(new Uri(endpoint));
+            return result.Response;
         }
 
-        public async Task<Result<Ach>> UpdateAchAccountAsync(Ach account)
+        public async Task<Ach> UpdateAchAccountAsync(Ach account)
         {
             validationService.Validate(account);
             var endpoint = string.Format("{0}{1}", settings.BaseUrl, Endpoints.AchAccount);
-            return await webServiceRequest.PutDeserializedAsync<Ach, Result<Ach>>(new Uri(endpoint), account);
+            var result = await webServiceRequest.PutDeserializedAsync<Ach, Result<Ach>>(new Uri(endpoint), account);
+            return result.Response;
         }
 
-        public async Task<Result<CreditCard>> UpdateCreditCardAccountAsync(CreditCard account)
+        public async Task<CreditCard> UpdateCreditCardAccountAsync(CreditCard account)
         {
             validationService.Validate(account);
             var endpoint = string.Format("{0}{1}", settings.BaseUrl, Endpoints.CreditCardAccount);
-            return await webServiceRequest.PutDeserializedAsync<CreditCard, Result<CreditCard>>(new Uri(endpoint), account);
+            var result = await webServiceRequest.PutDeserializedAsync<CreditCard, Result<CreditCard>>(new Uri(endpoint), account);
+            return result.Response;
         }
     }
 }

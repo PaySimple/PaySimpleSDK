@@ -41,7 +41,6 @@ namespace PaySimpleSdk.PaymentSchedules.Validation
             RuleFor(m => m.EndDate).Must((m, d) => !d.HasValue || d > m.StartDate).WithMessage("EndDate must be after StartDate");
             RuleFor(m => m.InvoiceNumber).Length(0, 50).WithMessage("InvoiceNumber cannot exceed 50 characters");
             RuleFor(m => m.OrderId).Length(0, 50).WithMessage("OrderId cannot exceed 50 characters");
-            RuleFor(m => m.FirstPaymentAmount).GreaterThan(0.00M).When(a => a != null).WithMessage("FirstPaymentAmount must be greater than 0");
             RuleFor(m => m.FirstPaymentDate).Must((m, d) => m.StartDate > d && d >= DateTime.Now.Date).When(m => m.FirstPaymentDate.HasValue).WithMessage("FirstPaymentDate must be a current or future date and must be a date before StartDate");
             RuleFor(m => m.ExecutionFrequencyParameter).InclusiveBetween(1, 7).When(m => m.ExecutionFrequencyType == ExecutionFrequencyType.Weekly || m.ExecutionFrequencyType == ExecutionFrequencyType.BiWeekly).WithMessage("ExecutionFrequencyParameter must be a value 1-7 (Sunday - Saturday), when ExecutionFrequencyType is Weekly or BiWeekly");
             RuleFor(m => m.ExecutionFrequencyParameter).InclusiveBetween(1, 31).When(m => m.ExecutionFrequencyType == ExecutionFrequencyType.SpecificDayOfMonth).WithMessage("ExecutionFrequencyParameter must be a value 1-7 (Sunday - Saturday), when ExecutionFrequencyType is SpecificDayOfMonth.  Note: If you want to bill on the 30th or 31st, use the LastDayOfMonth ExecutionFrequencyType");

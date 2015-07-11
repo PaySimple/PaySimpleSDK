@@ -24,13 +24,16 @@
 // The most recent version of this license can be found at: http://opensource.org/licenses/MIT
 #endregion
 
+using Newtonsoft.Json;
 using System.Collections.Generic;
 
 namespace PaySimpleSdk.PaymentSchedules
 {
     public class PaymentScheduleList
     {
+        [JsonProperty("PaymentPlans")]
         public IEnumerable<PaymentPlan> PaymentPlans { get; internal set; }
+        [JsonProperty("RecurringPayments")]
         public IEnumerable<RecurringPayment> RecurringPayments { get; internal set; }
     }
 }

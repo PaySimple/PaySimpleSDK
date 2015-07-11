@@ -45,7 +45,7 @@ namespace PaySimpleSdk.Payments
             : base(settings, validationService, webServiceRequest, serviceFactory)
         { }
 
-        public async Task<Result<NewAccountPayment<T>>> CreateNewAccountPaymentAsync<T>(NewAccountPayment<T> accountPayment)
+        public async Task<NewAccountPayment<T>> CreateNewAccountPaymentAsync<T>(NewAccountPayment<T> accountPayment)
             where T : Account, new()
         {
             // Validate objects
@@ -55,24 +55,16 @@ namespace PaySimpleSdk.Payments
 
             // Create the account
             var accountService = serviceFactory.GetAccountService();
-            var newAccountResult = await accountService.CreateAccountAsync<T>(accountPayment.Account);
-            newAccountPayment.Account = newAccountResult.Response;
+            newAccountPayment.Account = await accountService.CreateAccountAsync<T>(accountPayment.Account);
 
             // Make the Payment            
             accountPayment.Payment.AccountId = newAccountPayment.Account.Id;
-            var newPayment = await CreatePaymentAsync(accountPayment.Payment);
-            newAccountPayment.Payment = newPayment.Response;
+            newAccountPayment.Payment = await CreatePaymentAsync(accountPayment.Payment);
 
-            var result = new Result<NewAccountPayment<T>>()
-            {
-                ResultData = newPayment.ResultData,
-                Response = newAccountPayment
-            };
-
-            return result;
+            return newAccountPayment;
         }
 
-        public async Task<Result<NewCustomerPayment<T>>> CreateNewCustomerPaymentAsync<T>(NewCustomerPayment<T> customerPayment)
+        public async Task<NewCustomerPayment<T>> CreateNewCustomerPaymentAsync<T>(NewCustomerPayment<T> customerPayment)
             where T : Account, new()
         {
             // Validate objects
@@ -82,39 +74,34 @@ namespace PaySimpleSdk.Payments
 
             // Create the new Customer
             var customerService = serviceFactory.GetCustomerService();
-            var createdCustomer = await customerService.CreateCustomerAsync(customerPayment.Customer);
-            newCustomerPayment.Customer = createdCustomer.Response;
+            newCustomerPayment.Customer = await customerService.CreateCustomerAsync(customerPayment.Customer);
 
             // Create the new Account, and make the payment
-            customerPayment.Account.CustomerId = createdCustomer.Response.Id;
+            customerPayment.Account.CustomerId = newCustomerPayment.Customer.Id;
             var paymentResult = await CreateNewAccountPaymentAsync<T>(customerPayment);
 
-            newCustomerPayment.Account = paymentResult.Response.Account;
-            newCustomerPayment.Payment = paymentResult.Response.Payment;
+            newCustomerPayment.Account = paymentResult.Account;
+            newCustomerPayment.Payment = paymentResult.Payment;
 
-            var result = new Result<NewCustomerPayment<T>>()
-            {
-                ResultData = paymentResult.ResultData,
-                Response = newCustomerPayment
-            };
-
-            return result;
+            return newCustomerPayment;
         }
 
-        public async Task<Result<Payment>> CreatePaymentAsync(Payment payment)
+        public async Task<Payment> CreatePaymentAsync(Payment payment)
         {
             validationService.Validate(payment);
             var endpoint = string.Format("{0}{1}", settings.BaseUrl, Endpoints.Payment);
-            return await webServiceRequest.PostDeserializedAsync<Payment, Result<Payment>>(new Uri(endpoint), payment);
+            var results = await webServiceRequest.PostDeserializedAsync<Payment, Result<Payment>>(new Uri(endpoint), payment);
+            return results.Response;
         }
 
-        public async Task<Result<Payment>> GetPaymentAsync(int paymentId)
+        public async Task<Payment> GetPaymentAsync(int paymentId)
         {
             var endpoint = string.Format("{0}{1}/{2}", settings.BaseUrl, Endpoints.Payment, paymentId);
-            return await webServiceRequest.GetDeserializedAsync<Result<Payment>>(new Uri(endpoint));
+            var result = await webServiceRequest.GetDeserializedAsync<Result<Payment>>(new Uri(endpoint));
+            return result.Response;
         }
 
-        public async Task<Result<IEnumerable<Payment>>> GetPaymentsAsync(DateTime? startDate = null, DateTime? endDate = null, IEnumerable<PaymentStatus> status = null, PaymentSort sortBy = PaymentSort.PaymentId, SortDirection direction = SortDirection.DESC, int page = 1, int pageSize = 200, bool lite = false)
+        public async Task<PagedResult<IEnumerable<Payment>>> GetPaymentsAsync(DateTime? startDate = null, DateTime? endDate = null, IEnumerable<PaymentStatus> status = null, PaymentSort sortBy = PaymentSort.PaymentId, SortDirection direction = SortDirection.DESC, int page = 1, int pageSize = 200, bool lite = false)
         {
             StringBuilder endpoint = new StringBuilder(string.Format("{0}{1}?lite={2}", settings.BaseUrl, Endpoints.Payment, lite));
 
@@ -145,19 +132,22 @@ namespace PaySimpleSdk.Payments
             if (pageSize != 200)
                 endpoint.AppendFormat("&pagesize={0}", pageSize);
 
-            return await webServiceRequest.GetDeserializedAsync<Result<IEnumerable<Payment>>>(new Uri(endpoint.ToString()));
+            var result = await webServiceRequest.GetDeserializedAsync<Result<IEnumerable<Payment>>>(new Uri(endpoint.ToString()));
+            return PagedResult.ConvertToPagedResult<IEnumerable<Payment>>(result);
         }
 
-        public async Task<Result<Payment>> ReversePaymentAsync(int paymentId)
+        public async Task<Payment> ReversePaymentAsync(int paymentId)
         {
             var endpoint = string.Format("{0}{1}/{2}/reverse", settings.BaseUrl, Endpoints.Payment, paymentId);
-            return await webServiceRequest.PutAsync<Result<Payment>>(new Uri(endpoint));
+            var result = await webServiceRequest.PutAsync<Result<Payment>>(new Uri(endpoint));
+            return result.Response;
         }
 
-        public async Task<Result<Payment>> VoidPaymentAsync(int paymentId)
+        public async Task<Payment> VoidPaymentAsync(int paymentId)
         {
             var endpoint = string.Format("{0}{1}/{2}/void", settings.BaseUrl, Endpoints.Payment, paymentId);
-            return await webServiceRequest.PutAsync<Result<Payment>>(new Uri(endpoint));
+            var result = await webServiceRequest.PutAsync<Result<Payment>>(new Uri(endpoint));
+            return result.Response;
         }
     }
 }
