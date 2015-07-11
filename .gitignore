@@ -199,4 +199,3 @@ FakesAssemblies/
 
 #Exclude Nuget Push files
 nugetpush.ps1
-src/TestHarness/App.config
