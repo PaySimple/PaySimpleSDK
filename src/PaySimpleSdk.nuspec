@@ -7,7 +7,7 @@
     <authors>Scott Lance</authors>
     <owners>Scott Lance</owners>
     <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
-    <projectUrl>https://bitbucket.org/scottlance/paysimple</projectUrl>    
+    <projectUrl>https://bitbucket.org/scottlance/paysimplesdk</projectUrl>    
     <description>PaySimple SDK is a fully asyncronous and validatable SDK designed around the PaySimple API v4</description>    
     <copyright>Copyright 2015</copyright>
     <tags>PaySimple</tags>
