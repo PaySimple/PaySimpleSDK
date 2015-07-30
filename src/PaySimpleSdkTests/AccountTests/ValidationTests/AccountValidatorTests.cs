@@ -333,7 +333,7 @@ namespace PaySimpleSdkTests.AccountTests.ValidationTests
         {
             // Arrange
             var validator = new CreditCardValidator();
-            var account = new CreditCard { CreditCardNumber = "365389111509143" };
+            var account = new CreditCard { CreditCardNumber = "371449635398456" };
 
             // Act
             var result = validator.Validate(account);
