@@ -818,7 +818,7 @@
         </member>
         <member name="M:Xunit.Sdk.AssertEqualityComparer`1.#ctor(System.Boolean,System.Collections.IEqualityComparer)">
             <summary>
-            Initializes a new instance of the <see cref="T:Xunit.Sdk.AssertEqualityComparer`1"/> class.
+            Initializes a new instance of the <see cref="T:Xunit.Sdk.AssertEqualityComparer`1" /> class.
             </summary>
             <param name="skipTypeCheck">Set to <c>true</c> to skip type equality checks.</param>
             <param name="innerComparer">The inner comparer to be used when the compared objects are enumerable.</param>
@@ -850,50 +850,6 @@
         <member name="T:Xunit.Sdk.AssertActualExpectedException">
             <summary>
             Base class for exceptions that have actual and expected values
-            </summary>
-        </member>
-        <member name="T:Xunit.Sdk.XunitException">
-            <summary>
-            The base assert exception class
-            </summary>
-        </member>
-        <member name="M:Xunit.Sdk.XunitException.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:Xunit.Sdk.XunitException"/> class.
-            </summary>
-        </member>
-        <member name="M:Xunit.Sdk.XunitException.#ctor(System.String)">
-            <summary>
-            Initializes a new instance of the <see cref="T:Xunit.Sdk.XunitException"/> class.
-            </summary>
-            <param name="userMessage">The user message to be displayed</param>
-        </member>
-        <member name="M:Xunit.Sdk.XunitException.#ctor(System.String,System.Exception)">
-            <summary>
-            Initializes a new instance of the <see cref="T:Xunit.Sdk.XunitException"/> class.
-            </summary>
-            <param name="userMessage">The user message to be displayed</param>
-            <param name="innerException">The inner exception</param>
-        </member>
-        <member name="M:Xunit.Sdk.XunitException.#ctor(System.String,System.String)">
-            <summary>
-            Initializes a new instance of the <see cref="T:Xunit.Sdk.XunitException"/> class.
-            </summary>
-            <param name="userMessage">The user message to be displayed</param>
-            <param name="stackTrace">The stack trace to be displayed</param>
-        </member>
-        <member name="M:Xunit.Sdk.XunitException.ToString">
-            <inheritdoc/>
-        </member>
-        <member name="P:Xunit.Sdk.XunitException.StackTrace">
-            <summary>
-            Gets a string representation of the frames on the call stack at the time the current exception was thrown.
-            </summary>
-            <returns>A string that describes the contents of the call stack, with the most recent method call appearing first.</returns>
-        </member>
-        <member name="P:Xunit.Sdk.XunitException.UserMessage">
-            <summary>
-            Gets the user message
             </summary>
         </member>
         <member name="M:Xunit.Sdk.AssertActualExpectedException.#ctor(System.Object,System.Object,System.String,System.String,System.String)">
@@ -1412,6 +1368,50 @@
             </summary>
             <param name="userMessage">The user message to be displayed, or null for the default message</param>
             <param name="value">The actual value</param>
+        </member>
+        <member name="T:Xunit.Sdk.XunitException">
+            <summary>
+            The base assert exception class
+            </summary>
+        </member>
+        <member name="M:Xunit.Sdk.XunitException.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Xunit.Sdk.XunitException"/> class.
+            </summary>
+        </member>
+        <member name="M:Xunit.Sdk.XunitException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Xunit.Sdk.XunitException"/> class.
+            </summary>
+            <param name="userMessage">The user message to be displayed</param>
+        </member>
+        <member name="M:Xunit.Sdk.XunitException.#ctor(System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Xunit.Sdk.XunitException"/> class.
+            </summary>
+            <param name="userMessage">The user message to be displayed</param>
+            <param name="innerException">The inner exception</param>
+        </member>
+        <member name="M:Xunit.Sdk.XunitException.#ctor(System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Xunit.Sdk.XunitException"/> class.
+            </summary>
+            <param name="userMessage">The user message to be displayed</param>
+            <param name="stackTrace">The stack trace to be displayed</param>
+        </member>
+        <member name="P:Xunit.Sdk.XunitException.StackTrace">
+            <summary>
+            Gets a string representation of the frames on the call stack at the time the current exception was thrown.
+            </summary>
+            <returns>A string that describes the contents of the call stack, with the most recent method call appearing first.</returns>
+        </member>
+        <member name="P:Xunit.Sdk.XunitException.UserMessage">
+            <summary>
+            Gets the user message
+            </summary>
+        </member>
+        <member name="M:Xunit.Sdk.XunitException.ToString">
+            <inheritdoc/>
         </member>
     </members>
 </doc>

@@ -2,12 +2,13 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>PaySimpleSdk</id>
-    <version>0.6.4-beta</version>
+    <version>1.0.0</version>
     <title>PaySimple SDK</title>
     <authors>Scott Lance</authors>
     <owners>Scott Lance</owners>
     <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
-    <projectUrl>https://bitbucket.org/scottlance/paysimplesdk</projectUrl>    
+    <projectUrl>https://bitbucket.org/scottlance/paysimplesdk</projectUrl>
+    <iconUrl>https://bitbucket.org/scottlance/paysimplesdk/avatar/128/?ts=1438640642</iconUrl>
     <description>PaySimple SDK is a fully asyncronous and validatable SDK designed around the PaySimple API v4</description>    
     <copyright>Copyright 2015</copyright>
     <tags>PaySimple</tags>
