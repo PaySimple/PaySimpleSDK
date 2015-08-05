@@ -6,7 +6,7 @@ PaySimple SDK is a fully asynchronous and validatable .NET SDK designed around t
 Use NuGet to get the latest version of the SDK 
 
 ```
-Install-Package PaySimpleSdk -Pre
+Install-Package PaySimpleSdk
 ```
 
 Create new instance of the PaySimpleSettings object and pass your Api Key and Username:
