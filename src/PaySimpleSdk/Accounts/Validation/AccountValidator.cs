@@ -52,7 +52,7 @@ namespace PaySimpleSdk.Accounts.Validation
         public CreditCardValidator()
         {
             RuleFor(m => m.CreditCardNumber).NotEmpty().WithMessage("CreditCardNumber is required").Matches(@"^(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14}|3[47][0-9]{13}|6(?:011|5[0-9]{2})[0-9]{12})$").WithMessage("CreditCardNumber is invalid");
-            RuleFor(m => m.ExpirationDate).NotEmpty().WithMessage("ExpirationDate is required").Matches(@"^(0[1-9]{1}|1[0-2]{1}/\d{4})$").WithMessage("ExpirationDate must be in a \"MM/YYYY\" format");
+            RuleFor(m => m.ExpirationDate).NotEmpty().WithMessage("ExpirationDate is required").Matches(@"^(([0][1-9])|([1][0-2]))/20[0-9][0-9]$").WithMessage("ExpirationDate must be in a \"MM/YYYY\" format");
             RuleFor(m => m.BillingZipCode).PostalCode().WithMessage("BillingZipCode must be a valid US or CA postal code, acceptable formats are 11111, 11111-1111, A1A1A1, or A1A 1A1");
         }
     }
