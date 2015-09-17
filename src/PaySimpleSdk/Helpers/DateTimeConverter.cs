@@ -35,17 +35,19 @@ namespace PaySimpleSdk.Helpers
     {
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            writer.WriteValue(Convert.ToDateTime(value).ToString("yyyy-MM-dd"));
+            writer.WriteValue(Convert.ToDateTime(value).ToString("o"));
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            return reader.Value as string;
+            return reader.Value as DateTime?;
         }
 
         public override bool CanConvert(Type objectType)
         {
-            return objectType == typeof(DateTime?);
+            return true;
+            //return objectType == typeof(DateTime?);
+            //return objectType == typeof(string);
         }
     }
 }
