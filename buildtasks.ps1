@@ -6,7 +6,7 @@ properties {
 	$sln_file = "$src_directory\PaySimpleSdk.sln"
 	$target_config = "Release"
 	$framework_version = "v4.5"
-	$xunit_path = "$src_directory\packages\xunit.runner.console.2.0.0\tools\xunit.console.exe"	
+	$xunit_path = "$src_directory\packages\xunit.runner.console.2.1.0\tools\xunit.console.exe"	
 	$nuget_path = "$src_directory\.nuget\nuget.exe"
 
 	$version = "1.0.4"

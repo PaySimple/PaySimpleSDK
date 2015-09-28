@@ -469,7 +469,21 @@ namespace PaySimpleSdkTests.AccountTests.ValidationTests
         }
 
         [Fact]
-        public void CreditCardNumber_Eleven_Asterisk_Last_Four_Numbers_Generates_Errors()
+        public void CreditCardNumber_Ten_Asterisk_Last_Four_Numbers_Generates_Errors()
+        {
+            // Arrange
+            var validator = new CreditCardValidator();
+            var account = new CreditCard { CreditCardNumber = "**********8601" };
+
+            // Act
+            var result = validator.Validate(account);
+
+            // Assert
+            Assert.True(result.Errors.Any(e => e.ErrorMessage == "CreditCardNumber is invalid"));
+        }
+
+        [Fact]
+        public void CreditCardNumber_Thirteen_Asterisk_Last_Four_Numbers_Generates()
         {
             // Arrange
             var validator = new CreditCardValidator();
@@ -479,15 +493,15 @@ namespace PaySimpleSdkTests.AccountTests.ValidationTests
             var result = validator.Validate(account);
 
             // Assert
-            Assert.False(result.Errors.Any(e => e.ErrorMessage == "CreditCardNumber is invalid"));
+            Assert.True(result.Errors.Any(e => e.ErrorMessage == "CreditCardNumber is invalid"));
         }
 
         [Fact]
-        public void CreditCardNumber_Twelve_Asterisk_Last_Four_Numbers_Is_Valid()
+        public void CreditCardNumber_Twelve_Asterisk_Last_Three_Is_Valid()
         {
             // Arrange
             var validator = new CreditCardValidator();
-            var account = new CreditCard { CreditCardNumber = "************8601" };
+            var account = new CreditCard { CreditCardNumber = "************6011" };
 
             // Act
             var result = validator.Validate(account);
@@ -511,11 +525,11 @@ namespace PaySimpleSdkTests.AccountTests.ValidationTests
         }
 
         [Fact]
-        public void CreditCardNumber_Thirteen_Asterisk_Last_Four_Numbers_Is_Valid()
+        public void CreditCardNumber_Eleven_Asterisk_Last_Four_Numbers_Is_Valid()
         {
             // Arrange
             var validator = new CreditCardValidator();
-            var account = new CreditCard { CreditCardNumber = "*************8601" };
+            var account = new CreditCard { CreditCardNumber = "***********8601" };
 
             // Act
             var result = validator.Validate(account);
@@ -536,21 +550,7 @@ namespace PaySimpleSdkTests.AccountTests.ValidationTests
 
             // Assert
             Assert.True(result.Errors.Any(e => e.ErrorMessage == "CreditCardNumber is invalid"));
-        }
-
-        [Fact]
-        public void CreditCardNumber_Fourteen_Asterisk_Last_Four_Numbers_Is_Valid()
-        {
-            // Arrange
-            var validator = new CreditCardValidator();
-            var account = new CreditCard { CreditCardNumber = "**************8601" };
-
-            // Act
-            var result = validator.Validate(account);
-
-            // Assert
-            Assert.False(result.Errors.Any(e => e.ErrorMessage == "CreditCardNumber is invalid"));
-        }
+        }       
 
         [Fact]
         public void CreditCardNumber_Fourteen_Asterisk_Last_Three_Generates_Errors()
