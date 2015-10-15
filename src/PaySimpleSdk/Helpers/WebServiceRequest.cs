@@ -132,7 +132,7 @@ namespace PaySimpleSdk.Helpers
                 httpClient.DefaultRequestHeaders.Add("Authorization", authToken);
                 httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
 
-                var result = await httpClient.SendAsync(request);
+                var result = await httpClient.SendAsync(request).ConfigureAwait(false);
 
                 if (result.IsSuccessStatusCode)
                     return result;

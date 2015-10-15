@@ -9,7 +9,7 @@ properties {
 	$xunit_path = "$src_directory\packages\xunit.runner.console.2.1.0\tools\xunit.console.exe"	
 	$nuget_path = "$src_directory\.nuget\nuget.exe"
 
-	$version = "1.0.4"
+	$version = "1.0.5"
 	$preRelease = ""
 }
 
