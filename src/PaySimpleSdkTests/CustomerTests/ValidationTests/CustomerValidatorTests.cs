@@ -691,5 +691,72 @@ namespace PaySimpleSdkTests.CustomerTests.ValidationTests
             // Assert
             Assert.True(result.Errors.Any(e => e.ErrorMessage == "Notes cannot exceed 2048 characters"));
         }
+
+        // *************************************************************************************************
+
+        [Fact]
+        public void BillingAddress_Is_Null_Is_Valid()
+        {
+            // Arrange
+            var customer = new Customer
+            {
+                FirstName = "Sheldon",
+                LastName = "Cooper",
+                BillingAddress = null
+            };
+
+            var validator = new CustomerValidator();
+
+            // Act
+            var result = validator.Validate(customer);
+
+            // Assertt
+            Assert.False(result.Errors.Any());
+        }
+
+        // *************************************************************************************************
+
+        [Fact]
+        public void ShippingAddress_Is_Null_Is_Valid_When_ShippingSameAsBilling_Is_True()
+        {
+            // Arrange
+            var customer = new Customer
+            {
+                FirstName = "Sheldon",
+                LastName = "Cooper",
+                ShippingSameAsBilling = true,
+                ShippingAddress = null
+            };
+
+            var validator = new CustomerValidator();
+
+            // Act
+            var result = validator.Validate(customer);
+
+            // Assertt
+            Assert.False(result.Errors.Any());
+        }
+
+        [Fact]
+        public void ShippingAddress_Is_Null_Is_Not_Valid_When_ShippingSameAsBilling_Is_False()
+        {
+            // Arrange
+            var customer = new Customer
+            {
+                FirstName = "Sheldon",
+                LastName = "Cooper",
+                ShippingSameAsBilling = false,
+                ShippingAddress = null
+            };
+
+            var validator = new CustomerValidator();
+
+            // Act
+            var result = validator.Validate(customer);
+
+            // Assertt
+            Assert.True(result.Errors.Any(e => e.ErrorMessage == "ShippingAddress is required if ShippingSameAsBilling is set to false"));
+        }
+        // *************************************************************************************************
     }
 }

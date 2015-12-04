@@ -34,7 +34,7 @@ namespace PaySimpleSdkTests.CustomerTests.ValidationTests
 {
     [ExcludeFromCodeCoverage]
     public class AddressValidatorTests
-    {
+    {       
         [Fact]
         public void StreetAddress1_Is_Empty_Generates_Error()
         {
