@@ -27,6 +27,7 @@
 using PaySimpleSdk.Exceptions;
 using PaySimpleSdk.Models;
 using System;
+using System.Net;
 using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -42,7 +43,9 @@ namespace PaySimpleSdk.Helpers
 
         public WebServiceRequest(ISerialization serialization, ISignatureGenerator signatureGenerator)
         {
-            this.serialization = serialization;
+			ServicePointManager.SecurityProtocol = ServicePointManager.SecurityProtocol | SecurityProtocolType.Tls12;
+
+			this.serialization = serialization;
             this.signatureGenerator = signatureGenerator;
         }
 
