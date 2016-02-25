@@ -1,4 +1,4 @@
-# PaySimple SDK v1.0.7
+# PaySimple SDK v1.0.8
 
 PaySimple SDK is a fully asynchronous and validatable .NET SDK designed around the PaySimple API v4
 
