@@ -19,7 +19,7 @@ var settings = new PaySimpleSettings("AoOtRylA63570WmH3eqChyFRqwhTnA2g0dnsV7zzQk
 Optionally, declare the number of retries on failed requests:
 ```
 #!C#
-var settings = new PaySimpleSettings("AoOtRylA63570WmH3eqChyFRqwhTnA2g0dnsV7zzQko4s4yKWdBorA1WiT7dK2H2xz06P562Hqv0heYBdfNamfQyxX50drtpL8s7", "AUserName", 5);
+var settings = new PaySimpleSettings("AoOtRylA63570WmH3eqChyFRqwhTnA2g0dnsV7zzQko4s4yKWdBorA1WiT7dK2H2xz06P562Hqv0heYBdfNamfQyxX50drtpL8s7", "AUserName", automaticRetryCount: 5);
 ```
 
 Create a service and start calling the API:
