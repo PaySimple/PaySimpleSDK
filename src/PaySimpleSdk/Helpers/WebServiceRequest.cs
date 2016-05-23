@@ -32,6 +32,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace PaySimpleSdk.Helpers
 {
@@ -40,13 +41,15 @@ namespace PaySimpleSdk.Helpers
     {
         private readonly ISerialization serialization;
         private readonly ISignatureGenerator signatureGenerator;
+        private readonly int retryCount;
 
-        public WebServiceRequest(ISerialization serialization, ISignatureGenerator signatureGenerator)
+        public WebServiceRequest(ISerialization serialization, ISignatureGenerator signatureGenerator, int retryCount)
         {
-			ServicePointManager.SecurityProtocol = ServicePointManager.SecurityProtocol | SecurityProtocolType.Tls12;
+            ServicePointManager.SecurityProtocol = ServicePointManager.SecurityProtocol | SecurityProtocolType.Tls12;
 
-			this.serialization = serialization;
+            this.serialization = serialization;
             this.signatureGenerator = signatureGenerator;
+            this.retryCount = retryCount;
         }
 
         public async Task<HttpResponseMessage> GetAsync(Uri requestUri)
@@ -128,6 +131,32 @@ namespace PaySimpleSdk.Helpers
         }
 
         private async Task<HttpResponseMessage> MakeRequestAsync(HttpRequestMessage request)
+        {
+            var exceptions = new List<Exception>();
+
+            // Minor optimization: skip the loop entirely if we don't need it
+            if (retryCount <= 1)
+                return await DoRequestAsync(request);
+
+            for (int retry = 0; retry < retryCount; retry++)
+            {
+                try
+                {
+                    // Wait 1 second between additional attempts
+                    if (retry > 0)
+                        System.Threading.Thread.Sleep(1000);
+
+                    return await DoRequestAsync(request);
+                }
+                catch (Exception ex)
+                {
+                    exceptions.Add(ex);
+                }
+            }
+
+            throw new AggregateException(exceptions);
+        }
+        private async Task<HttpResponseMessage> DoRequestAsync(HttpRequestMessage request)
         {
             using (HttpClient httpClient = new HttpClient())
             {
