@@ -31,5 +31,6 @@ namespace PaySimpleSdk.Models
         string ApiKey { get; set; }
         string BaseUrl { get; set; }
         string Username { get; set; }
+        int AutomaticRetryCount { get; set; }
     }
 }

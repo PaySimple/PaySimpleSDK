@@ -42,7 +42,7 @@ namespace PaySimpleSdk.Models
         {
             this.settings = settings;
             this.validationService = new ValidationService();
-            this.webServiceRequest = new WebServiceRequest(new Serialization(), new SignatureGenerator(settings));
+            this.webServiceRequest = new WebServiceRequest(new Serialization(), new SignatureGenerator(settings), settings.AutomaticRetryCount);
             this.serviceFactory = new ServiceFactory(settings);
         }
 

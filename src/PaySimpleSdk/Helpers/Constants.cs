@@ -32,5 +32,6 @@ namespace PaySimpleSdk.Helpers
     internal static class Constants
     {
         internal const string PaySimpleBaseUrl = "https://api.paysimple.com";
+        internal const int DefaultRetryCount = 1;
     }
 }

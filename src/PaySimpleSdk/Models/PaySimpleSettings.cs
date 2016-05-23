@@ -33,12 +33,14 @@ namespace PaySimpleSdk.Models
         public string ApiKey { get; set; }
         public string BaseUrl { get; set; }
         public string Username { get; set; }
+        public int AutomaticRetryCount { get; set; }
 
-        public PaySimpleSettings(string apiKey, string username, string baseUrl = Constants.PaySimpleBaseUrl)
+        public PaySimpleSettings(string apiKey, string username, string baseUrl = Constants.PaySimpleBaseUrl, int automaticRetryCount = Constants.DefaultRetryCount)
         {
             this.ApiKey = apiKey;
             this.Username = username;
             this.BaseUrl = baseUrl;
+            this.AutomaticRetryCount = automaticRetryCount;
         }
     }
 }
