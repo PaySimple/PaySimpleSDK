@@ -12,3 +12,7 @@ Updated library to allow for retries on failed web requests:
 
 * The number of retries can be set in the PaySimpleSettings constructor
 * The default number of retries is 1
+
+#v1.0.10 - 5.27.2016
+
+Fixed an issue where the new constructor created for retries broke backwards compatability
