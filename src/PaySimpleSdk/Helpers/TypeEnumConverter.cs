@@ -86,7 +86,7 @@ namespace PaySimpleSdk.Helpers
             else
             {
                 // If this is not a Enumeration, then write the value out                
-                var enumString = (string)reader.Value;
+                var enumString = (string)reader.Value ?? "";
                 return lookup[enumString];
             }
         }
