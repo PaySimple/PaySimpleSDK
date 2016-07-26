@@ -46,6 +46,10 @@ namespace PaySimpleSdk.Models
         public int HttpStatusCode { get; set; }
         [JsonProperty("PagingDetails")]
         public PagingDetail PagingDetails { get; set; }
+		public override string ToString()
+		{
+			return $"StatusCode: {HttpStatusCode} {Errors}";
+		}
     }
 
     public class Error
@@ -56,6 +60,11 @@ namespace PaySimpleSdk.Models
         public IEnumerable<ErrorMessage> ErrorMessages { get; set; }
         [JsonProperty("TraceCode")]
         public string TraceCode { get; set; }
+
+	    public override string ToString()
+	    {
+		    return $"ErrorCode: {ErrorCode} TraceCode: {TraceCode} ErrorMessages: {string.Join(", ", ErrorMessages)}";
+	    }
     }
 
     public class ErrorMessage
@@ -64,6 +73,11 @@ namespace PaySimpleSdk.Models
         public string Field { get; set; }
         [JsonProperty("Message")]
         public string Message { get; set; }
+
+	    public override string ToString()
+	    {
+		    return $"{Field} - {Message}";
+	    }
     }
 
     public class PagingDetail

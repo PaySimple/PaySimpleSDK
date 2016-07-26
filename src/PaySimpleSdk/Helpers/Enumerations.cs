@@ -30,7 +30,8 @@ namespace PaySimpleSdk.Helpers
     public enum CountryCode
     {
         CA,
-        US
+        US,
+		GB	
     }
 
     public enum CustomerSort

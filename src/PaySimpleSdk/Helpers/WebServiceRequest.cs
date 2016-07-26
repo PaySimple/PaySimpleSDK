@@ -33,6 +33,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace PaySimpleSdk.Helpers
 {
@@ -170,9 +171,15 @@ namespace PaySimpleSdk.Helpers
                     return result;
 
                 var content = await result.Content.ReadAsStringAsync();
-                var errors = serialization.Deserialize<ErrorResult>(content);
-
-                throw new PaySimpleEndpointException(errors);
+	            try
+	            {
+					var errors = serialization.Deserialize<ErrorResult>(content);
+					throw new PaySimpleEndpointException(errors, result.StatusCode);
+	            }
+	            catch (Exception e)
+	            {
+		            throw new PaySimpleEndpointException($"Error deserializing response: {content}", e);
+	            }
             }
         }
     }

@@ -41,8 +41,9 @@ namespace PaySimpleSdk.Customers
         public string StreetAddress2 { get; set; }
         [JsonProperty("City")]
         public string City { get; set; }
-        [JsonProperty("StateCode"), JsonConverter(typeof(TypeEnumConverter<StateCode, BiLookup<StateCode, string>>))]
-        public StateCode? StateCode { get; set; }
+//        [JsonProperty("StateCode"), JsonConverter(typeof(TypeEnumConverter<StateCode, BiLookup<StateCode, string>>))]
+        [JsonProperty("StateCode")]
+        public string StateCode { get; set; }
         [JsonProperty("ZipCode")]
         public string ZipCode { get; set; }
         [JsonProperty("Country"), JsonConverter(typeof(TypeEnumConverter<CountryCode, BiLookup<CountryCode, string>>))]
