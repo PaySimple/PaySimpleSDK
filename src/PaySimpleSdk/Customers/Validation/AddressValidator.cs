@@ -35,7 +35,7 @@ namespace PaySimpleSdk.Customers.Validation
             RuleFor(m => m.StreetAddress1).NotEmpty().WithMessage("StreetAddress1 is required").Length(0, 250).WithMessage("StreetAddress1 cannot exceed 250 characters");
             RuleFor(m => m.StreetAddress2).Length(0, 250).WithMessage("StreetAddress2 cannot exceed 250 characters");
             RuleFor(m => m.City).NotEmpty().WithMessage("City is required").Length(0, 100).WithMessage("City cannot exceed 100 characters");
-//            RuleFor(m => m.ZipCode).NotEmpty().WithMessage("ZipCode is required").PostalCode().WithMessage("ZipCode must be a valid US or CA postal code, acceptable formats are 11111, 11111-1111, A1A1A1, or A1A 1A1");
+            RuleFor(m => m.ZipCode).NotEmpty().WithMessage("ZipCode is required").PostalCode().WithMessage("ZipCode must be no more than 10 characters");
         }
     }
 }

@@ -626,18 +626,16 @@ namespace PaySimpleSdkTests.AccountTests.ValidationTests
 
         // *************************************************************************************************
 
-        [Fact]
-        public void BillingZipcode_Is_Not_Valid_Generates_Error()
+        private const string BillingZipcodeValidationErrorMessage = "BillingZipCode must be no more than 10 characters";
+        private static CreditCard BuildCreditCard(string creditCardNumber = "4111111111111111", string billingZip = "12345", string expirationDate = "08/2040", int customerId = 1)
         {
-            // Arrange
-            var validatior = new CreditCardValidator();
-            var account = new CreditCard { BillingZipCode = "789456" };
-
-            // Act
-            var result = validatior.Validate(account);
-
-            // Assert
-            Assert.True(result.Errors.Any(e => e.ErrorMessage == "BillingZipCode must be a valid US or CA postal code, acceptable formats are 11111, 11111-1111, A1A1A1, or A1A 1A1"));
+            return new CreditCard
+            {
+                CustomerId = customerId,
+                BillingZipCode = billingZip,
+                CreditCardNumber = creditCardNumber,
+                ExpirationDate = expirationDate
+            };
         }
 
         [Fact]
@@ -645,13 +643,13 @@ namespace PaySimpleSdkTests.AccountTests.ValidationTests
         {
             // Arrange
             var validatior = new CreditCardValidator();
-            var account = new CreditCard { BillingZipCode = "84101" };
+            var account = BuildCreditCard(billingZip: "84101");
 
             // Act
             var result = validatior.Validate(account);
 
             // Assert
-            Assert.False(result.Errors.Any(e => e.ErrorMessage == "BillingZipCode must be a valid US or CA postal code, acceptable formats are 11111, 11111-1111, A1A1A1, or A1A 1A1"));
+            Assert.Empty(result.Errors);
         }
 
         [Fact]
@@ -659,13 +657,13 @@ namespace PaySimpleSdkTests.AccountTests.ValidationTests
         {
             // Arrange
             var validatior = new CreditCardValidator();
-            var account = new CreditCard { BillingZipCode = "84101-7331" };
+            var account = BuildCreditCard(billingZip: "84101-7331");
 
             // Act
             var result = validatior.Validate(account);
 
             // Assert
-            Assert.False(result.Errors.Any(e => e.ErrorMessage == "BillingZipCode must be a valid US or CA postal code, acceptable formats are 11111, 11111-1111, A1A1A1, or A1A 1A1"));
+            Assert.Empty(result.Errors);
         }
 
         [Fact]
@@ -673,13 +671,13 @@ namespace PaySimpleSdkTests.AccountTests.ValidationTests
         {
             // Arrange
             var validatior = new CreditCardValidator();
-            var account = new CreditCard { BillingZipCode = "L4L 9C8" };
+            var account = BuildCreditCard(billingZip: "L4L 9C8");
 
             // Act
             var result = validatior.Validate(account);
 
             // Assert
-            Assert.False(result.Errors.Any(e => e.ErrorMessage == "BillingZipCode must be a valid US or CA postal code, acceptable formats are 11111, 11111-1111, A1A1A1, or A1A 1A1"));
+            Assert.Empty(result.Errors);
         }
 
         [Fact]
@@ -687,13 +685,27 @@ namespace PaySimpleSdkTests.AccountTests.ValidationTests
         {
             // Arrange
             var validatior = new CreditCardValidator();
-            var account = new CreditCard { BillingZipCode = "L4L9C8" };
+            var account = BuildCreditCard(billingZip:"L4L9C8");
 
             // Act
             var result = validatior.Validate(account);
 
             // Assert
-            Assert.False(result.Errors.Any(e => e.ErrorMessage == "BillingZipCode must be a valid US or CA postal code, acceptable formats are 11111, 11111-1111, A1A1A1, or A1A 1A1"));
+            Assert.Empty(result.Errors);
+        }
+
+        [Fact]
+        public void BillingZipcode_Is_Longer_Than_10_Characters_Returns_error()
+        {
+            // Arrange
+            var validator = new CreditCardValidator();
+            var account = BuildCreditCard(billingZip: "12345678901");
+
+            // Act
+            var result = validator.Validate(account);
+
+            // Assert
+            Assert.True(result.Errors.Any(e => e.ErrorMessage == BillingZipcodeValidationErrorMessage));
         }
 
         // *************************************************************************************************

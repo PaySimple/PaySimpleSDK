@@ -75,8 +75,7 @@ namespace FluentValidation
             if (string.IsNullOrWhiteSpace(property))
                 return true;
 
-            Regex regex = new Regex(@"(^\d{5}(-\d{4})?$)|(^[ABCEGHJKLMNPRSTVXY]{1}\d{1}[A-Z]{1} *\d{1}[A-Z]{1}\d{1}$)");
-            return regex.IsMatch(property);
+            return property.Length <= 10;
         }
     }
 }
