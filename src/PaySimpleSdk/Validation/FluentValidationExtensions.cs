@@ -42,6 +42,11 @@ namespace FluentValidation
         {
             return ruleBuilder.SetValidator(new PostalCode<string>());
         }
+
+        public static IRuleBuilderOptions<T, string> Country<T>(this IRuleBuilder<T, string> ruleBuilder)
+        {
+            return ruleBuilder.SetValidator(new Country<string>());
+        }
     }
 
     internal class Phone<T> : PropertyValidator
@@ -76,6 +81,25 @@ namespace FluentValidation
                 return true;
 
             return property.Length <= 10;
+        }
+    }
+
+    internal class Country<T> : PropertyValidator
+    {
+        public Country() 
+            : base ("{Property Name} is not valid")
+        { }
+
+        protected override bool IsValid(PropertyValidatorContext context)
+        {
+            var property = context.PropertyValue as string;
+
+            if (string.IsNullOrWhiteSpace(property))
+            {
+                return true;
+            }
+
+            return property.Length <= 3;
         }
     }
 }

@@ -27,13 +27,6 @@
 using System.Diagnostics.CodeAnalysis;
 namespace PaySimpleSdk.Helpers
 {
-    public enum CountryCode
-    {
-        CA,
-        US,
-		GB	
-    }
-
     public enum CustomerSort
     {
         FirstName,
@@ -233,7 +226,6 @@ namespace PaySimpleSdk.Helpers
         {
             switch (typeof(T).Name)
             {
-                case "CountryCode": return CountryCodeStrings;
                 case "CustomerSort": return CustomerSortStrings;
                 case "PaymentSort": return PaymentSortStrings;
                 case "PaymentStatus": return PaymentStatusStrings;
@@ -246,12 +238,6 @@ namespace PaySimpleSdk.Helpers
                 default: return null;
             }
         }
-
-        public static BiLookup<CountryCode, string> CountryCodeStrings = new BiLookup<CountryCode, string>
-        {
-            { CountryCode.CA, "CA" },
-            { CountryCode.US, "US" }
-        };
 
         public static BiLookup<CustomerSort, string> CustomerSortStrings = new BiLookup<CustomerSort, string>
         {
