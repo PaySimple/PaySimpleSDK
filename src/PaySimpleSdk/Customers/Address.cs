@@ -45,8 +45,8 @@ namespace PaySimpleSdk.Customers
         public StateCode? StateCode { get; set; }
         [JsonProperty("ZipCode")]
         public string ZipCode { get; set; }
-        [JsonProperty("Country")]
-        public string Country { get; set; }
+        [JsonProperty("Country"), JsonConverter(typeof(TypeEnumConverter<CountryCode, BiLookup<CountryCode, string>>))]
+        public CountryCode? Country { get; set; }
 
         public IEnumerable<ValidationError> Validate()
         {

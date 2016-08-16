@@ -34,12 +34,13 @@ namespace TestHarness
 
 		private void Domestic()
 		{
-			const string country = "US";
+			const CountryCode country = CountryCode.US;
 			var tests = new List<Task>();
 			var testCounter = 0;
 
 			var address = new Address
 			{
+				Country = country,
 				City = "Denver",
 				StateCode = StateCode.CO,
 				StreetAddress1 = "1414 Wynkoop St",
@@ -55,12 +56,13 @@ namespace TestHarness
 
 		private void Canadian()
 		{
-			const string country = "CA";
+			const CountryCode country = CountryCode.CA;
 			var tests = new List<Task>();
 			var testCounter = 0;
 
 			var billingAddress = new Address
 			{
+				Country = country,
 				City = "Ottowa",
 				StreetAddress1 = "234 Laurier Avenue West",
 				ZipCode = "K1A 0G9"
@@ -74,12 +76,13 @@ namespace TestHarness
 
 		private void UK()
 		{
-			const string country = "GB";
+			const CountryCode country = CountryCode.GB;
 			var tests = new List<Task>();
 			var testCounter = 0;
 
 			var address = new Address
 			{
+				Country = country,
 				City = "London",
 				StreetAddress1 = "4 Piccadilly Gardens",
 				ZipCode = "M1 1AF"
@@ -98,19 +101,19 @@ namespace TestHarness
 			var tests = new List<Task>();
 			var testCounter = 0;
 
-			tests.Add(ExecutePaymentTest("Danish card with 4 digit postal code and no address", "DK", "2100", null, ref testCounter));
-			tests.Add(ExecutePaymentTest("Israeli card with 7 digit postal code and no address", "IL", "6343229", null, ref testCounter));
+			tests.Add(ExecutePaymentTest("Danish card with 4 digit postal code and no address", CountryCode.DK, "2100", null, ref testCounter));
+			tests.Add(ExecutePaymentTest("Israeli card with 7 digit postal code and no address", CountryCode.IL, "6343229", null, ref testCounter));
 
 			Task.WaitAll(tests.ToArray());
 		}
 
-		private Task ExecutePaymentTest(string testName, string country, string billingZip,
+		private Task ExecutePaymentTest(string testName, CountryCode country, string billingZip,
 			Address customerBillingAddress, ref int testCounter)
 		{
 			testCounter++;
 			var customer = new Customer
 			{
-				FirstName = country,
+				FirstName = country.ToString(),
 				LastName = testCounter.ToString(),
 				ShippingSameAsBilling = true,
 				BillingAddress = customerBillingAddress

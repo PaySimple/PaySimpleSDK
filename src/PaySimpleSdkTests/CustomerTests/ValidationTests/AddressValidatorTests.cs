@@ -28,6 +28,7 @@ using PaySimpleSdk.Customers;
 using PaySimpleSdk.Customers.Validation;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using PaySimpleSdk.Helpers;
 using Xunit;
 
 namespace PaySimpleSdkTests.CustomerTests.ValidationTests
@@ -123,7 +124,7 @@ namespace PaySimpleSdkTests.CustomerTests.ValidationTests
 
         // *************************************************************************************************
         private const string ZipcodeValidationErrorMessage = "ZipCode cannot exceed 10 characters";
-        private Address BuildAddress(string city = "Denver", string streetAddress = "1515 Wynkoop", string zip = "80202", string country = "US")
+        private Address BuildAddress(string city = "Denver", string streetAddress = "1515 Wynkoop", string zip = "80202", CountryCode country = CountryCode.US)
         {
             return new Address
             {
@@ -217,92 +218,6 @@ namespace PaySimpleSdkTests.CustomerTests.ValidationTests
 
             // Assert
             Assert.True(result.Errors.Any(e => e.ErrorMessage == ZipcodeValidationErrorMessage));
-        }
-
-        // *************************************************************************************************
-
-        [Fact]
-        public void Country_Is_Longer_Than_3_Characters_Returns_Error()
-        {
-            // Arrange
-            var validator = new AddressValidator();
-            var address = BuildAddress(country: "Canada");
-
-            // Act
-            var result = validator.Validate(address);
-
-            // Assert
-            Assert.True(result.Errors.Any(e => e.ErrorMessage == "Country cannot exceed 3 characters"));
-        }
-
-        [Fact]
-        public void Country_Is_NULL_Is_Valid()
-        {
-            //Arrange
-            var validator = new AddressValidator();
-            var address = BuildAddress(country: null);
-
-            // Act
-            var result = validator.Validate(address);
-
-            // Assert
-            Assert.Empty(result.Errors);
-        }
-
-        [Fact]
-        public void Country_Is_Empty_Is_Valid()
-        {
-            // Arrange
-            var validator = new AddressValidator();
-            var address = BuildAddress(country: "");
-
-            // Act
-            var result = validator.Validate(address);
-
-            // Assert
-            Assert.Empty(result.Errors);
-        }
-
-        [Fact]
-        public void Country_Is_1_Character_Is_Valid()
-        {
-            // Arrange
-            var validator = new AddressValidator();
-            var address = BuildAddress(country: "A");
-
-            // Act
-            var result = validator.Validate(address);
-
-            // Assert
-            Assert.Empty(result.Errors);
-        }
-
-        [Fact]
-        public void Country_Is_2_Characters_Is_Valid()
-        {
-            // Arrange
-            var validator = new AddressValidator();
-            var address = BuildAddress(country: "US");
-            
-            // Act
-            var result = validator.Validate(address);
-
-            // Assert
-            Assert.Empty(result.Errors);
-        }
-
-        [Fact]
-        public void Country_Is_3_Characters_Is_Valid()
-        {
-            // Arrange
-            var validator = new AddressValidator();
-            var address = BuildAddress(country: "USA");
-
-            // Act
-            var result = validator.Validate(address);
-
-            // Assert
-            Assert.Empty(result.Errors);
         }
 
         // *************************************************************************************************

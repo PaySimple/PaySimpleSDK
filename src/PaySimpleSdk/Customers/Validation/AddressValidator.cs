@@ -36,7 +36,6 @@ namespace PaySimpleSdk.Customers.Validation
             RuleFor(m => m.StreetAddress2).Length(0, 250).WithMessage("StreetAddress2 cannot exceed 250 characters");
             RuleFor(m => m.City).NotEmpty().WithMessage("City is required").Length(0, 100).WithMessage("City cannot exceed 100 characters");
             RuleFor(m => m.ZipCode).NotEmpty().WithMessage("ZipCode is required").PostalCode().WithMessage("ZipCode cannot exceed 10 characters");
-            RuleFor(m => m.Country).Country().WithMessage("Country cannot exceed 3 characters");
         }
     }
 }

@@ -711,7 +711,7 @@ namespace TestHarness
                         City = "Salt Lake City",
                         StateCode = StateCode.UT,
                         ZipCode = "84101",
-                        Country = "US"
+                        Country = CountryCode.US
                     }
                 };
 
@@ -728,7 +728,7 @@ namespace TestHarness
                         City = "Salt Lake City",
                         StateCode = StateCode.UT,
                         ZipCode = "84101",
-                        Country = "US"
+                        Country = CountryCode.US
                     }
                 };
 
