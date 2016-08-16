@@ -27,6 +27,7 @@
 using PaySimpleSdk.Models;
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Net;
 using System.Runtime.Serialization;
 
 namespace PaySimpleSdk.Exceptions
@@ -36,6 +37,8 @@ namespace PaySimpleSdk.Exceptions
     public class PaySimpleEndpointException : Exception
     {
         public virtual ErrorResult EndpointErrors { get; private set; }
+
+		public virtual HttpStatusCode StatusCode { get; private set; }
 
         public PaySimpleEndpointException()
         { }
@@ -48,10 +51,11 @@ namespace PaySimpleSdk.Exceptions
             : base(message, inner)
         { }
 
-        internal PaySimpleEndpointException(ErrorResult errors)
-            : base("Endpoint Error", null)
+        internal PaySimpleEndpointException(ErrorResult errors, HttpStatusCode statusCode)
+            : base($"Endpoint Error: {statusCode}: {errors.ResultData}", null)
         {
-            this.EndpointErrors = errors;
+            EndpointErrors = errors;
+	        StatusCode = statusCode;
         }
 
         protected PaySimpleEndpointException(SerializationInfo info, StreamingContext context)

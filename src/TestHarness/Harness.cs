@@ -68,6 +68,9 @@ namespace TestHarness
 
                 // Run this for PaySimple Certification
                 //await Certification();
+
+                var internationalTests = new InternationalPaymentsTests(settings);
+                internationalTests.RunTests();
             }
             catch (PaySimpleException ex)
             {
@@ -76,6 +79,10 @@ namespace TestHarness
             catch (PaySimpleEndpointException ex)
             {
                 DumpObject("PaySimpleEndpointException", ex.EndpointErrors);
+            }
+            catch (Exception ex)
+            {
+                DumpObject("Exception", ex);
             }
         }
 
@@ -1278,7 +1285,7 @@ namespace TestHarness
         #endregion
 
         #region DumpObject
-        private void DumpObject(string functionName, object obj)
+        public static void DumpObject(string functionName, object obj)
         {
             var sep = "********************************************************************";
 
@@ -1286,8 +1293,7 @@ namespace TestHarness
             Console.WriteLine((functionName + " ").PadRight(sep.Length, '*'));
             Console.WriteLine(sep);
 
-            if (obj != null)
-                obj.PrintDump();
+            obj?.PrintDump();
 
             Console.WriteLine("");
         }

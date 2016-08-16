@@ -48,11 +48,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Harness.cs" />
+    <Compile Include="InternationalPaymentsTests.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

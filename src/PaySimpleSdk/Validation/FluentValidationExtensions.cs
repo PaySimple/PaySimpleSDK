@@ -42,6 +42,11 @@ namespace FluentValidation
         {
             return ruleBuilder.SetValidator(new PostalCode<string>());
         }
+
+        public static IRuleBuilderOptions<T, string> Country<T>(this IRuleBuilder<T, string> ruleBuilder)
+        {
+            return ruleBuilder.SetValidator(new Country<string>());
+        }
     }
 
     internal class Phone<T> : PropertyValidator
@@ -75,8 +80,26 @@ namespace FluentValidation
             if (string.IsNullOrWhiteSpace(property))
                 return true;
 
-            Regex regex = new Regex(@"(^\d{5}(-\d{4})?$)|(^[ABCEGHJKLMNPRSTVXY]{1}\d{1}[A-Z]{1} *\d{1}[A-Z]{1}\d{1}$)");
-            return regex.IsMatch(property);
+            return property.Length <= 10;
+        }
+    }
+
+    internal class Country<T> : PropertyValidator
+    {
+        public Country() 
+            : base ("{Property Name} is not valid")
+        { }
+
+        protected override bool IsValid(PropertyValidatorContext context)
+        {
+            var property = context.PropertyValue as string;
+
+            if (string.IsNullOrWhiteSpace(property))
+            {
+                return true;
+            }
+
+            return property.Length <= 3;
         }
     }
 }

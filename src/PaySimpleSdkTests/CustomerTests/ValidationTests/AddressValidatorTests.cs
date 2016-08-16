@@ -28,6 +28,7 @@ using PaySimpleSdk.Customers;
 using PaySimpleSdk.Customers.Validation;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using PaySimpleSdk.Helpers;
 using Xunit;
 
 namespace PaySimpleSdkTests.CustomerTests.ValidationTests
@@ -122,12 +123,23 @@ namespace PaySimpleSdkTests.CustomerTests.ValidationTests
         }
 
         // *************************************************************************************************
+        private const string ZipcodeValidationErrorMessage = "ZipCode cannot exceed 10 characters";
+        private Address BuildAddress(string city = "Denver", string streetAddress = "1515 Wynkoop", string zip = "80202", CountryCode country = CountryCode.US)
+        {
+            return new Address
+            {
+                City = city,
+                StreetAddress1 = streetAddress,
+                ZipCode = zip,
+                Country = country
+            };
+        }
 
         [Fact]
         public void ZipCode_Is_Empty_Generates_Error()
         {
             // Arrange
-            var address = new Address { ZipCode = "" };
+            var address = BuildAddress(zip: "");
             var validator = new AddressValidator();
 
             // Act
@@ -137,32 +149,19 @@ namespace PaySimpleSdkTests.CustomerTests.ValidationTests
             Assert.True(result.Errors.Any(e => e.ErrorMessage == "ZipCode is required"));
         }
 
-        [Fact]
-        public void ZipCode_Is_Not_Valid_Generates_Error()
-        {
-            // Arrange
-            var validatior = new AddressValidator();
-            var address = new Address { ZipCode = "789456" };
-
-            // Act
-            var result = validatior.Validate(address);
-
-            // Assert
-            Assert.True(result.Errors.Any(e => e.ErrorMessage == "ZipCode must be a valid US or CA postal code, acceptable formats are 11111, 11111-1111, A1A1A1, or A1A 1A1"));
-        }
 
         [Fact]
         public void ZipCode_Is_5_Digits_Is_Valid()
         {
             // Arrange
             var validatior = new AddressValidator();
-            var address = new Address { ZipCode = "84101" };
+            var address = BuildAddress(zip: "84101");
 
             // Act
             var result = validatior.Validate(address);
 
             // Assert
-            Assert.False(result.Errors.Any(e => e.ErrorMessage == "ZipCode must be a valid US or CA postal code, acceptable formats are 11111, 11111-1111, A1A1A1, or A1A 1A1"));
+            Assert.Empty(result.Errors);
         }
 
         [Fact]
@@ -170,13 +169,13 @@ namespace PaySimpleSdkTests.CustomerTests.ValidationTests
         {
             // Arrange
             var validatior = new AddressValidator();
-            var address = new Address { ZipCode = "84101-7331" };
+            var address = BuildAddress(zip: "84101-7331");
 
             // Act
             var result = validatior.Validate(address);
 
             // Assert
-            Assert.False(result.Errors.Any(e => e.ErrorMessage == "ZipCode must be a valid US or CA postal code, acceptable formats are 11111, 11111-1111, A1A1A1, or A1A 1A1"));
+            Assert.Empty(result.Errors);
         }
 
         [Fact]
@@ -184,13 +183,13 @@ namespace PaySimpleSdkTests.CustomerTests.ValidationTests
         {
             // Arrange
             var validatior = new AddressValidator();
-            var address = new Address { ZipCode = "L4L 9C8" };
+            var address = BuildAddress(zip: "L4L 9C8");
 
             // Act
             var result = validatior.Validate(address);
 
             // Assert
-            Assert.False(result.Errors.Any(e => e.ErrorMessage == "ZipCode must be a valid US or CA postal code, acceptable formats are 11111, 11111-1111, A1A1A1, or A1A 1A1"));
+            Assert.Empty(result.Errors);
         }
 
         [Fact]
@@ -198,13 +197,27 @@ namespace PaySimpleSdkTests.CustomerTests.ValidationTests
         {
             // Arrange
             var validatior = new AddressValidator();
-            var address = new Address { ZipCode = "L4L9C8" };
+            var address = BuildAddress(zip: "L4L9C8");
 
             // Act
             var result = validatior.Validate(address);
 
             // Assert
-            Assert.False(result.Errors.Any(e => e.ErrorMessage == "ZipCode must be a valid US or CA postal code, acceptable formats are 11111, 11111-1111, A1A1A1, or A1A 1A1"));
+            Assert.Empty(result.Errors);
+        }
+
+        [Fact]
+        public void BillingZipcode_Is_Longer_Than_10_Characters_Returns_Error()
+        {
+            // Arrange
+            var validator = new AddressValidator();
+            var address = BuildAddress(zip: "12345678901");
+
+            // Act
+            var result = validator.Validate(address);
+
+            // Assert
+            Assert.True(result.Errors.Any(e => e.ErrorMessage == ZipcodeValidationErrorMessage));
         }
 
         // *************************************************************************************************
