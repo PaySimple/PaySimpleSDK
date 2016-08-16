@@ -13,19 +13,16 @@ Install-Package PaySimpleSdk
 Create new instance of the PaySimpleSettings object and pass your Api Key and Username:
 
 ```
-#!C#
 var settings = new PaySimpleSettings("AoOtRylA63570WmH3eqChyFRqwhTnA2g0dnsV7zzQko4s4yKWdBorA1WiT7dK2H2xz06P562Hqv0heYBdfNamfQyxX50drtpL8s7", "AUserName");
 ```
 Optionally, declare the number of retries on failed requests:
 ```
-#!C#
 var settings = new PaySimpleSettings("AoOtRylA63570WmH3eqChyFRqwhTnA2g0dnsV7zzQko4s4yKWdBorA1WiT7dK2H2xz06P562Hqv0heYBdfNamfQyxX50drtpL8s7", "AUserName", automaticRetryCount: 5);
 ```
 
 Create a service and start calling the API:
 
 ```
-#!C#
 var paymentScheduleService = new PaymentScheduleService(settings);
 var paymentSchedules = await paymentScheduleService.GetAllPaymentSchedulesAsync();
 ```
