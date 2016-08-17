@@ -33,16 +33,12 @@ That's it!
 
 Visit the following documentation pages for each of the SDK services:
 
-* [Account Service](https://bitbucket.org/scottlance/paysimplesdk/wiki/AccountService)
-* [Customer Service](https://bitbucket.org/scottlance/paysimplesdk/wiki/CustomerService)
-* [Payment Service](https://bitbucket.org/scottlance/paysimplesdk/wiki/PaymentService)
-* [Payment Schedule Service](https://bitbucket.org/scottlance/paysimplesdk/wiki/PaymentScheduleService)
+* [Account Service](https://github.com/PaySimple/PaySimpleSDK/wiki/Account-Service)
+* [Customer Service](https://github.com/PaySimple/PaySimpleSDK/wiki/Customer-Service)
+* [Payment Service](https://github.com/PaySimple/PaySimpleSDK/wiki/Payment-Service)
+* [Payment Schedule Service](https://github.com/PaySimple/PaySimpleSDK/wiki/Payment-Schedule-Service)
 
-Visit the documentation for usage on the PagedResult<T> class and PaySimple Exceptions:
+Visit the documentation for usage on the PagedResult&lt;T&gt; class and PaySimple Exceptions:
 
-* [PagedResult<T>](https://bitbucket.org/scottlance/paysimplesdk/wiki/PagedResult)
-* [Exceptions](https://bitbucket.org/scottlance/paysimplesdk/wiki/Exceptions)
-
-## Documentation
-
-Visit the documentation wiki at: https://bitbucket.org/scottlance/paysimplesdk/wiki/Home
+* [PagedResult&lt;T&gt;](https://github.com/PaySimple/PaySimpleSDK/wiki/PagedResult)
+* [Exceptions](https://github.com/PaySimple/PaySimpleSDK/wiki/Exceptions)
