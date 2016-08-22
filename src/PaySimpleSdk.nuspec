@@ -10,7 +10,7 @@
     <projectUrl>https://github.com/PaySimple/PaySimpleSDK</projectUrl>
     <iconUrl>https://bitbucket.org/scottlance/paysimplesdk/avatar/128/?ts=1438640642</iconUrl>
     <description>PaySimple SDK is a fully asynchronous and validatable SDK designed around the PaySimple API v4</description>    
-    <copyright>Copyright 2015</copyright>
+    <copyright>Copyright 2016</copyright>
     <tags>PaySimple</tags>
     <dependencies>
       <dependency id="FluentValidation" version="5.6.2.0" />      
