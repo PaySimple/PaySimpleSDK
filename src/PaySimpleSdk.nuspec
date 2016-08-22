@@ -4,12 +4,12 @@
     <id>PaySimpleSdk</id>
     <version>1.1.0</version>
     <title>PaySimple SDK</title>
-    <authors>Scott Lance</authors>
-    <owners>Scott Lance</owners>
+    <authors>Scott Lance, PaySimple</authors>
+    <owners>Scott Lance, PaySimple</owners>
     <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
-    <projectUrl>https://bitbucket.org/scottlance/paysimplesdk</projectUrl>
+    <projectUrl>https://github.com/PaySimple/PaySimpleSDK</projectUrl>
     <iconUrl>https://bitbucket.org/scottlance/paysimplesdk/avatar/128/?ts=1438640642</iconUrl>
-    <description>PaySimple SDK is a fully asyncronous and validatable SDK designed around the PaySimple API v4</description>    
+    <description>PaySimple SDK is a fully asynchronous and validatable SDK designed around the PaySimple API v4</description>    
     <copyright>Copyright 2015</copyright>
     <tags>PaySimple</tags>
     <dependencies>
