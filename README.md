@@ -1,10 +1,10 @@
-# PaySimple SDK v1.0.11
+# PaySimple SDK v1.1.0
 
 PaySimple SDK is a fully asynchronous and validatable .NET SDK designed around the PaySimple API v4
 
 ## Installation
 
-Use NuGet to get the latest version of the SDK 
+Use NuGet to get the latest version of the SDK
 
 ```
 Install-Package PaySimpleSdk
