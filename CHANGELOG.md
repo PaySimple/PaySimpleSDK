@@ -16,3 +16,7 @@ Updated library to allow for retries on failed web requests:
 #v1.0.10 - 5.27.2016
 
 Fixed an issue where the new constructor created for retries broke backwards compatability
+
+#v1.1.0 - 8.23.2016
+
+Add support for international payments.  Validators on Postal Codes were removed and a list of all countries was added to the CountryCode enumeration
