@@ -1,6 +1,6 @@
 #PaySimple SDK Changelog
 
-#V1.0.11 - 2.01.2017
+#V1.1.1 - 2.01.2017
 
 Fixed an issue where a deserialization exception would get obscured.
 
@@ -8,6 +8,10 @@ Updated dependent libraries
 
 * FluentValidation 5.6.2.0 > 6.2.1
 * Newtonsoft.Json 6.0.8 > 9.0.1
+
+#v1.1.0 - 8.23.2016
+
+Add support for international payments. Validators on Postal Codes were removed and a list of all countries was added to the CountryCode enumeration
 
 #v1.0.10 - 5.27.2016
 
