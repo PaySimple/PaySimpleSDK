@@ -171,15 +171,15 @@ namespace PaySimpleSdk.Helpers
                     return result;
 
                 var content = await result.Content.ReadAsStringAsync();
-	            try
-	            {
-					var errors = serialization.Deserialize<ErrorResult>(content);
-					throw new PaySimpleEndpointException(errors, result.StatusCode);
-	            }
-	            catch (Exception e)
-	            {
-		            throw new PaySimpleEndpointException($"Error deserializing response: {content}", e);
-	            }
+                try
+                {
+                    var errors = serialization.Deserialize<ErrorResult>(content);
+                    throw new PaySimpleEndpointException(errors, result.StatusCode);
+                }
+                catch (Exception e) when (!(e is PaySimpleEndpointException))
+                {
+                    throw new PaySimpleEndpointException($"Error deserializing response: {content}", e);
+                }
             }
         }
     }
