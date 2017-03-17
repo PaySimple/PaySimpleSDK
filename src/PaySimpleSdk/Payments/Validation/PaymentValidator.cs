@@ -32,9 +32,9 @@ namespace PaySimpleSdk.Payments.Validation
     {
         public PaymentValidator()
         {
-            RuleFor(m => m.AccountId).GreaterThan(0).WithMessage("AccountId must be a interger greater than 0");
+	        RuleFor(m => m.AccountId).GreaterThan(0).WithMessage("AccountId must be a interger greater than 0");
             RuleFor(m => m.Amount).GreaterThan(0).WithMessage("Amount must be greater than 0.00");
-            RuleFor(m => m.Cvv).Matches(@"^(|\d{3,4})$").WithMessage("CVV is invalid");
+            RuleFor(m => m.Cvv).Matches(@"^(|\d{3,4})$").WithMessage("CVV is invalid").When(m => string.IsNullOrEmpty(m.PaymentToken));
             RuleFor(m => m.InvoiceNumber).Length(0, 50).WithMessage("InvoiceNumber cannot exceed 50 characters");
             RuleFor(m => m.PurchaseOrderNumber).Length(0, 50).WithMessage("PurchaseOrderNumber cannot exceed 50 characters");
             RuleFor(m => m.OrderId).Length(0, 50).WithMessage("OrderId cannot exceed 50 characters");

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-#region License
+﻿#region License
 // The MIT License (MIT)
 //
 // Copyright (c) 2015 Scott Lance
@@ -27,33 +24,19 @@ using System.Linq;
 // The most recent version of this license can be found at: http://opensource.org/licenses/MIT
 #endregion
 
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
-using PaySimpleSdk.Accounts;
-using PaySimpleSdk.Exceptions;
-using PaySimpleSdk.Payments.Validation;
-using PaySimpleSdk.Validation;
+using FluentValidation;
 
-namespace PaySimpleSdk.Payments
+namespace PaySimpleSdk.Customers.Validation
 {
-	/// <summary>
-	/// Used to retrieve a token that will represent the protected card data
-	/// </summary>
-	public class PaymentTokenRequest : ProtectedCardData, IValidatable
-	{
-		[JsonProperty]
-		public int CustomerAccountId { get; set; }
-
-		[JsonProperty]
-		public int CustomerId { get; set; }
-
-		[JsonProperty]
-		public bool IsNewlyCreated { get; set; }
-
-		public IEnumerable<ValidationError> Validate()
-		{
-			return Validator.Validate<PaymentTokenRequest, PaymentTokenRequestValidator>(this);
-		}
-	}
+    internal class CustomerAndAccountRequestValidator : AbstractValidator<CustomerAndAccountRequest>
+    {
+        public CustomerAndAccountRequestValidator()
+        {
+            RuleFor(m => m.Customer).NotEmpty().WithMessage("Customer is required");
+            RuleFor(m => m.Customer.Email).NotEmpty().WithMessage("Customer email is required");
+            RuleFor(m => m.AchAccount).NotEmpty().WithMessage("Account is required").When(m => m.CreditCardAccount == null);
+            RuleFor(m => m.CreditCardAccount).NotEmpty().WithMessage("Account is required").When(m => m.AchAccount == null);
+           
+        }
+    }
 }

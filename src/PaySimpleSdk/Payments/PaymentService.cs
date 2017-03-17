@@ -152,6 +152,7 @@ namespace PaySimpleSdk.Payments
 
 		public async Task<PaymentToken> GetPaymentTokenAsync(PaymentTokenRequest request)
 		{
+			validationService.Validate(request);
 			var endpoint = $"{settings.BaseUrl}{Endpoints.PaymentToken}/";
 			var result = await webServiceRequest.PostDeserializedAsync<PaymentTokenRequest, Result<PaymentToken>>(new Uri(endpoint), request);
 			return result.Response;

@@ -202,7 +202,7 @@ namespace TestHarness
             };
 
             visa = await CreateCreditCardAccountAsync(visa);
-
+			
             if (visa == null)
             {
                 Console.WriteLine("Failed to create Credit Card account");
@@ -338,7 +338,7 @@ namespace TestHarness
 		        CustomerId = warrior.Id,
 		        Cvv = "999"
 	        };
-
+			
 	        var paymentToken = await GetPaymentTokenAsync(tokenRequest);
 
 			if (string.IsNullOrWhiteSpace(paymentToken?.Token))
@@ -347,6 +347,22 @@ namespace TestHarness
 				return;
 			}
 
+			// Make payment with a payment token
+			var tokenPayment = new Payment
+			{
+				AccountId = visa.Id,
+				PaymentToken = paymentToken.Token,
+				Amount = 5.00M
+			};
+			tokenPayment = await CreatePaymentAsync(tokenPayment);
+
+			if (tokenPayment == null)
+			{
+				Console.WriteLine("Failed to make payment using token");
+				return;
+			}
+
+			// Make ach payment
 			var achPayment = new Payment
             {
                 AccountId = ach.Id,
@@ -361,6 +377,7 @@ namespace TestHarness
                 return;
             }
 
+			// Make credit card payment
             var creditCardPayment = new Payment
             {
                 AccountId = visa.Id,

@@ -106,8 +106,10 @@ namespace PaySimpleSdk.Payments
         public DateTime? LastModified { get; internal set; }
         [JsonProperty("RequiresReceipt")]
         public bool RequiresReceipt { get; set; }
+		[JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+		public string PaymentToken { get; set; }
 
-        public IEnumerable<ValidationError> Validate()
+		public IEnumerable<ValidationError> Validate()
         {
             var errors = new List<ValidationError>();
             errors.AddRange(Validator.Validate<Payment, PaymentValidator>(this));
