@@ -42,5 +42,7 @@ namespace PaySimpleSdk.Payments
         Task<PagedResult<IEnumerable<Payment>>> GetPaymentsAsync(DateTime? startDate = null, DateTime? endDate = null, IEnumerable<PaymentStatus> status = null, PaymentSort sortBy = PaymentSort.PaymentId, SortDirection direction = SortDirection.DESC, int page = 1, int pageSize = 200, bool lite = false);
         Task<Payment> ReversePaymentAsync(int paymentId);
         Task<Payment> VoidPaymentAsync(int paymentId);
+        Task<PaymentToken> GetPaymentTokenAsync(PaymentTokenRequest request);
+        Task<CheckoutToken> GetCheckoutTokenAsync();
     }
 }

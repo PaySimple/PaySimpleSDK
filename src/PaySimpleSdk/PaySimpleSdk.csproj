@@ -98,12 +98,16 @@
     <Compile Include="PaymentSchedules\PaymentScheduleService.cs" />
     <Compile Include="PaymentSchedules\RecurringPayment.cs" />
     <Compile Include="PaymentSchedules\Validation\RecurringPaymentValidator.cs" />
+    <Compile Include="Payments\CheckoutToken.cs" />
+    <Compile Include="Payments\CheckoutTokenRequest.cs" />
     <Compile Include="Payments\FailureData.cs" />
     <Compile Include="Payments\Interfaces\IPaymentService.cs" />
     <Compile Include="Payments\NewAccountPayment.cs" />
     <Compile Include="Payments\NewCustomerPayment.cs" />
     <Compile Include="Payments\Payment.cs" />
     <Compile Include="Payments\PaymentService.cs" />
+    <Compile Include="Payments\PaymentToken.cs" />
+    <Compile Include="Payments\PaymentTokenRequest.cs" />
     <Compile Include="Payments\ReceiptOptions.cs" />
     <Compile Include="Payments\Validation\PaymentValidator.cs" />
     <Compile Include="Payments\Validation\ReceiptOptionsValidator.cs" />
