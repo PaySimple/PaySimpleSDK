@@ -249,8 +249,41 @@ namespace TestHarness
                 return;
             }
 
-            // Get All Customer Accounts
-            var customerAccounts = await GetAllAccountsAsync(warrior.Id);
+			// Match Customer and Credit Card
+	        visa.CreditCardNumber = "4111111111111111";
+	        var customerAndCreditCard = new CustomerAndAccountRequest
+	        {
+		        Customer = warrior,
+				CreditCardAccount = visa
+	        };
+
+			var matchCreditCardToken = await MatchOrCreateCustomerAndCreditCardAccountAsync(customerAndCreditCard);
+
+			if (string.IsNullOrWhiteSpace(matchCreditCardToken?.Token) )
+			{
+				Console.WriteLine("Failed to match or create customer and credit card");
+				return;
+			}
+
+			// Match Customer and Ach
+	        ach.RoutingNumber = "131111114";
+	        ach.AccountNumber = "751111111";
+			var customerAndAch = new CustomerAndAccountRequest
+			{
+				Customer = warrior,
+				AchAccount = ach
+			};
+
+			var matchAchToken = await MatchOrCreateCustomerAndAchAccountAsync(customerAndAch);
+
+			if (string.IsNullOrWhiteSpace(matchAchToken?.Token))
+			{
+				Console.WriteLine("Failed to match or create customer and ach");
+				return;
+			}
+
+			// Get All Customer Accounts
+			var customerAccounts = await GetAllAccountsAsync(warrior.Id);
 
             if (customerAccounts == null)
             {
@@ -298,7 +331,23 @@ namespace TestHarness
             await SetDefaultAccountAsync(warrior.Id, visa.Id);
 
             // Create Payments
-            var achPayment = new Payment
+
+	        var tokenRequest = new PaymentTokenRequest
+	        {
+		        CustomerAccountId = visa.Id,
+		        CustomerId = warrior.Id,
+		        Cvv = "999"
+	        };
+
+	        var paymentToken = await GetPaymentTokenAsync(tokenRequest);
+
+			if (string.IsNullOrWhiteSpace(paymentToken?.Token))
+			{
+				Console.WriteLine("Failed to get payment token");
+				return;
+			}
+
+			var achPayment = new Payment
             {
                 AccountId = ach.Id,
                 Amount = 5.00M
@@ -886,11 +935,31 @@ namespace TestHarness
             return result;
         }
 
-        #endregion
+		public async Task<PaymentToken> MatchOrCreateCustomerAndCreditCardAccountAsync(CustomerAndAccountRequest request)
+		{
+			var result = await customerService.MatchOrCreateCustomerAndCreditCardAccountAsync(request);
 
-        #region Payment Service Methods
+			if (result != null)
+				DumpObject("MatchOrCreateCustomerAndCreditCardAccountAsync", result);
 
-        public async Task PaymentCertification(int achAccountId, int creditCardAccountId)
+			return result;
+		}
+
+		public async Task<PaymentToken> MatchOrCreateCustomerAndAchAccountAsync(CustomerAndAccountRequest request)
+		{
+			var result = await customerService.MatchOrCreateCustomerAndAchAccountAsync(request);
+
+			if (result != null)
+				DumpObject("MatchOrCreateCustomerAndAchAccountAsync", result);
+
+			return result;
+		}
+
+		#endregion
+
+		#region Payment Service Methods
+
+		public async Task PaymentCertification(int achAccountId, int creditCardAccountId)
         {
             try
             {
@@ -1062,11 +1131,21 @@ namespace TestHarness
             return result;
         }
 
-        #endregion
+		public async Task<PaymentToken> GetPaymentTokenAsync(PaymentTokenRequest request)
+		{
+			var result = await paymentService.GetPaymentTokenAsync(request);
 
-        #region Payment Schedule Service Methods
-        
-        public async Task<NewAccountPaymentPlan<T>> CreateNewAccountPaymentPlanAsync<T>(NewAccountPaymentPlan<T> accountPaymentPlan)
+			if (result != null)
+				DumpObject("GetPaymentTokenAsync", result);
+
+			return result;
+		}
+
+		#endregion
+
+		#region Payment Schedule Service Methods
+
+		public async Task<NewAccountPaymentPlan<T>> CreateNewAccountPaymentPlanAsync<T>(NewAccountPaymentPlan<T> accountPaymentPlan)
             where T : Account, new()
         {
             try
