@@ -33,7 +33,7 @@ using System.Collections.Generic;
 
 namespace PaySimpleSdk.Accounts
 {
-    public class CreditCard : Account, IValidatable
+    public class CreditCard : Account
     {
         [JsonProperty("CreditCardNumber")]
         public string CreditCardNumber { get; set; }

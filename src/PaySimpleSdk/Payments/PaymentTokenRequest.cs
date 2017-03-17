@@ -4,10 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using PaySimpleSdk.Accounts;
 
 namespace PaySimpleSdk.Payments
 {
-	public class PaymentTokenRequest
+	/// <summary>
+	/// Used to retrieve a token that will represent the protected card data
+	/// </summary>
+	public class PaymentTokenRequest : ProtectedCardData
 	{
 		[JsonProperty]
 		public int CustomerAccountId { get; set; }
@@ -17,11 +21,5 @@ namespace PaySimpleSdk.Payments
 
 		[JsonProperty]
 		public bool IsNewlyCreated { get; set; }
-
-		[JsonProperty]
-		public string TrackData { get; set; }
-
-		[JsonProperty]
-		public string Cvv { get; set; }
 	}
 }

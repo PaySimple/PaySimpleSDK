@@ -53,5 +53,17 @@ namespace PaySimpleSdk.Customers
         Task<PagedResult<IEnumerable<RecurringPayment>>> GetRecurringPaymentSchedulesAsync(int customerId, DateTime? startDate = null, DateTime? endDate = null, ScheduleStatus? status = null, ScheduleSort sortBy = ScheduleSort.Id, SortDirection direction = SortDirection.ASC, int page = 1, int pageSize = 200, bool lite = false);
         Task SetDefaultAccountAsync(int customerId, int accountId);
         Task<Customer> UpdateCustomerAsync(Customer customer);
-    }
+		/// <summary>
+		/// Will match or create a new customer and credit card account
+		/// </summary>
+		/// <param name="request"></param>
+		/// <returns></returns>
+        Task<PaymentToken> MatchOrCreateCustomerAndCreditCardAccountAsync(CustomerAndAccountRequest request);
+		/// <summary>
+		/// Will match or create a new customer and ach account
+		/// </summary>
+		/// <param name="request"></param>
+		/// <returns></returns>
+		Task<PaymentToken> MatchOrCreateCustomerAndAchAccountAsync(CustomerAndAccountRequest request);
+	}
 }

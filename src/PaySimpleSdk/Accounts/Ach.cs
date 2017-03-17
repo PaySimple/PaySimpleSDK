@@ -32,7 +32,7 @@ using System.Collections.Generic;
 
 namespace PaySimpleSdk.Accounts
 {
-    public class Ach : Account, IValidatable
+    public class Ach : Account
     {
         [JsonProperty("AccountNumber")]
         public string AccountNumber { get; set; }

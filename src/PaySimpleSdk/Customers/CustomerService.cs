@@ -259,5 +259,19 @@ namespace PaySimpleSdk.Customers
             var result = await webServiceRequest.PutDeserializedAsync<Customer, Result<Customer>>(new Uri(endpoint), customer);
             return result.Response;
         }
+
+	    public async Task<PaymentToken> MatchOrCreateCustomerAndCreditCardAccountAsync(CustomerAndAccountRequest request)
+	    {
+			var endpoint = $"{settings.BaseUrl}{Endpoints.MatchOrCreateCustomerAndCreditCardAccount}/";
+			var result = await webServiceRequest.PostDeserializedAsync<CustomerAndAccountRequest, Result<PaymentToken>>(new Uri(endpoint), request);
+			return result.Response;
+		}
+
+	    public async Task<PaymentToken> MatchOrCreateCustomerAndAchAccountAsync(CustomerAndAccountRequest request)
+	    {
+			var endpoint = $"{settings.BaseUrl}{Endpoints.MatchOrCreateCustomerAndAchAccount}/";
+			var result = await webServiceRequest.PostDeserializedAsync<CustomerAndAccountRequest, Result<PaymentToken>>(new Uri(endpoint), request);
+			return result.Response;
+		}
     }
 }

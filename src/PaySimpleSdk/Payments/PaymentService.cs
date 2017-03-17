@@ -150,18 +150,18 @@ namespace PaySimpleSdk.Payments
             return result.Response;
         }
 
-	    public async Task<CheckoutToken> GetCheckoutTokenAsync()
+		public async Task<PaymentToken> GetPaymentTokenAsync(PaymentTokenRequest request)
+		{
+			var endpoint = $"{settings.BaseUrl}{Endpoints.PaymentToken}/";
+			var result = await webServiceRequest.PostDeserializedAsync<PaymentTokenRequest, Result<PaymentToken>>(new Uri(endpoint), request);
+			return result.Response;
+		}
+
+		public async Task<CheckoutToken> GetCheckoutTokenAsync()
 	    {
 			var endpoint = $"{settings.BaseUrl}{Endpoints.CheckoutToken}/";
 			var result = await webServiceRequest.PostDeserializedAsync<CheckoutTokenRequest, Result<CheckoutToken>>(new Uri(endpoint), new CheckoutTokenRequest());
 		    return result.Response;
 	    }
-
-	    public async Task<PaymentToken> GetPaymentTokenAsync(PaymentTokenRequest request)
-	    {
-			var endpoint = $"{settings.BaseUrl}{Endpoints.PaymentToken}/";
-			var result = await webServiceRequest.PostDeserializedAsync<PaymentTokenRequest, Result<PaymentToken>>(new Uri(endpoint), request);
-			return result.Response;
-		}
     }
 }

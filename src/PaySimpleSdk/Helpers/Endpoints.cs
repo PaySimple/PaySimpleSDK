@@ -38,5 +38,7 @@ namespace PaySimpleSdk.Helpers
         public const string RecurringPayment = "/v4/recurringpayment";
         public const string PaymentToken = "/v4/paymenttoken";
         public const string CheckoutToken = "/v4/checkouttoken";
+        public const string MatchOrCreateCustomerAndCreditCardAccount = "/v4/matchcreditcard";
+        public const string MatchOrCreateCustomerAndAchAccount = "/v4/matchach";
     }
 }
