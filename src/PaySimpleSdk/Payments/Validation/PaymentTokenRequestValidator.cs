@@ -24,29 +24,18 @@
 // The most recent version of this license can be found at: http://opensource.org/licenses/MIT
 #endregion
 
-using Newtonsoft.Json;
-using PaySimpleSdk.Accounts.Validation;
-using PaySimpleSdk.Exceptions;
-using PaySimpleSdk.Helpers;
-using PaySimpleSdk.Validation;
-using System.Collections.Generic;
+using FluentValidation;
 
-namespace PaySimpleSdk.Accounts
+namespace PaySimpleSdk.Payments.Validation
 {
-    public class CreditCard : Account
+    internal class PaymentTokenRequestValidator : AbstractValidator<PaymentTokenRequest>
     {
-        [JsonProperty("CreditCardNumber")]
-        public string CreditCardNumber { get; set; }
-        [JsonProperty("ExpirationDate")]
-        public string ExpirationDate { get; set; }
-        [JsonProperty("Issuer")]
-        public Issuer Issuer { get; set; }
-        [JsonProperty("BillingZipCode")]
-        public string BillingZipCode { get; set; }
-
-        public override IEnumerable<ValidationError> Validate()
+        public PaymentTokenRequestValidator()
         {
-            return Validator.Validate<CreditCard, CreditCardValidator>(this);
+	        RuleFor(m => m.CustomerAccountId).GreaterThan(0).WithMessage("CustomerAccountId must be a integer greater than 0");
+            RuleFor(m => m.CustomerId).GreaterThan(0).WithMessage("CustomerId must be a interger greater than 0");
+			// would be nice to validate this based on card type and is 3 or 4 digits not both
+			RuleFor(m => m.Cvv).Matches(@"^(|\d{3,4})$").WithMessage("CVV is invalid");
         }
     }
 }

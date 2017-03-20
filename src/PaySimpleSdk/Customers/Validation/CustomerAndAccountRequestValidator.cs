@@ -24,29 +24,19 @@
 // The most recent version of this license can be found at: http://opensource.org/licenses/MIT
 #endregion
 
-using Newtonsoft.Json;
-using PaySimpleSdk.Accounts.Validation;
-using PaySimpleSdk.Exceptions;
-using PaySimpleSdk.Helpers;
-using PaySimpleSdk.Validation;
-using System.Collections.Generic;
+using FluentValidation;
 
-namespace PaySimpleSdk.Accounts
+namespace PaySimpleSdk.Customers.Validation
 {
-    public class CreditCard : Account
+    internal class CustomerAndAccountRequestValidator : AbstractValidator<CustomerAndAccountRequest>
     {
-        [JsonProperty("CreditCardNumber")]
-        public string CreditCardNumber { get; set; }
-        [JsonProperty("ExpirationDate")]
-        public string ExpirationDate { get; set; }
-        [JsonProperty("Issuer")]
-        public Issuer Issuer { get; set; }
-        [JsonProperty("BillingZipCode")]
-        public string BillingZipCode { get; set; }
-
-        public override IEnumerable<ValidationError> Validate()
+        public CustomerAndAccountRequestValidator()
         {
-            return Validator.Validate<CreditCard, CreditCardValidator>(this);
+            RuleFor(m => m.Customer).NotEmpty().WithMessage("Customer is required");
+            RuleFor(m => m.Customer.Email).NotEmpty().WithMessage("Customer email is required");
+            RuleFor(m => m.AchAccount).NotEmpty().WithMessage("Account is required").When(m => m.CreditCardAccount == null);
+            RuleFor(m => m.CreditCardAccount).NotEmpty().WithMessage("Account is required").When(m => m.AchAccount == null);
+           
         }
     }
 }

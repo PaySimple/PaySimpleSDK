@@ -24,11 +24,14 @@
 // The most recent version of this license can be found at: http://opensource.org/licenses/MIT
 #endregion
 
+using System.IO;
+
 namespace PaySimpleSdk.Helpers
 {
     interface ISerialization
     {
         string Serialize(object obj);
         T Deserialize<T>(string obj) where T : class;
+        T Deserialize<T>(Stream stream) where T : class;
     }
 }

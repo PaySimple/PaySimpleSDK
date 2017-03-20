@@ -1,4 +1,7 @@
-﻿#region License
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+#region License
 // The MIT License (MIT)
 //
 // Copyright (c) 2015 Scott Lance
@@ -24,29 +27,33 @@
 // The most recent version of this license can be found at: http://opensource.org/licenses/MIT
 #endregion
 
+using System.Text;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
-using PaySimpleSdk.Accounts.Validation;
+using PaySimpleSdk.Accounts;
 using PaySimpleSdk.Exceptions;
-using PaySimpleSdk.Helpers;
+using PaySimpleSdk.Payments.Validation;
 using PaySimpleSdk.Validation;
-using System.Collections.Generic;
 
-namespace PaySimpleSdk.Accounts
+namespace PaySimpleSdk.Payments
 {
-    public class CreditCard : Account
-    {
-        [JsonProperty("CreditCardNumber")]
-        public string CreditCardNumber { get; set; }
-        [JsonProperty("ExpirationDate")]
-        public string ExpirationDate { get; set; }
-        [JsonProperty("Issuer")]
-        public Issuer Issuer { get; set; }
-        [JsonProperty("BillingZipCode")]
-        public string BillingZipCode { get; set; }
+	/// <summary>
+	/// Used to retrieve a token that will represent the protected card data
+	/// </summary>
+	public class PaymentTokenRequest : ProtectedCardData, IValidatable
+	{
+		[JsonProperty]
+		public int CustomerAccountId { get; set; }
 
-        public override IEnumerable<ValidationError> Validate()
-        {
-            return Validator.Validate<CreditCard, CreditCardValidator>(this);
-        }
-    }
+		[JsonProperty]
+		public int CustomerId { get; set; }
+
+		[JsonProperty]
+		public bool IsNewlyCreated { get; set; }
+
+		public IEnumerable<ValidationError> Validate()
+		{
+			return Validator.Validate<PaymentTokenRequest, PaymentTokenRequestValidator>(this);
+		}
+	}
 }

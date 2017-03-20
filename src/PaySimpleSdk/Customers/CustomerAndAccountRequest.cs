@@ -24,29 +24,29 @@
 // The most recent version of this license can be found at: http://opensource.org/licenses/MIT
 #endregion
 
-using Newtonsoft.Json;
-using PaySimpleSdk.Accounts.Validation;
-using PaySimpleSdk.Exceptions;
-using PaySimpleSdk.Helpers;
-using PaySimpleSdk.Validation;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using PaySimpleSdk.Accounts;
+using PaySimpleSdk.Customers.Validation;
+using PaySimpleSdk.Exceptions;
+using PaySimpleSdk.Payments;
+using PaySimpleSdk.Payments.Validation;
+using PaySimpleSdk.Validation;
 
-namespace PaySimpleSdk.Accounts
+namespace PaySimpleSdk.Customers
 {
-    public class CreditCard : Account
-    {
-        [JsonProperty("CreditCardNumber")]
-        public string CreditCardNumber { get; set; }
-        [JsonProperty("ExpirationDate")]
-        public string ExpirationDate { get; set; }
-        [JsonProperty("Issuer")]
-        public Issuer Issuer { get; set; }
-        [JsonProperty("BillingZipCode")]
-        public string BillingZipCode { get; set; }
-
-        public override IEnumerable<ValidationError> Validate()
-        {
-            return Validator.Validate<CreditCard, CreditCardValidator>(this);
-        }
-    }
+	public class CustomerAndAccountRequest : IValidatable
+	{
+		public Customer Customer { get; set; }
+		public Ach AchAccount { get; set; }
+		public CreditCard CreditCardAccount { get; set; }
+		public ProtectedCardData ProtectedCardData { get; set; }
+		public IEnumerable<ValidationError> Validate()
+		{
+			return Validator.Validate<CustomerAndAccountRequest, CustomerAndAccountRequestValidator>(this);
+		}
+	}
 }

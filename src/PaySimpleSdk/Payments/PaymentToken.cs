@@ -24,29 +24,27 @@
 // The most recent version of this license can be found at: http://opensource.org/licenses/MIT
 #endregion
 
-using Newtonsoft.Json;
-using PaySimpleSdk.Accounts.Validation;
-using PaySimpleSdk.Exceptions;
-using PaySimpleSdk.Helpers;
-using PaySimpleSdk.Validation;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
 
-namespace PaySimpleSdk.Accounts
+namespace PaySimpleSdk.Payments
 {
-    public class CreditCard : Account
-    {
-        [JsonProperty("CreditCardNumber")]
-        public string CreditCardNumber { get; set; }
-        [JsonProperty("ExpirationDate")]
-        public string ExpirationDate { get; set; }
-        [JsonProperty("Issuer")]
-        public Issuer Issuer { get; set; }
-        [JsonProperty("BillingZipCode")]
-        public string BillingZipCode { get; set; }
+	public class PaymentToken
+	{
+		[JsonProperty("PaymentToken", NullValueHandling = NullValueHandling.Ignore)]
+		public string Token { get; set; }
 
-        public override IEnumerable<ValidationError> Validate()
-        {
-            return Validator.Validate<CreditCard, CreditCardValidator>(this);
-        }
-    }
+		[JsonProperty]
+		public int CustomerId { get; set; }
+
+		[JsonProperty]
+		public int CustomerAccountId { get; set; }
+		
+		[JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+		public bool? IsNewlyCreated { get; set; } 
+	}
 }
