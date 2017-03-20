@@ -320,11 +320,51 @@ namespace TestHarness
 
             };
 
+
             creditCardPayment = await CreatePaymentAsync(creditCardPayment);
 
             if (creditCardPayment == null)
             {
                 Console.WriteLine("Failed to create Credit Card payment");
+                return;
+            }
+
+            // Create Recurring Customer Payment
+            var recurringCustomerPayment = new NewCustomerRecurringPayment<CreditCard>
+            {
+                Customer = new Customer()
+                {
+                    FirstName = "testrec",
+                    LastName = "testreclast",
+                    BillingAddress = new Address
+                    {
+                        StreetAddress1 = "testrecstreet",
+                        StreetAddress2 = "Testrecstreet2",
+                        City = "testRecCity",
+                        StateCode = StateCode.CO,
+                        Country = CountryCode.US,
+                        ZipCode = "80020"
+                    }
+                },
+                Account = new CreditCard
+                {
+                    CreditCardNumber = "4111111111111111",
+                    ExpirationDate = "12/2022",
+                    Issuer = Issuer.Visa
+                },
+                RecurringPayment = new RecurringPayment
+                {
+                    PaymentAmount = 25.00M,
+                    ExecutionFrequencyType = ExecutionFrequencyType.FirstOfMonth,
+                    StartDate = DateTime.Now.AddDays(1)
+                }
+            };
+
+            var recurringCustomerPaymentFromServer =
+                await CreateNewCustomerRecurringPaymentAsync(recurringCustomerPayment);
+            if (recurringCustomerPaymentFromServer == null)
+            {
+                Console.WriteLine("Failed to get recurring customer payment from server");
                 return;
             }
 

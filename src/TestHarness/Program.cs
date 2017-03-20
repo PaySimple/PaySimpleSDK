@@ -34,7 +34,7 @@ namespace TestHarness
         static void Main(string[] args)
         {
             // So we can scroll long lists of data
-            Console.SetBufferSize(100, 5000);
+            Console.SetBufferSize(200, 5000);
             var harness = new Harness();
             Task.WaitAll(harness.RunMethods());
             Console.WriteLine("Done");
