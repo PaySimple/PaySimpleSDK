@@ -30,14 +30,40 @@ namespace PaySimpleSdk.Accounts
 {
     public interface IAccountService
     {
-        Task<T> CreateAccountAsync<T>(T account) where T : Account;
-        Task<Ach> CreateAchAccountAsync(Ach account);
-        Task<CreditCard> CreateCreditCardAccountAsync(CreditCard account);
+		/// <summary>
+		/// NOTE: PCI Compliance is the responsibility of the user of this SDK
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="account"></param>
+		/// <returns></returns>
+		Task<T> CreateAccountAsync<T>(T account) where T : Account;
+		/// <summary>
+		/// NOTE: PCI Compliance is the responsibility of the user of this SDK
+		/// </summary>
+		/// <param name="account"></param>
+		/// <returns></returns>
+		Task<Ach> CreateAchAccountAsync(Ach account);
+		/// <summary>
+		/// NOTE: PCI Compliance is the responsibility of the user of this SDK
+		/// </summary>
+		/// <param name="account"></param>
+		/// <returns></returns>
+		Task<CreditCard> CreateCreditCardAccountAsync(CreditCard account);
         Task DeleteAchAccountAsync(int accountId);
         Task DeleteCreditCardAccountAsync(int accountId);
         Task<Ach> GetAchAccountAsync(int accountId);
         Task<CreditCard> GetCreditCardAccountAsync(int accountId);
-        Task<Ach> UpdateAchAccountAsync(Ach account);
-        Task<CreditCard> UpdateCreditCardAccountAsync(CreditCard account);
+		/// <summary>
+		/// NOTE: PCI Compliance is the responsibility of the user of this SDK
+		/// </summary>
+		/// <param name="account"></param>
+		/// <returns></returns>
+		Task<Ach> UpdateAchAccountAsync(Ach account);
+		/// <summary>
+		/// NOTE: PCI Compliance is the responsibility of the user of this SDK
+		/// </summary>
+		/// <param name="account"></param>
+		/// <returns></returns>
+		Task<CreditCard> UpdateCreditCardAccountAsync(CreditCard account);
     }
 }
