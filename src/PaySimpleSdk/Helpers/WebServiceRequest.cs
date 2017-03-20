@@ -1,4 +1,4 @@
-﻿#region License
+#region License
 // The MIT License (MIT)
 //
 // Copyright (c) 2015 Scott Lance
@@ -33,6 +33,9 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.ComponentModel.Design.Serialization;
+using System.IO;
+using System.Web.Configuration;
 using Newtonsoft.Json;
 
 namespace PaySimpleSdk.Helpers
@@ -64,9 +67,10 @@ namespace PaySimpleSdk.Helpers
         public async Task<T> GetDeserializedAsync<T>(Uri requestUri) where T : class
         {
             var result = await GetAsync(requestUri);
-            var content = await result.Content.ReadAsStringAsync();
-
-            return serialization.Deserialize<T>(content);
+	        using (var content = await result.Content.ReadAsStreamAsync())
+	        {
+		        return serialization.Deserialize<T>(content);
+	        }
         }
 
         public async Task<HttpResponseMessage> PutAsync(Uri requestUri)
@@ -79,9 +83,11 @@ namespace PaySimpleSdk.Helpers
         {
             var requestMessage = new HttpRequestMessage(HttpMethod.Put, requestUri);
             var result = await MakeRequestAsync(requestMessage);
-            var content = await result.Content.ReadAsStringAsync();
-            return serialization.Deserialize<T>(content);
-        }
+			using (var content = await result.Content.ReadAsStreamAsync())
+			{
+				return serialization.Deserialize<T>(content);
+			}
+		}
 
         public async Task<HttpResponseMessage> PutAsync<T>(Uri requestUri, T payload) where T : class
         {
@@ -94,15 +100,16 @@ namespace PaySimpleSdk.Helpers
             return await MakeRequestAsync(requestMessage);
         }
 
-        public async Task<T2> PutDeserializedAsync<T1, T2>(Uri requestUri, T1 payload)
-            where T1 : class
-            where T2 : class
+        public async Task<TResponse> PutDeserializedAsync<TRequest, TResponse>(Uri requestUri, TRequest payload)
+			where TRequest : class
+            where TResponse : class
         {
-            var result = await PutAsync<T1>(requestUri, payload);
-            var content = await result.Content.ReadAsStringAsync();
-
-            return serialization.Deserialize<T2>(content);
-        }
+            var result = await PutAsync<TRequest>(requestUri, payload);
+			using (var content = await result.Content.ReadAsStreamAsync())
+			{
+				return serialization.Deserialize<TResponse>(content);
+			}
+		}
 
         public async Task<HttpResponseMessage> DeleteAsync(Uri requestUri)
         {
@@ -122,63 +129,75 @@ namespace PaySimpleSdk.Helpers
             return await MakeRequestAsync(requestMessage);
         }
 
-        public async Task<T2> PostDeserializedAsync<T1, T2>(Uri requestUri, T1 payload)
-            where T1 : class
-            where T2 : class
+        public async Task<TResponse> PostDeserializedAsync<TRequest, TResponse>(Uri requestUri, TRequest payload)
+            where TRequest : class
+            where TResponse : class
         {
-            var result = await PostAsync<T1>(requestUri, payload);
-            var content = await result.Content.ReadAsStringAsync();
+            var result = await PostAsync<TRequest>(requestUri, payload);
+			using (var content = await result.Content.ReadAsStreamAsync())
+			{
+				return serialization.Deserialize<TResponse>(content);
+			}
+		}
 
-            return serialization.Deserialize<T2>(content);
-        }
+    private async Task<HttpResponseMessage> MakeRequestAsync(HttpRequestMessage request)
+    {
+        var exceptions = new List<Exception>();
 
-        private async Task<HttpResponseMessage> MakeRequestAsync(HttpRequestMessage request)
+        // Minor optimization: skip the loop entirely if we don't need it
+        if (retryCount <= 1)
+            return await DoRequestAsync(request);
+
+        for (int retry = 0; retry < retryCount; retry++)
         {
-            var exceptions = new List<Exception>();
-
-            // Minor optimization: skip the loop entirely if we don't need it
-            if (retryCount <= 1)
-                return await DoRequestAsync(request);
-
-            for (int retry = 0; retry < retryCount; retry++)
-            {
-                try
-                {
-                    // Wait 1 second between additional attempts
-                    if (retry > 0)
-                        System.Threading.Thread.Sleep(1000);
-
-                    return await DoRequestAsync(request);
-                }
-                catch (Exception ex)
-                {
-                    exceptions.Add(ex);
-                }
-            }
-
-            throw new AggregateException(exceptions);
-        }
-        private async Task<HttpResponseMessage> DoRequestAsync(HttpRequestMessage request)
-        {
-            var authToken = signatureGenerator.GenerateSignature();
-            httpClient.DefaultRequestHeaders.Add("Authorization", authToken);
-            httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
-
-            var result = await httpClient.SendAsync(request).ConfigureAwait(false);
-
-            if (result.IsSuccessStatusCode)
-                return result;
-
-            var content = await result.Content.ReadAsStringAsync();
             try
             {
-                var errors = serialization.Deserialize<ErrorResult>(content);
-                throw new PaySimpleEndpointException(errors, result.StatusCode);
+                // Wait 1 second between additional attempts
+              if (retry > 0)
+                await Task.Delay(1000);
+
+                return await DoRequestAsync(request);
             }
-            catch (Exception e) when (!(e is PaySimpleEndpointException))
+            catch (Exception ex)
             {
-                throw new PaySimpleEndpointException($"Error deserializing response: {content}", e);
-            }           
-        }    
+                exceptions.Add(ex);
+            }
+        }
+
+        throw new AggregateException(exceptions);
     }
+    private async Task<HttpResponseMessage> DoRequestAsync(HttpRequestMessage request)
+    {
+        var authToken = signatureGenerator.GenerateSignature();
+        httpClient.DefaultRequestHeaders.Add("Authorization", authToken);
+        httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
+
+        var result = await httpClient.SendAsync(request).ConfigureAwait(false);
+
+        if (result.IsSuccessStatusCode)
+            return result;
+
+        using (var content = await result.Content.ReadAsStreamAsync())
+        {
+          try
+          {
+            var errors = serialization.Deserialize<ErrorResult>(content);
+            throw new PaySimpleEndpointException(errors, result.StatusCode);
+          }
+          catch (Exception e) when (!(e is PaySimpleEndpointException))
+          {
+            throw new PaySimpleEndpointException($"Error deserializing response: {GetResponseString(content)}", e);
+          }
+        }
+    }
+
+		private static string GetResponseString(Stream response)
+		{
+			response.Position = 0;
+			StreamReader reader = new StreamReader(response);
+			var text = reader.ReadToEnd();
+
+			return text;
+		}
+	}
 }

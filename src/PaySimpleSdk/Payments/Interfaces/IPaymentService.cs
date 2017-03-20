@@ -42,5 +42,16 @@ namespace PaySimpleSdk.Payments
         Task<PagedResult<IEnumerable<Payment>>> GetPaymentsAsync(DateTime? startDate = null, DateTime? endDate = null, IEnumerable<PaymentStatus> status = null, PaymentSort sortBy = PaymentSort.PaymentId, SortDirection direction = SortDirection.DESC, int page = 1, int pageSize = 200, bool lite = false);
         Task<Payment> ReversePaymentAsync(int paymentId);
         Task<Payment> VoidPaymentAsync(int paymentId);
+		/// <summary>
+		/// Gets a token that represents protected card data for a payment account
+		/// </summary>
+		/// <param name="request"></param>
+		/// <returns></returns>
+		Task<PaymentToken> GetPaymentTokenAsync(PaymentTokenRequest request);
+		/// <summary>
+		/// Gets a token that will identify you during the checkout process
+		/// </summary>
+		/// <returns></returns>
+        Task<CheckoutToken> GetCheckoutTokenAsync();
     }
 }

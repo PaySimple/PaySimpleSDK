@@ -26,6 +26,7 @@
 
 using Newtonsoft.Json;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 
 namespace PaySimpleSdk.Helpers
 {
@@ -41,5 +42,20 @@ namespace PaySimpleSdk.Helpers
         {
             return JsonConvert.DeserializeObject<T>(obj, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Objects });//, NullValueHandling = NullValueHandling.Ignore });
         }
-    }
+
+		public T Deserialize<T>(Stream stream) where T : class
+		{
+			var serializer = new JsonSerializer
+			{
+				TypeNameHandling = TypeNameHandling.Objects
+			};
+
+			using (var jsonTextReader = new JsonTextReader(new StreamReader(stream)))
+			{
+				var result = serializer.Deserialize<T>(jsonTextReader);
+				return result;
+			}
+			
+		}
+	}
 }
