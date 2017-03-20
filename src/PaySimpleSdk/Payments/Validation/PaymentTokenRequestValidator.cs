@@ -32,10 +32,10 @@ namespace PaySimpleSdk.Payments.Validation
     {
         public PaymentTokenRequestValidator()
         {
-	        RuleFor(m => m.CustomerAccountId).GreaterThan(0).WithMessage("CustomerAccountId must be a interger greater than 0");
+	        RuleFor(m => m.CustomerAccountId).GreaterThan(0).WithMessage("CustomerAccountId must be a integer greater than 0");
             RuleFor(m => m.CustomerId).GreaterThan(0).WithMessage("CustomerId must be a interger greater than 0");
-            RuleFor(m => m.Cvv).Matches(@"^(|\d{3,4})$").WithMessage("CVV is invalid").When(m => string.IsNullOrEmpty(m.TrackData));
-            RuleFor(m => m.TrackData).NotEmpty().WithMessage("TrackData and CVV cannot be empty").When(m => string.IsNullOrEmpty(m.Cvv)); ;
+			// would be nice to validate this based on card type and is 3 or 4 digits not both
+			RuleFor(m => m.Cvv).Matches(@"^(|\d{3,4})$").WithMessage("CVV is invalid");
         }
     }
 }
