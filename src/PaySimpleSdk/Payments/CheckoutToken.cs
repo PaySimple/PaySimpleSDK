@@ -33,10 +33,19 @@ using Newtonsoft.Json;
 
 namespace PaySimpleSdk.Payments
 {
+	/// <summary>
+	///  This token uniquely identifies your PaySimple account during the checkout process
+	/// </summary>
 	public class CheckoutToken
 	{
+		/// <summary>
+		/// The actual token that will be passed to PaySimple during the checkout process
+		/// </summary>
 		[JsonProperty]
 		public string JwtToken { get; set; }
+		/// <summary>
+		/// The expiration date of this token
+		/// </summary>
 		[JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
 		public DateTime? Expiration { get; set; }
 		[JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
