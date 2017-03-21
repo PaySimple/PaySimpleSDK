@@ -1,5 +1,14 @@
 #PaySimple SDK Changelog
 
+#v1.2.0 - 3.21.2017
+
+Added new API calls
+
+We now use a shared instance of HttpClient
+
+Response deserialization now happens from the response stream
+
+
 #V1.1.1 - 2.01.2017
 
 Fixed an issue where a deserialization exception would get obscured.
