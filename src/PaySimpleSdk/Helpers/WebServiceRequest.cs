@@ -1,4 +1,4 @@
-﻿#region License
+#region License
 // The MIT License (MIT)
 //
 // Copyright (c) 2015 Scott Lance
@@ -44,8 +44,9 @@ namespace PaySimpleSdk.Helpers
     internal class WebServiceRequest : IWebServiceRequest
     {
         private readonly ISerialization serialization;
-        private readonly ISignatureGenerator signatureGenerator;
+        private readonly ISignatureGenerator signatureGenerator;        
         private readonly int retryCount;
+        private static HttpClient httpClient = new HttpClient();
 
         public WebServiceRequest(ISerialization serialization, ISignatureGenerator signatureGenerator, int retryCount)
         {
@@ -53,7 +54,7 @@ namespace PaySimpleSdk.Helpers
 
             this.serialization = serialization;
             this.signatureGenerator = signatureGenerator;
-            this.retryCount = retryCount;
+            this.retryCount = retryCount;        
         }
 
         public async Task<HttpResponseMessage> GetAsync(Uri requestUri)
@@ -139,59 +140,56 @@ namespace PaySimpleSdk.Helpers
 			}
 		}
 
-        private async Task<HttpResponseMessage> MakeRequestAsync(HttpRequestMessage request)
-        {
-            var exceptions = new List<Exception>();
+    private async Task<HttpResponseMessage> MakeRequestAsync(HttpRequestMessage request)
+    {
+        var exceptions = new List<Exception>();
 
-            // Minor optimization: skip the loop entirely if we don't need it
-            if (retryCount <= 1)
+        // Minor optimization: skip the loop entirely if we don't need it
+        if (retryCount <= 1)
+            return await DoRequestAsync(request);
+
+        for (int retry = 0; retry < retryCount; retry++)
+        {
+            try
+            {
+                // Wait 1 second between additional attempts
+              if (retry > 0)
+                await Task.Delay(1000);
+
                 return await DoRequestAsync(request);
-
-            for (int retry = 0; retry < retryCount; retry++)
-            {
-                try
-                {
-                    // Wait 1 second between additional attempts
-	                if (retry > 0)
-		                await Task.Delay(1000);
-
-                    return await DoRequestAsync(request);
-                }
-                catch (Exception ex)
-                {
-                    exceptions.Add(ex);
-                }
             }
-
-            throw new AggregateException(exceptions);
+            catch (Exception ex)
+            {
+                exceptions.Add(ex);
+            }
         }
-        private async Task<HttpResponseMessage> DoRequestAsync(HttpRequestMessage request)
+
+        throw new AggregateException(exceptions);
+    }
+    private async Task<HttpResponseMessage> DoRequestAsync(HttpRequestMessage request)
+    {
+        var authToken = signatureGenerator.GenerateSignature();
+        httpClient.DefaultRequestHeaders.Add("Authorization", authToken);
+        httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
+
+        var result = await httpClient.SendAsync(request).ConfigureAwait(false);
+
+        if (result.IsSuccessStatusCode)
+            return result;
+
+        using (var content = await result.Content.ReadAsStreamAsync())
         {
-            using (HttpClient httpClient = new HttpClient())
-            {
-                var authToken = signatureGenerator.GenerateSignature();
-                httpClient.DefaultRequestHeaders.Add("Authorization", authToken);
-                httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
-
-                var result = await httpClient.SendAsync(request).ConfigureAwait(false);
-
-                if (result.IsSuccessStatusCode)
-                    return result;
-
-	            using (var content = await result.Content.ReadAsStreamAsync())
-	            {
-		            try
-		            {
-			            var errors = serialization.Deserialize<ErrorResult>(content);
-			            throw new PaySimpleEndpointException(errors, result.StatusCode);
-		            }
-		            catch (Exception e) when (!(e is PaySimpleEndpointException))
-		            {
-			            throw new PaySimpleEndpointException($"Error deserializing response: {GetResponseString(content)}", e);
-		            }
-				}
-            }
+          try
+          {
+            var errors = serialization.Deserialize<ErrorResult>(content);
+            throw new PaySimpleEndpointException(errors, result.StatusCode);
+          }
+          catch (Exception e) when (!(e is PaySimpleEndpointException))
+          {
+            throw new PaySimpleEndpointException($"Error deserializing response: {GetResponseString(content)}", e);
+          }
         }
+    }
 
 		private static string GetResponseString(Stream response)
 		{
