@@ -352,7 +352,8 @@ namespace TestHarness
 			{
 				AccountId = visa.Id,
 				PaymentToken = paymentToken.Token,
-				Amount = 5.00M
+				Amount = 5.00M,
+				
 			};
 			tokenPayment = await CreatePaymentAsync(tokenPayment);
 
@@ -621,8 +622,16 @@ namespace TestHarness
                 return;
             }
 
-            // Delete Payment Plans
-            await DeletePaymentPlanAsync(paymentPlan.Id);
+			var voidTokenPayment = await VoidPaymentAsync(tokenPayment.Id.Value);
+
+			if (voidTokenPayment == null)
+			{
+				Console.WriteLine("Failed to void Payment Token payment");
+				return;
+			}
+
+			// Delete Payment Plans
+			await DeletePaymentPlanAsync(paymentPlan.Id);
 
             // Delete Recurring Payments
             await DeleteRecurringPaymentAsync(recurringPayment.Id);
