@@ -1,5 +1,9 @@
 #PaySimple SDK Changelog
 
+#v1.2.1 - 6.29.2017
+
+Fixed PaymentSubType serialization issue with Payment Schedules.
+
 #v1.2.0 - 3.21.2017
 
 Added new API calls

@@ -50,7 +50,7 @@ namespace PaySimpleSdk.PaymentSchedules
         public string CustomerLastName { get; internal set; }
         [JsonProperty("CustomerCompany")]
         public string CustomerCompany { get; internal set; }
-        [JsonProperty("PaymentSubType")]
+        [JsonProperty("PaymentSubType"), JsonConverter(typeof(TypeEnumConverter<PaymentSubType, BiLookup<PaymentSubType, string>>))]
         public PaymentSubType? PaymentSubType { get; set; }
         [JsonProperty("OrderId")]
         public string OrderId { get; set; }

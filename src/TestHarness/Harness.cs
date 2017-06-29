@@ -202,7 +202,7 @@ namespace TestHarness
             };
 
             visa = await CreateCreditCardAccountAsync(visa);
-			
+
             if (visa == null)
             {
                 Console.WriteLine("Failed to create Credit Card account");
@@ -249,41 +249,41 @@ namespace TestHarness
                 return;
             }
 
-			// Match Customer and Credit Card
-	        visa.CreditCardNumber = "4111111111111111";
-	        var customerAndCreditCard = new CustomerAndAccountRequest
-	        {
-		        Customer = warrior,
-				CreditCardAccount = visa
-	        };
+            // Match Customer and Credit Card
+            visa.CreditCardNumber = "4111111111111111";
+            var customerAndCreditCard = new CustomerAndAccountRequest
+            {
+                Customer = warrior,
+                CreditCardAccount = visa
+            };
 
-			var matchCreditCardToken = await MatchOrCreateCustomerAndCreditCardAccountAsync(customerAndCreditCard);
+            var matchCreditCardToken = await MatchOrCreateCustomerAndCreditCardAccountAsync(customerAndCreditCard);
 
-			if (string.IsNullOrWhiteSpace(matchCreditCardToken?.Token) )
-			{
-				Console.WriteLine("Failed to match or create customer and credit card");
-				return;
-			}
+            if (string.IsNullOrWhiteSpace(matchCreditCardToken?.Token))
+            {
+                Console.WriteLine("Failed to match or create customer and credit card");
+                return;
+            }
 
-			// Match Customer and Ach
-	        ach.RoutingNumber = "131111114";
-	        ach.AccountNumber = "751111111";
-			var customerAndAch = new CustomerAndAccountRequest
-			{
-				Customer = warrior,
-				AchAccount = ach
-			};
+            // Match Customer and Ach
+            ach.RoutingNumber = "131111114";
+            ach.AccountNumber = "751111111";
+            var customerAndAch = new CustomerAndAccountRequest
+            {
+                Customer = warrior,
+                AchAccount = ach
+            };
 
-			var matchAchToken = await MatchOrCreateCustomerAndAchAccountAsync(customerAndAch);
+            var matchAchToken = await MatchOrCreateCustomerAndAchAccountAsync(customerAndAch);
 
-			if (string.IsNullOrWhiteSpace(matchAchToken?.Token))
-			{
-				Console.WriteLine("Failed to match or create customer and ach");
-				return;
-			}
+            if (string.IsNullOrWhiteSpace(matchAchToken?.Token))
+            {
+                Console.WriteLine("Failed to match or create customer and ach");
+                return;
+            }
 
-			// Get All Customer Accounts
-			var customerAccounts = await GetAllAccountsAsync(warrior.Id);
+            // Get All Customer Accounts
+            var customerAccounts = await GetAllAccountsAsync(warrior.Id);
 
             if (customerAccounts == null)
             {
@@ -332,39 +332,39 @@ namespace TestHarness
 
             // Create Payments
 
-	        var tokenRequest = new PaymentTokenRequest
-	        {
-		        CustomerAccountId = visa.Id,
-		        CustomerId = warrior.Id,
-		        Cvv = "999"
-	        };
-			
-	        var paymentToken = await GetPaymentTokenAsync(tokenRequest);
+            var tokenRequest = new PaymentTokenRequest
+            {
+                CustomerAccountId = visa.Id,
+                CustomerId = warrior.Id,
+                Cvv = "999"
+            };
 
-			if (string.IsNullOrWhiteSpace(paymentToken?.Token))
-			{
-				Console.WriteLine("Failed to get payment token");
-				return;
-			}
+            var paymentToken = await GetPaymentTokenAsync(tokenRequest);
 
-			// Make payment with a payment token
-			var tokenPayment = new Payment
-			{
-				AccountId = visa.Id,
-				PaymentToken = paymentToken.Token,
-				Amount = 5.00M,
-				
-			};
-			tokenPayment = await CreatePaymentAsync(tokenPayment);
+            if (string.IsNullOrWhiteSpace(paymentToken?.Token))
+            {
+                Console.WriteLine("Failed to get payment token");
+                return;
+            }
 
-			if (tokenPayment == null)
-			{
-				Console.WriteLine("Failed to make payment using token");
-				return;
-			}
+            // Make payment with a payment token
+            var tokenPayment = new Payment
+            {
+                AccountId = visa.Id,
+                PaymentToken = paymentToken.Token,
+                Amount = 5.00M,
 
-			// Make ach payment
-			var achPayment = new Payment
+            };
+            tokenPayment = await CreatePaymentAsync(tokenPayment);
+
+            if (tokenPayment == null)
+            {
+                Console.WriteLine("Failed to make payment using token");
+                return;
+            }
+
+            // Make ach payment
+            var achPayment = new Payment
             {
                 AccountId = ach.Id,
                 Amount = 5.00M
@@ -378,7 +378,7 @@ namespace TestHarness
                 return;
             }
 
-			// Make credit card payment
+            // Make credit card payment
             var creditCardPayment = new Payment
             {
                 AccountId = visa.Id,
@@ -524,6 +524,64 @@ namespace TestHarness
                 return;
             }
 
+            // Create Recurring Payment ACH
+            var recurringPaymentAch = new RecurringPayment
+            {
+                AccountId = ach.Id,
+                PaymentAmount = 10.00M,
+                StartDate = DateTime.Now.AddDays(1),
+                ExecutionFrequencyType = ExecutionFrequencyType.FirstOfMonth,
+                PaymentSubType = PaymentSubType.Tel
+            };
+
+            recurringPaymentAch = await CreateRecurringPaymentAsync(recurringPaymentAch);
+
+            if (recurringPaymentAch == null)
+            {
+                Console.WriteLine("Failed to create ACH recurring payment");
+                return;
+            }
+
+            if (recurringPaymentAch.PaymentSubType != PaymentSubType.Tel)
+            {
+                Console.WriteLine("Failed to set payment sub type for ACH recurring payment");
+                return;
+            }
+
+            // Update Recurring Payment
+            var updateRecurringPaymentAch = new RecurringPayment
+            {
+                Id = recurringPayment.Id,
+                AccountId = ach.Id,
+                PaymentAmount = 100.00M,
+                StartDate = DateTime.Now.AddDays(1),
+                ExecutionFrequencyType = ExecutionFrequencyType.FirstOfMonth,
+                PaymentSubType = PaymentSubType.Ppd
+            };
+
+            updateRecurringPaymentAch = await UpdateRecurringPaymentAsync(updateRecurringPaymentAch);
+
+            if (updateRecurringPaymentAch == null)
+            {
+                Console.WriteLine("Failed to update ACH recurring payment");
+                return;
+            }
+
+            if (updateRecurringPaymentAch.PaymentSubType != PaymentSubType.Ppd)
+            {
+                Console.WriteLine("Failed to update ACH recurring payment sub type");
+                return;
+            }
+
+            // Get Recurring Schedule
+            recurringPaymentAch = await GetRecurringScheduleAsync(recurringPaymentAch.Id);
+
+            if (recurringPaymentAch == null)
+            {
+                Console.WriteLine("Failed to get ACH recurring schedule");
+                return;
+            }
+
             // Get Customer Payment Plans
             var paymentPlans = await GetPaymentPlansAsync(warrior.Id);
 
@@ -605,6 +663,9 @@ namespace TestHarness
             // Suspend Recurring Payment
             await SuspendRecurringPaymentAsync(recurringPayment.Id);
 
+            // Supend ACH Recurring Payment
+            await SuspendRecurringPaymentAsync(recurringPaymentAch.Id);
+
             // Void Payments
             var voidAchPayment = await VoidPaymentAsync(achPayment.Id.Value);
 
@@ -622,16 +683,16 @@ namespace TestHarness
                 return;
             }
 
-			var voidTokenPayment = await VoidPaymentAsync(tokenPayment.Id.Value);
+            var voidTokenPayment = await VoidPaymentAsync(tokenPayment.Id.Value);
 
-			if (voidTokenPayment == null)
-			{
-				Console.WriteLine("Failed to void Payment Token payment");
-				return;
-			}
+            if (voidTokenPayment == null)
+            {
+                Console.WriteLine("Failed to void Payment Token payment");
+                return;
+            }
 
-			// Delete Payment Plans
-			await DeletePaymentPlanAsync(paymentPlan.Id);
+            // Delete Payment Plans
+            await DeletePaymentPlanAsync(paymentPlan.Id);
 
             // Delete Recurring Payments
             await DeleteRecurringPaymentAsync(recurringPayment.Id);
@@ -1001,31 +1062,31 @@ namespace TestHarness
             return result;
         }
 
-		public async Task<PaymentToken> MatchOrCreateCustomerAndCreditCardAccountAsync(CustomerAndAccountRequest request)
-		{
-			var result = await customerService.MatchOrCreateCustomerAndCreditCardAccountAsync(request);
+        public async Task<PaymentToken> MatchOrCreateCustomerAndCreditCardAccountAsync(CustomerAndAccountRequest request)
+        {
+            var result = await customerService.MatchOrCreateCustomerAndCreditCardAccountAsync(request);
 
-			if (result != null)
-				DumpObject("MatchOrCreateCustomerAndCreditCardAccountAsync", result);
+            if (result != null)
+                DumpObject("MatchOrCreateCustomerAndCreditCardAccountAsync", result);
 
-			return result;
-		}
+            return result;
+        }
 
-		public async Task<PaymentToken> MatchOrCreateCustomerAndAchAccountAsync(CustomerAndAccountRequest request)
-		{
-			var result = await customerService.MatchOrCreateCustomerAndAchAccountAsync(request);
+        public async Task<PaymentToken> MatchOrCreateCustomerAndAchAccountAsync(CustomerAndAccountRequest request)
+        {
+            var result = await customerService.MatchOrCreateCustomerAndAchAccountAsync(request);
 
-			if (result != null)
-				DumpObject("MatchOrCreateCustomerAndAchAccountAsync", result);
+            if (result != null)
+                DumpObject("MatchOrCreateCustomerAndAchAccountAsync", result);
 
-			return result;
-		}
+            return result;
+        }
 
-		#endregion
+        #endregion
 
-		#region Payment Service Methods
+        #region Payment Service Methods
 
-		public async Task PaymentCertification(int achAccountId, int creditCardAccountId)
+        public async Task PaymentCertification(int achAccountId, int creditCardAccountId)
         {
             try
             {
@@ -1098,7 +1159,7 @@ namespace TestHarness
                 DumpObject("PaySimpleEndpointException", ex.EndpointErrors);
             }
         }
-        
+
         public async Task<NewAccountPayment<T>> CreateNewAccountPaymentAsync<T>(NewAccountPayment<T> accountPayment)
             where T : Account, new()
         {
@@ -1146,7 +1207,7 @@ namespace TestHarness
 
             return null;
         }
-        
+
         public async Task<Payment> CreatePaymentAsync(Payment payment)
         {
             var result = await paymentService.CreatePaymentAsync(payment);
@@ -1197,21 +1258,21 @@ namespace TestHarness
             return result;
         }
 
-		public async Task<PaymentToken> GetPaymentTokenAsync(PaymentTokenRequest request)
-		{
-			var result = await paymentService.GetPaymentTokenAsync(request);
+        public async Task<PaymentToken> GetPaymentTokenAsync(PaymentTokenRequest request)
+        {
+            var result = await paymentService.GetPaymentTokenAsync(request);
 
-			if (result != null)
-				DumpObject("GetPaymentTokenAsync", result);
+            if (result != null)
+                DumpObject("GetPaymentTokenAsync", result);
 
-			return result;
-		}
+            return result;
+        }
 
-		#endregion
+        #endregion
 
-		#region Payment Schedule Service Methods
+        #region Payment Schedule Service Methods
 
-		public async Task<NewAccountPaymentPlan<T>> CreateNewAccountPaymentPlanAsync<T>(NewAccountPaymentPlan<T> accountPaymentPlan)
+        public async Task<NewAccountPaymentPlan<T>> CreateNewAccountPaymentPlanAsync<T>(NewAccountPaymentPlan<T> accountPaymentPlan)
             where T : Account, new()
         {
             try
@@ -1268,7 +1329,7 @@ namespace TestHarness
 
             return result;
         }
-        
+
         public async Task<NewAccountRecurringPayment<T>> CreateNewAccountRecurringPaymentAsync<T>(NewAccountRecurringPayment<T> accountRecurringPayment)
             where T : Account, new()
         {
@@ -1316,7 +1377,7 @@ namespace TestHarness
 
             return null;
         }
-        
+
         public async Task<RecurringPayment> CreateRecurringPaymentAsync(RecurringPayment recurringPayment)
         {
             var result = await paymentScheduleService.CreateRecurringPaymentAsync(recurringPayment);

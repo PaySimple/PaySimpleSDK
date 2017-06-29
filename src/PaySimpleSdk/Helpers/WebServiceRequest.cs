@@ -33,10 +33,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using System.ComponentModel.Design.Serialization;
 using System.IO;
-using System.Web.Configuration;
-using Newtonsoft.Json;
 
 namespace PaySimpleSdk.Helpers
 {
@@ -44,7 +41,7 @@ namespace PaySimpleSdk.Helpers
     internal class WebServiceRequest : IWebServiceRequest
     {
         private readonly ISerialization serialization;
-        private readonly ISignatureGenerator signatureGenerator;        
+        private readonly ISignatureGenerator signatureGenerator;
         private readonly int retryCount;
         private static HttpClient httpClient = new HttpClient();
 
@@ -54,7 +51,7 @@ namespace PaySimpleSdk.Helpers
 
             this.serialization = serialization;
             this.signatureGenerator = signatureGenerator;
-            this.retryCount = retryCount;        
+            this.retryCount = retryCount;
         }
 
         public async Task<HttpResponseMessage> GetAsync(Uri requestUri)
@@ -67,10 +64,10 @@ namespace PaySimpleSdk.Helpers
         public async Task<T> GetDeserializedAsync<T>(Uri requestUri) where T : class
         {
             var result = await GetAsync(requestUri);
-	        using (var content = await result.Content.ReadAsStreamAsync())
-	        {
-		        return serialization.Deserialize<T>(content);
-	        }
+            using (var content = await result.Content.ReadAsStreamAsync())
+            {
+                return serialization.Deserialize<T>(content);
+            }
         }
 
         public async Task<HttpResponseMessage> PutAsync(Uri requestUri)
@@ -83,11 +80,11 @@ namespace PaySimpleSdk.Helpers
         {
             var requestMessage = new HttpRequestMessage(HttpMethod.Put, requestUri);
             var result = await MakeRequestAsync(requestMessage);
-			using (var content = await result.Content.ReadAsStreamAsync())
-			{
-				return serialization.Deserialize<T>(content);
-			}
-		}
+            using (var content = await result.Content.ReadAsStreamAsync())
+            {
+                return serialization.Deserialize<T>(content);
+            }
+        }
 
         public async Task<HttpResponseMessage> PutAsync<T>(Uri requestUri, T payload) where T : class
         {
@@ -101,15 +98,15 @@ namespace PaySimpleSdk.Helpers
         }
 
         public async Task<TResponse> PutDeserializedAsync<TRequest, TResponse>(Uri requestUri, TRequest payload)
-			where TRequest : class
+            where TRequest : class
             where TResponse : class
         {
             var result = await PutAsync<TRequest>(requestUri, payload);
-			using (var content = await result.Content.ReadAsStreamAsync())
-			{
-				return serialization.Deserialize<TResponse>(content);
-			}
-		}
+            using (var content = await result.Content.ReadAsStreamAsync())
+            {
+                return serialization.Deserialize<TResponse>(content);
+            }
+        }
 
         public async Task<HttpResponseMessage> DeleteAsync(Uri requestUri)
         {
@@ -134,80 +131,74 @@ namespace PaySimpleSdk.Helpers
             where TResponse : class
         {
             var result = await PostAsync<TRequest>(requestUri, payload);
-			using (var content = await result.Content.ReadAsStreamAsync())
-			{
-				return serialization.Deserialize<TResponse>(content);
-			}
-		}
+            using (var content = await result.Content.ReadAsStreamAsync())
+            {
+                return serialization.Deserialize<TResponse>(content);
+            }
+        }
 
-		private async Task<HttpResponseMessage> MakeRequestAsync(HttpRequestMessage request)
-		{
-			var exceptions = new List<Exception>();
+        private async Task<HttpResponseMessage> MakeRequestAsync(HttpRequestMessage request)
+        {
+            var exceptions = new List<Exception>();
 
-			// Minor optimization: skip the loop entirely if we don't need it
-			if (retryCount <= 1)
-				return await DoRequestAsync(request);
+            // Minor optimization: skip the loop entirely if we don't need it
+            if (retryCount <= 1)
+                return await DoRequestAsync(request);
 
-			for (int retry = 0; retry < retryCount; retry++)
-			{
-				try
-				{
-					// Wait 1 second between additional attempts
-				  if (retry > 0)
-					await Task.Delay(1000);
+            for (int retry = 0; retry < retryCount; retry++)
+            {
+                try
+                {
+                    // Wait 1 second between additional attempts
+                    if (retry > 0)
+                        await Task.Delay(1000);
 
-					return await DoRequestAsync(request);
-				}
-				catch (Exception ex)
-				{
-					exceptions.Add(ex);
-				}
-			}
+                    return await DoRequestAsync(request);
+                }
+                catch (Exception ex)
+                {
+                    exceptions.Add(ex);
+                }
+            }
 
-			throw new AggregateException(exceptions);
-		}
-		private async Task<HttpResponseMessage> DoRequestAsync(HttpRequestMessage request)
-		{
-			var authToken = signatureGenerator.GenerateSignature();
-			request.Headers.Add("Authorization", authToken);
-			request.Headers.Add("Accept", "application/json");
-			// Unfortunately the PS Api is incorrectly using the 204 (NO CONTENT) status code. It is returning content with a 204 which causes protocol violations
-			// Closing the connection allows this to work, but no more connection reuse for now
-			request.Headers.Add("Connection", "close");
-			
-			try
-			{
-				var result = await httpClient.SendAsync(request).ConfigureAwait(false);
+            throw new AggregateException(exceptions);
+        }
+        private async Task<HttpResponseMessage> DoRequestAsync(HttpRequestMessage request)
+        {
+            var authToken = signatureGenerator.GenerateSignature();
+            request.Headers.Add("Authorization", authToken);
+            request.Headers.Add("Accept", "application/json");
+            // Unfortunately the PS Api is incorrectly using the 204 (NO CONTENT) status code. It is returning content with a 204 which causes protocol violations
+            // Closing the connection allows this to work, but no more connection reuse for now
+            request.Headers.Add("Connection", "close");
 
-				if (result.IsSuccessStatusCode)
-					return result;
 
-				using (var content = await result.Content.ReadAsStreamAsync())
-				{
-					try
-					{
-						var errors = serialization.Deserialize<ErrorResult>(content);
-						throw new PaySimpleEndpointException(errors, result.StatusCode);
-					}
-					catch (Exception e) when (!(e is PaySimpleEndpointException))
-					{
-						throw new PaySimpleEndpointException($"Error deserializing response: {GetResponseString(content)}", e);
-					}
-				}
-			}
-			catch (Exception e)
-			{
-				throw;
-			}
-		}
+            var result = await httpClient.SendAsync(request).ConfigureAwait(false);
 
-		private static string GetResponseString(Stream response)
-		{
-			response.Position = 0;
-			StreamReader reader = new StreamReader(response);
-			var text = reader.ReadToEnd();
+            if (result.IsSuccessStatusCode)
+                return result;
 
-			return text;
-		}
-	}
+            using (var content = await result.Content.ReadAsStreamAsync())
+            {
+                try
+                {
+                    var errors = serialization.Deserialize<ErrorResult>(content);
+                    throw new PaySimpleEndpointException(errors, result.StatusCode);
+                }
+                catch (Exception e) when (!(e is PaySimpleEndpointException))
+                {
+                    throw new PaySimpleEndpointException($"Error deserializing response: {GetResponseString(content)}", e);
+                }
+            }
+        }
+
+        private static string GetResponseString(Stream response)
+        {
+            response.Position = 0;
+            StreamReader reader = new StreamReader(response);
+            var text = reader.ReadToEnd();
+
+            return text;
+        }
+    }
 }
