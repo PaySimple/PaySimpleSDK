@@ -52,7 +52,7 @@ namespace PaySimpleSdk.Exceptions
         { }
 
         internal PaySimpleEndpointException(ErrorResult errors, HttpStatusCode statusCode)
-            : base($"Endpoint Error: {statusCode}: {errors.ResultData}", null)
+            : base($"Endpoint Error: {statusCode}: {errors?.ResultData}", null)
         {
             EndpointErrors = errors;
 	        StatusCode = statusCode;

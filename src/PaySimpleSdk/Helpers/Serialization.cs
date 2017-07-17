@@ -30,18 +30,18 @@ using System.IO;
 
 namespace PaySimpleSdk.Helpers
 {
-    [ExcludeFromCodeCoverage]
-    internal class Serialization : ISerialization
-    {
-        public string Serialize(object obj)
-        {
-            return JsonConvert.SerializeObject(obj, Formatting.None, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
-        }
+	[ExcludeFromCodeCoverage]
+	internal class Serialization : ISerialization
+	{
+		public string Serialize(object obj)
+		{
+			return JsonConvert.SerializeObject(obj, Formatting.None, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+		}
 
-        public T Deserialize<T>(string obj) where T : class
-        {
-            return JsonConvert.DeserializeObject<T>(obj, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Objects });//, NullValueHandling = NullValueHandling.Ignore });
-        }
+		public T Deserialize<T>(string obj) where T : class
+		{
+			return JsonConvert.DeserializeObject<T>(obj, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Objects });//, NullValueHandling = NullValueHandling.Ignore });
+		}
 
 		public T Deserialize<T>(Stream stream) where T : class
 		{
@@ -50,12 +50,10 @@ namespace PaySimpleSdk.Helpers
 				TypeNameHandling = TypeNameHandling.Objects
 			};
 
-			using (var jsonTextReader = new JsonTextReader(new StreamReader(stream)))
-			{
-				var result = serializer.Deserialize<T>(jsonTextReader);
-				return result;
-			}
-			
+			var jsonTextReader = new JsonTextReader(new StreamReader(stream));
+
+			var result = serializer.Deserialize<T>(jsonTextReader);
+			return result;
 		}
 	}
 }
