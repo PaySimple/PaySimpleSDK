@@ -1,5 +1,11 @@
 #PaySimple SDK Changelog
 
+#v1.2.2 - 7.17.2017
+
+Fixed a null reference exception when no errors were sent back from the server
+
+Deserialization no longer closes the stream
+
 #v1.2.1 - 6.29.2017
 
 Fixed PaymentSubType serialization issue with Payment Schedules.
