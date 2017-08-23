@@ -40,5 +40,6 @@ namespace PaySimpleSdk.Helpers
         public const string CheckoutToken = "/v4/checkouttoken";
         public const string MatchOrCreateCustomerAndCreditCardAccount = "/v4/customer/matchcreditcard";
         public const string MatchOrCreateCustomerAndAchAccount = "/v4/customer/matchach";
+        public const string CustomerToken = "/v4/customer/{0}/token";
     }
 }
