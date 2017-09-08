@@ -104,6 +104,7 @@
     <Compile Include="Payments\CheckoutToken.cs" />
     <Compile Include="Payments\CheckoutTokenRequest.cs" />
     <Compile Include="Payments\FailureData.cs" />
+    <Compile Include="Payments\TokenResponse.cs" />
     <Compile Include="Payments\Interfaces\IPaymentService.cs" />
     <Compile Include="Payments\NewAccountPayment.cs" />
     <Compile Include="Payments\NewCustomerPayment.cs" />
