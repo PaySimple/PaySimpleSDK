@@ -1,5 +1,9 @@
 #PaySimple SDK Changelog
 
+#v1.3 - 9.08.2017
+
+Added ability to get a customer token so users of PaySimpleJS can add credit card accounts to existing authenticated customers.
+
 #v1.2.2 - 7.17.2017
 
 Fixed a null reference exception when no errors were sent back from the server

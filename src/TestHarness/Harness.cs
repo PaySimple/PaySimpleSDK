@@ -35,7 +35,9 @@ using ServiceStack.Text;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace TestHarness
@@ -135,7 +137,7 @@ namespace TestHarness
 
             // Create Customer
             warrior = await CreateCustomerAsync(warrior);
-            valkyrie = await CreateCustomerAsync(valkyrie);
+			valkyrie = await CreateCustomerAsync(valkyrie);
             wizard = await CreateCustomerAsync(wizard);
             elf = await CreateCustomerAsync(elf);
 
@@ -209,8 +211,20 @@ namespace TestHarness
                 return;
             }
 
-            // Update Ach Account
-            ach.AccountNumber = "751111111";
+	        // Create Recurring Payment
+	        var recurringPayment2 = new RecurringPayment
+	        {
+		        AccountId = visa.Id,
+		        PaymentAmount = 10.00M,
+		        StartDate = DateTime.Now.AddDays(1),
+		        ExecutionFrequencyType = ExecutionFrequencyType.FirstOfMonth,
+	        };
+
+	        await DeleteCustomerAsync(warrior.Id);
+	        recurringPayment2 = await CreateRecurringPaymentAsync(recurringPayment2);
+
+			// Update Ach Account
+			ach.AccountNumber = "751111111";
             ach.IsCheckingAccount = true;
             ach = await UpdateAchAccountAsync(ach);
 
@@ -353,9 +367,9 @@ namespace TestHarness
                 AccountId = visa.Id,
                 PaymentToken = paymentToken.Token,
                 Amount = 5.00M,
-
             };
-            tokenPayment = await CreatePaymentAsync(tokenPayment);
+
+			tokenPayment = await CreatePaymentAsync(tokenPayment);
 
             if (tokenPayment == null)
             {
@@ -489,7 +503,7 @@ namespace TestHarness
                 ExecutionFrequencyType = ExecutionFrequencyType.FirstOfMonth,
             };
 
-            recurringPayment = await CreateRecurringPaymentAsync(recurringPayment);
+			recurringPayment = await CreateRecurringPaymentAsync(recurringPayment);
 
             if (recurringPayment == null)
             {
@@ -523,6 +537,23 @@ namespace TestHarness
                 Console.WriteLine("Failed to get recurring schedule");
                 return;
             }
+
+            var exceptionThrown = false;
+
+            try
+            {
+                await DeleteCustomerAsync(visa.CustomerId);
+            }
+            catch (PaySimpleEndpointException e)
+            {
+                exceptionThrown = true;
+                Debug.Assert(e.StatusCode == HttpStatusCode.BadRequest, "Status code should equal 400 / 'Bad Request'");
+                Debug.Assert(e.EndpointErrors.ResultData.Errors.ErrorMessages.First().Message ==
+                    "Before you can delete this customer, you must cancel all open recurring payments, payment plans, subscriptions, appointments, future payments and invoices associated with this record. ", 
+                    "Error message should indicate customer has active recurring payments");
+            }
+
+            Debug.Assert(exceptionThrown, "Exception should be thrown indicating customer has recurring payments");
 
             // Create Recurring Payment ACH
             var recurringPaymentAch = new RecurringPayment
@@ -691,8 +722,10 @@ namespace TestHarness
                 return;
             }
 
-            // Delete Payment Plans
-            await DeletePaymentPlanAsync(paymentPlan.Id);
+
+
+			// Delete Payment Plans
+			await DeletePaymentPlanAsync(paymentPlan.Id);
 
             // Delete Recurring Payments
             await DeleteRecurringPaymentAsync(recurringPayment.Id);
@@ -706,13 +739,19 @@ namespace TestHarness
             await DeleteCustomerAsync(valkyrie.Id);
             await DeleteCustomerAsync(wizard.Id);
             await DeleteCustomerAsync(elf.Id);
-        }
 
-        #endregion
+	        #region Test 204 on customer delete handled
 
-        #region Account Service Methods
+	        //await DeleteCustomerAsync(elf.Id);
 
-        public async Task<AccountList> AccountCertification(int customerId)
+	        #endregion
+		}
+
+		#endregion
+
+		#region Account Service Methods
+
+		public async Task<AccountList> AccountCertification(int customerId)
         {
             var accounts = new AccountList();
 

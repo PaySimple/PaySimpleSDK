@@ -33,6 +33,7 @@ namespace PaySimpleSdk.Helpers
         public const string CreditCardAccount = "/v4/account/creditcard";
         public const string GlobalSearch = "/v4/globalSearch";
         public const string Payment = "/v4/payment";
+        public const string Credit = "/v4/payment/credit";
         public const string PaymentPlan = "/v4/paymentplan";
         public const string PaymentSchedule = "/v4/paymentschedule";
         public const string RecurringPayment = "/v4/recurringpayment";
@@ -40,5 +41,6 @@ namespace PaySimpleSdk.Helpers
         public const string CheckoutToken = "/v4/checkouttoken";
         public const string MatchOrCreateCustomerAndCreditCardAccount = "/v4/customer/matchcreditcard";
         public const string MatchOrCreateCustomerAndAchAccount = "/v4/customer/matchach";
+        public const string CustomerToken = "/v4/customer/{0}/token";
     }
 }

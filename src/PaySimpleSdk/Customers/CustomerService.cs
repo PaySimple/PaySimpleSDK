@@ -275,5 +275,12 @@ namespace PaySimpleSdk.Customers
 			var result = await webServiceRequest.PostDeserializedAsync<CustomerAndAccountRequest, Result<PaymentToken>>(new Uri(endpoint), request);
 			return result.Response;
 		}
+
+        public async Task<TokenResponse> GetCustomerTokenAsync(int customerId)
+        {
+            var endpoint = $"{settings.BaseUrl}{string.Format(Endpoints.CustomerToken, customerId)}";
+            var result = await webServiceRequest.GetDeserializedAsync<Result<TokenResponse>>(new Uri(endpoint));
+            return result.Response;
+        }
     }
 }

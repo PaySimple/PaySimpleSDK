@@ -67,5 +67,8 @@ namespace PaySimpleSdk.Customers
 		/// <param name="request"></param>
 		/// <returns></returns>
 		Task<PaymentToken> MatchOrCreateCustomerAndAchAccountAsync(CustomerAndAccountRequest request);
-	}
+
+        Task<TokenResponse> GetCustomerTokenAsync(int customerId);
+
+    }
 }
