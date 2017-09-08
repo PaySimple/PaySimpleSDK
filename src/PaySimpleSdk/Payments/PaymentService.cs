@@ -94,6 +94,14 @@ namespace PaySimpleSdk.Payments
             return results.Response;
         }
 
+        public async Task<Payment> IssueCreditAsync(Payment payment)
+        {
+            validationService.Validate(payment);
+            var endpoint = string.Format("{0}{1}", settings.BaseUrl, Endpoints.Credit);
+            var results = await webServiceRequest.PostDeserializedAsync<Payment, Result<Payment>>(new Uri(endpoint), payment);
+            return results.Response;
+        }
+
         public async Task<Payment> GetPaymentAsync(int paymentId)
         {
             var endpoint = string.Format("{0}{1}/{2}", settings.BaseUrl, Endpoints.Payment, paymentId);
@@ -150,19 +158,19 @@ namespace PaySimpleSdk.Payments
             return result.Response;
         }
 
-		public async Task<PaymentToken> GetPaymentTokenAsync(PaymentTokenRequest request)
-		{
-			validationService.Validate(request);
-			var endpoint = $"{settings.BaseUrl}{Endpoints.PaymentToken}/";
-			var result = await webServiceRequest.PostDeserializedAsync<PaymentTokenRequest, Result<PaymentToken>>(new Uri(endpoint), request);
-			return result.Response;
-		}
+        public async Task<PaymentToken> GetPaymentTokenAsync(PaymentTokenRequest request)
+        {
+            validationService.Validate(request);
+            var endpoint = $"{settings.BaseUrl}{Endpoints.PaymentToken}/";
+            var result = await webServiceRequest.PostDeserializedAsync<PaymentTokenRequest, Result<PaymentToken>>(new Uri(endpoint), request);
+            return result.Response;
+        }
 
-		public async Task<CheckoutToken> GetCheckoutTokenAsync()
-	    {
-			var endpoint = $"{settings.BaseUrl}{Endpoints.CheckoutToken}/";
-			var result = await webServiceRequest.PostDeserializedAsync<CheckoutTokenRequest, Result<CheckoutToken>>(new Uri(endpoint), new CheckoutTokenRequest());
-		    return result.Response;
-	    }
+        public async Task<CheckoutToken> GetCheckoutTokenAsync()
+        {
+            var endpoint = $"{settings.BaseUrl}{Endpoints.CheckoutToken}/";
+            var result = await webServiceRequest.PostDeserializedAsync<CheckoutTokenRequest, Result<CheckoutToken>>(new Uri(endpoint), new CheckoutTokenRequest());
+            return result.Response;
+        }
     }
 }

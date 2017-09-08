@@ -33,6 +33,7 @@ namespace PaySimpleSdk.Helpers
         public const string CreditCardAccount = "/v4/account/creditcard";
         public const string GlobalSearch = "/v4/globalSearch";
         public const string Payment = "/v4/payment";
+        public const string Credit = "/v4/payment/credit";
         public const string PaymentPlan = "/v4/paymentplan";
         public const string PaymentSchedule = "/v4/paymentschedule";
         public const string RecurringPayment = "/v4/recurringpayment";
