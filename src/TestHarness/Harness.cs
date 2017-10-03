@@ -54,7 +54,7 @@ namespace TestHarness
         {
             var apiKey = ConfigurationManager.AppSettings["apiKey"];
             var username = ConfigurationManager.AppSettings["username"];
-            settings = new PaySimpleSettings(apiKey, username, "https://sandbox-api.paysimple.com");
+            settings = new PaySimpleSettings(apiKey, username, "https://api.qa2-paysimple.com");
             accountService = new AccountService(settings);
             customerService = new CustomerService(settings);
             paymentService = new PaymentService(settings);
@@ -210,18 +210,6 @@ namespace TestHarness
                 Console.WriteLine("Failed to create Credit Card account");
                 return;
             }
-
-	        // Create Recurring Payment
-	        var recurringPayment2 = new RecurringPayment
-	        {
-		        AccountId = visa.Id,
-		        PaymentAmount = 10.00M,
-		        StartDate = DateTime.Now.AddDays(1),
-		        ExecutionFrequencyType = ExecutionFrequencyType.FirstOfMonth,
-	        };
-
-	        await DeleteCustomerAsync(warrior.Id);
-	        recurringPayment2 = await CreateRecurringPaymentAsync(recurringPayment2);
 
 			// Update Ach Account
 			ach.AccountNumber = "751111111";
