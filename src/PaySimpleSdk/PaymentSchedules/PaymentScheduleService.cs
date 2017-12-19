@@ -155,12 +155,13 @@ namespace PaySimpleSdk.PaymentSchedules
             await webServiceRequest.DeleteAsync(new Uri(endpoint));
         }
 
-        public async Task<PagedResult<IEnumerable<RecurringPayment>>> GetAllPaymentSchedulesAsync()
+        public async Task<PagedResult<IEnumerable<RecurringPayment>>> GetAllPaymentSchedulesAsync(int page = 1, int pageSize = 200)
         {
-            var endpoint = string.Format("{0}{1}", settings.BaseUrl, Endpoints.PaymentSchedule);
+            var endpoint = $"{settings.BaseUrl}{Endpoints.PaymentSchedule}?page={page}&pagesize={pageSize}";
             var result = await webServiceRequest.GetDeserializedAsync<Result<IEnumerable<RecurringPayment>>>(new Uri(endpoint));
             return PagedResult.ConvertToPagedResult<IEnumerable<RecurringPayment>>(result);
         }
+
         public async Task<PagedResult<IEnumerable<Payment>>> GetPaymentPlanPaymentsAsync(int paymentPlanId)
         {
             var endpoint = string.Format("{0}{1}/{2}/payments", settings.BaseUrl, Endpoints.PaymentPlan, paymentPlanId);
