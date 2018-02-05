@@ -77,10 +77,10 @@ namespace PaySimpleSdk.PaymentSchedules
 		Task<RecurringPayment> CreateRecurringPaymentAsync(RecurringPayment recurringPayment);
         Task DeletePaymentPlanAsync(int paymentPlanId);
         Task DeleteRecurringPaymentAsync(int recurringPaymentId);
-        Task<PagedResult<IEnumerable<RecurringPayment>>> GetAllPaymentSchedulesAsync(int page = 1, int pageSize = 200);
+        Task<PagedResult<IEnumerable<PaymentSchedule>>> GetAllPaymentSchedulesAsync(int page = 1, int pageSize = 200);
         Task<PagedResult<IEnumerable<Payment>>> GetPaymentPlanPaymentsAsync(int paymentPlanId);
         Task<PaymentPlan> GetPaymentPlanScheduleAsync(int paymentPlanId);
-        Task<PagedResult<IEnumerable<Payment>>> GetRecurringPaymentsAsync(int recurringPaymentId);
+        Task<PagedResult<IEnumerable<Payment>>> GetRecurringSchedulePaymentsAsync(int recurringPaymentId);
         Task<RecurringPayment> GetRecurringScheduleAsync(int recurringPaymentId);
         Task PausePaymentPlanAsync(int paymentPlanId, DateTime endDate);
         Task PauseRecurringPaymentAsync(int recurringPaymentId, DateTime endDate);

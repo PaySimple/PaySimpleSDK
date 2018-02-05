@@ -378,6 +378,7 @@ namespace PaySimpleSdk.Helpers
 
     public enum ScheduleStatus
     {
+		None = 0,
         Active = 1,
         Expired = 3,
         PauseUntil = 2,
@@ -475,7 +476,20 @@ namespace PaySimpleSdk.Helpers
         Voided
     }
 
-    [ExcludeFromCodeCoverage]
+	public enum PaymentScheduleType
+	{
+		/// <summary>
+		/// The schedule is a payment plan.
+		/// </summary>
+		PaymentPlan = 1,
+
+		/// <summary>
+		/// The schedule is a Recurring Payment Schedule.
+		/// </summary>
+		RecurringPayment = 2
+	}
+
+	[ExcludeFromCodeCoverage]
     public static class EnumStrings
     {
         public static BiLookup<CountryCode, string> CountryCodeStrings = new BiLookup<CountryCode, string>
@@ -893,6 +907,13 @@ namespace PaySimpleSdk.Helpers
             {Status.Voided, "Voided"}
         };
 
+	    public static BiLookup<PaymentScheduleType, string> PaymentScheduleTypeStrings =
+		    new BiLookup<PaymentScheduleType, string>
+		    {
+				{ PaymentScheduleType.PaymentPlan, "1" },
+			    { PaymentScheduleType.RecurringPayment, "2" }
+			};
+
         public static object GetEnumMappings<T>()
         {
             switch (typeof(T).Name)
@@ -903,7 +924,9 @@ namespace PaySimpleSdk.Helpers
                     return CustomerSortStrings;
                 case "PaymentSort":
                     return PaymentSortStrings;
-                case "PaymentStatus":
+	            case "PaymentScheduleType":
+		            return PaymentScheduleTypeStrings;
+				case "PaymentStatus":
                     return PaymentStatusStrings;
                 case "PaymentSubType":
                     return PaymentSubTypeStrings;

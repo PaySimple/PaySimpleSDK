@@ -1425,7 +1425,7 @@ namespace TestHarness
             await paymentScheduleService.DeleteRecurringPaymentAsync(recurringPaymentId);
         }
 
-        public async Task<PagedResult<IEnumerable<RecurringPayment>>> GetAllPaymentSchedulesAsync()
+        public async Task<PagedResult<IEnumerable<PaymentSchedule>>> GetAllPaymentSchedulesAsync()
         {
             var result = await paymentScheduleService.GetAllPaymentSchedulesAsync();
 
@@ -1457,10 +1457,10 @@ namespace TestHarness
 
         public async Task<PagedResult<IEnumerable<Payment>>> GetRecurringPaymentsAsync(int recurringPaymentId)
         {
-            var result = await paymentScheduleService.GetRecurringPaymentsAsync(recurringPaymentId);
+            var result = await paymentScheduleService.GetRecurringSchedulePaymentsAsync(recurringPaymentId);
 
             if (result != null)
-                DumpObject("GetRecurringPaymentsAsync", result);
+                DumpObject("GetRecurringSchedulePaymentsAsync", result);
 
             return result;
         }

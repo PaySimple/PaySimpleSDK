@@ -248,9 +248,9 @@ namespace PaySimpleSdkTests.PaymentScheduleTests
             // Arrange            
             Uri endpoint = null;
 
-            webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<RecurringPayment>>>(It.IsAny<Uri>()))
+            webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<PaymentSchedule>>>(It.IsAny<Uri>()))
                 .Callback((Uri a) => endpoint = a)
-                .ReturnsAsync(new Result<IEnumerable<RecurringPayment>> { ResultData = new Meta(), Response = new List<RecurringPayment>() });
+                .ReturnsAsync(new Result<IEnumerable<PaymentSchedule>> { ResultData = new Meta(), Response = new List<PaymentSchedule>() });
 
             // Act
             await service.GetAllPaymentSchedulesAsync();
@@ -263,14 +263,14 @@ namespace PaySimpleSdkTests.PaymentScheduleTests
         public async Task GetAllPaymentSchedulesAsync_Verify_WebServiceRequest_GetDeserializedAsync()
         {
             // Arrange
-            webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<RecurringPayment>>>(It.IsAny<Uri>()))
-                .ReturnsAsync(new Result<IEnumerable<RecurringPayment>> { ResultData = new Meta(), Response = new List<RecurringPayment>() });
+            webServiceRequest.Setup(m => m.GetDeserializedAsync<Result<IEnumerable<PaymentSchedule>>>(It.IsAny<Uri>()))
+                .ReturnsAsync(new Result<IEnumerable<PaymentSchedule>> { ResultData = new Meta(), Response = new List<PaymentSchedule>() });
 
             // Act
             await service.GetAllPaymentSchedulesAsync();
 
             // Assert
-            webServiceRequest.Verify(m => m.GetDeserializedAsync<Result<IEnumerable<RecurringPayment>>>(It.IsAny<Uri>()));
+            webServiceRequest.Verify(m => m.GetDeserializedAsync<Result<IEnumerable<PaymentSchedule>>>(It.IsAny<Uri>()));
         }
 
         // *************************************************************************************************
@@ -287,7 +287,7 @@ namespace PaySimpleSdkTests.PaymentScheduleTests
                 .ReturnsAsync(new Result<IEnumerable<Payment>> { ResultData = new Meta(), Response = new List<Payment>() });
 
             // Act
-            await service.GetRecurringPaymentsAsync(recurringPaymentId);
+            await service.GetRecurringSchedulePaymentsAsync(recurringPaymentId);
 
             // Assert
             Assert.Equal(string.Format("{0}/v4/recurringpayment/{1}/payments", settings.BaseUrl, recurringPaymentId), endpoint.AbsoluteUri);
@@ -303,7 +303,7 @@ namespace PaySimpleSdkTests.PaymentScheduleTests
                 .ReturnsAsync(new Result<IEnumerable<Payment>> { ResultData = new Meta(), Response = new List<Payment>() });
 
             // Act
-            await service.GetRecurringPaymentsAsync(recurringPaymentId);
+            await service.GetRecurringSchedulePaymentsAsync(recurringPaymentId);
 
             // Assert
             webServiceRequest.Verify(m => m.GetDeserializedAsync<Result<IEnumerable<Payment>>>(It.IsAny<Uri>()));
