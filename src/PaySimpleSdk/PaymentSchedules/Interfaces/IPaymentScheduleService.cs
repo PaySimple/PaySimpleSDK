@@ -35,52 +35,52 @@ namespace PaySimpleSdk.PaymentSchedules
 {
     public interface IPaymentScheduleService
     {
-		/// <summary>
-		/// NOTE: PCI Compliance is the responsibility of the user of this SDK
-		/// </summary>
-		/// <typeparam name="T"></typeparam>
-		/// <param name="accountPaymentPlan"></param>
-		/// <returns></returns>
-		Task<NewAccountPaymentPlan<T>> CreateNewAccountPaymentPlanAsync<T>(NewAccountPaymentPlan<T> accountPaymentPlan) where T : Account, new();
-		/// <summary>
-		/// NOTE: PCI Compliance is the responsibility of the user of this SDK
-		/// </summary>
-		/// <typeparam name="T"></typeparam>
-		/// <param name="customerPaymentPlan"></param>
-		/// <returns></returns>
-		Task<NewCustomerPaymentPlan<T>> CreateNewCustomerPaymentPlanAsync<T>(NewCustomerPaymentPlan<T> customerPaymentPlan) where T : Account, new();
-		/// <summary>
-		/// NOTE: PCI Compliance is the responsibility of the user of this SDK
-		/// </summary>
-		/// <param name="paymentPlan"></param>
-		/// <returns></returns>
-		Task<PaymentPlan> CreatePaymentPlanAsync(PaymentPlan paymentPlan);
-		/// <summary>
-		/// NOTE: PCI Compliance is the responsibility of the user of this SDK
-		/// </summary>
-		/// <typeparam name="T"></typeparam>
-		/// <param name="accountRecurringPayment"></param>
-		/// <returns></returns>
-		Task<NewAccountRecurringPayment<T>> CreateNewAccountRecurringPaymentAsync<T>(NewAccountRecurringPayment<T> accountRecurringPayment) where T : Account, new();
-		/// <summary>
-		/// NOTE: PCI Compliance is the responsibility of the user of this SDK
-		/// </summary>
-		/// <typeparam name="T"></typeparam>
-		/// <param name="customerRecurringPayment"></param>
-		/// <returns></returns>
-		Task<NewCustomerRecurringPayment<T>> CreateNewCustomerRecurringPaymentAsync<T>(NewCustomerRecurringPayment<T> customerRecurringPayment) where T : Account, new();
-		/// <summary>
-		/// NOTE: PCI Compliance is the responsibility of the user of this SDK
-		/// </summary>
-		/// <param name="recurringPayment"></param>
-		/// <returns></returns>
-		Task<RecurringPayment> CreateRecurringPaymentAsync(RecurringPayment recurringPayment);
+        /// <summary>
+        /// NOTE: PCI Compliance is the responsibility of the user of this SDK
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="accountPaymentPlan"></param>
+        /// <returns></returns>
+        Task<NewAccountPaymentPlan<T>> CreateNewAccountPaymentPlanAsync<T>(NewAccountPaymentPlan<T> accountPaymentPlan) where T : Account, new();
+        /// <summary>
+        /// NOTE: PCI Compliance is the responsibility of the user of this SDK
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="customerPaymentPlan"></param>
+        /// <returns></returns>
+        Task<NewCustomerPaymentPlan<T>> CreateNewCustomerPaymentPlanAsync<T>(NewCustomerPaymentPlan<T> customerPaymentPlan) where T : Account, new();
+        /// <summary>
+        /// NOTE: PCI Compliance is the responsibility of the user of this SDK
+        /// </summary>
+        /// <param name="paymentPlan"></param>
+        /// <returns></returns>
+        Task<PaymentPlan> CreatePaymentPlanAsync(PaymentPlan paymentPlan);
+        /// <summary>
+        /// NOTE: PCI Compliance is the responsibility of the user of this SDK
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="accountRecurringPayment"></param>
+        /// <returns></returns>
+        Task<NewAccountRecurringPayment<T>> CreateNewAccountRecurringPaymentAsync<T>(NewAccountRecurringPayment<T> accountRecurringPayment) where T : Account, new();
+        /// <summary>
+        /// NOTE: PCI Compliance is the responsibility of the user of this SDK
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="customerRecurringPayment"></param>
+        /// <returns></returns>
+        Task<NewCustomerRecurringPayment<T>> CreateNewCustomerRecurringPaymentAsync<T>(NewCustomerRecurringPayment<T> customerRecurringPayment) where T : Account, new();
+        /// <summary>
+        /// NOTE: PCI Compliance is the responsibility of the user of this SDK
+        /// </summary>
+        /// <param name="recurringPayment"></param>
+        /// <returns></returns>
+        Task<RecurringPayment> CreateRecurringPaymentAsync(RecurringPayment recurringPayment);
         Task DeletePaymentPlanAsync(int paymentPlanId);
         Task DeleteRecurringPaymentAsync(int recurringPaymentId);
-        Task<PagedResult<IEnumerable<RecurringPayment>>> GetAllPaymentSchedulesAsync(int page = 1, int pageSize = 200);
+        Task<PagedResult<IEnumerable<PaymentSchedule>>> GetAllPaymentSchedulesAsync(int page = 1, int pageSize = 200);
         Task<PagedResult<IEnumerable<Payment>>> GetPaymentPlanPaymentsAsync(int paymentPlanId);
         Task<PaymentPlan> GetPaymentPlanScheduleAsync(int paymentPlanId);
-        Task<PagedResult<IEnumerable<Payment>>> GetRecurringPaymentsAsync(int recurringPaymentId);
+        Task<PagedResult<IEnumerable<Payment>>> GetRecurringSchedulePaymentsAsync(int recurringPaymentId);
         Task<RecurringPayment> GetRecurringScheduleAsync(int recurringPaymentId);
         Task PausePaymentPlanAsync(int paymentPlanId, DateTime endDate);
         Task PauseRecurringPaymentAsync(int recurringPaymentId, DateTime endDate);

@@ -155,11 +155,11 @@ namespace PaySimpleSdk.PaymentSchedules
             await webServiceRequest.DeleteAsync(new Uri(endpoint));
         }
 
-        public async Task<PagedResult<IEnumerable<RecurringPayment>>> GetAllPaymentSchedulesAsync(int page = 1, int pageSize = 200)
+        public async Task<PagedResult<IEnumerable<PaymentSchedule>>> GetAllPaymentSchedulesAsync(int page = 1, int pageSize = 200)
         {
             var endpoint = $"{settings.BaseUrl}{Endpoints.PaymentSchedule}?page={page}&pagesize={pageSize}";
-            var result = await webServiceRequest.GetDeserializedAsync<Result<IEnumerable<RecurringPayment>>>(new Uri(endpoint));
-            return PagedResult.ConvertToPagedResult<IEnumerable<RecurringPayment>>(result);
+            var result = await webServiceRequest.GetDeserializedAsync<Result<IEnumerable<PaymentSchedule>>>(new Uri(endpoint));
+            return PagedResult.ConvertToPagedResult<IEnumerable<PaymentSchedule>>(result);
         }
 
         public async Task<PagedResult<IEnumerable<Payment>>> GetPaymentPlanPaymentsAsync(int paymentPlanId)
@@ -176,7 +176,7 @@ namespace PaySimpleSdk.PaymentSchedules
             return result.Response;
         }
 
-        public async Task<PagedResult<IEnumerable<Payment>>> GetRecurringPaymentsAsync(int recurringPaymentId)
+        public async Task<PagedResult<IEnumerable<Payment>>> GetRecurringSchedulePaymentsAsync(int recurringPaymentId)
         {
             var endpoint = string.Format("{0}{1}/{2}/payments", settings.BaseUrl, Endpoints.RecurringPayment, recurringPaymentId);
             var result = await webServiceRequest.GetDeserializedAsync<Result<IEnumerable<Payment>>>(new Uri(endpoint));

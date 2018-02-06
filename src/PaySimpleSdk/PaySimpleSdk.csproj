@@ -97,6 +97,7 @@
     <Compile Include="PaymentSchedules\NewCustomerPaymentPlan.cs" />
     <Compile Include="PaymentSchedules\NewCustomerRecurringPayment.cs" />
     <Compile Include="PaymentSchedules\PaymentPlan.cs" />
+    <Compile Include="PaymentSchedules\PaymentSchedule.cs" />
     <Compile Include="PaymentSchedules\PaymentScheduleList.cs" />
     <Compile Include="PaymentSchedules\PaymentScheduleService.cs" />
     <Compile Include="PaymentSchedules\RecurringPayment.cs" />

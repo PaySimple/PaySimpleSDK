@@ -378,6 +378,7 @@ namespace PaySimpleSdk.Helpers
 
     public enum ScheduleStatus
     {
+        None = 0,
         Active = 1,
         Expired = 3,
         PauseUntil = 2,
@@ -473,6 +474,19 @@ namespace PaySimpleSdk.Helpers
         ReversePosted,
         Settled,
         Voided
+    }
+
+    public enum PaymentScheduleType
+    {
+        /// <summary>
+        /// The schedule is a payment plan.
+        /// </summary>
+        PaymentPlan = 1,
+
+        /// <summary>
+        /// The schedule is a Recurring Payment Schedule.
+        /// </summary>
+        RecurringPayment = 2
     }
 
     [ExcludeFromCodeCoverage]
@@ -893,6 +907,13 @@ namespace PaySimpleSdk.Helpers
             {Status.Voided, "Voided"}
         };
 
+        public static BiLookup<PaymentScheduleType, string> PaymentScheduleTypeStrings =
+            new BiLookup<PaymentScheduleType, string>
+            {
+                { PaymentScheduleType.PaymentPlan, "1" },
+                { PaymentScheduleType.RecurringPayment, "2" }
+            };
+
         public static object GetEnumMappings<T>()
         {
             switch (typeof(T).Name)
@@ -903,6 +924,8 @@ namespace PaySimpleSdk.Helpers
                     return CustomerSortStrings;
                 case "PaymentSort":
                     return PaymentSortStrings;
+                case "PaymentScheduleType":
+                    return PaymentScheduleTypeStrings;
                 case "PaymentStatus":
                     return PaymentStatusStrings;
                 case "PaymentSubType":

@@ -1,5 +1,10 @@
 # PaySimple SDK Changelog
 
+## v1.4.0 - 2.5.2018
+
+The PaymentScheduleService.GetAllPaymentSchedulesAsync() will now return List<PaymentSchedule>.
+Renamed PaymentScheduleService.GetRecurringPaymentsAsync to PaymentScheduleService.GetRecurringSchedulePaymentsAsync
+
 ## v1.3.1 - 12.19.2017
 
 Added paging to PaymentScheduleService.GetAllPaymentSchedulesAsync() call.
