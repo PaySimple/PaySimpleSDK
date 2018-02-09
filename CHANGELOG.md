@@ -1,5 +1,9 @@
 # PaySimple SDK Changelog
 
+## v1.4.1 - 2.9.2018
+
+Credit card validation now allows for 19 digit carts and new MasterCard bin ranges.
+
 ## v1.4.0 - 2.5.2018
 
 The PaymentScheduleService.GetAllPaymentSchedulesAsync() will now return List<PaymentSchedule>.
