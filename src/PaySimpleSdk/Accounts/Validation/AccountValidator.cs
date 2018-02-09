@@ -50,10 +50,78 @@ namespace PaySimpleSdk.Accounts.Validation
     internal class CreditCardValidator : AccountValidator<CreditCard>
     {
         public CreditCardValidator()
-        {
-            RuleFor(m => m.CreditCardNumber).NotEmpty().WithMessage("CreditCardNumber is required").Matches(@"^(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14}|3[47][0-9]{13}|6(?:011|5[0-9]{2})[0-9]{12})$|^((\*{11,12})[0-9]{4})$").WithMessage("CreditCardNumber is invalid");
-            RuleFor(m => m.ExpirationDate).NotEmpty().WithMessage("ExpirationDate is required").Matches(@"^(([0][1-9])|([1][0-2]))/20[0-9][0-9]$").WithMessage("ExpirationDate must be in a \"MM/YYYY\" format");
+		{
+			RuleFor(m => m.CreditCardNumber)
+				.NotEmpty()
+				.WithMessage("CreditCardNumber is required");
+
+			RuleFor(m => m.CreditCardNumber)
+				.Must(a => string.IsNullOrWhiteSpace(a) || a.Contains("*") || LuhnAlgorithm.IsValidCreditCard(a))
+				.WithMessage("CreditCardNumber is invalid");
+
+			RuleFor(m => m.CreditCardNumber)
+				.Matches(@"^(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14}|3[47][0-9]{13}|6(?:011|5[0-9]{2})[0-9]{12})$|^((\*{11,12})[0-9]{4})$")
+				.When(a => !string.IsNullOrWhiteSpace(a.CreditCardNumber) && a.CreditCardNumber.Contains("*"))
+				.WithMessage("CreditCardNumber is invalid");
+
+			RuleFor(m => m.ExpirationDate).NotEmpty().WithMessage("ExpirationDate is required")
+				.Matches(@"^(([0][1-9])|([1][0-2]))/20[0-9][0-9]$").WithMessage("ExpirationDate must be in a \"MM/YYYY\" format");
+
             RuleFor(m => m.BillingZipCode).PostalCode().WithMessage("BillingZipCode must be no more than 10 characters");
         }
     }
+
+	public static class LuhnAlgorithm
+	{
+		private static readonly int[] m_anDELTAS = { 0, 1, 2, 3, 4, -4, -3, -2, -1, 0 };
+		private static readonly bool[] m_abChecksumAnswers = { true,
+																	  false,false,false,false,false,false,false,false,false,true,
+																	  false,false,false,false,false,false,false,false,false,true,
+																	  false,false,false,false,false,false,false,false,false,true,
+																	  false,false,false,false,false,false,false,false,false,true,
+																	  false,false,false,false,false,false,false,false,false,true,
+																	  false,false,false,false,false,false,false,false,false,true,
+																	  false,false,false,false,false,false,false,false,false,true,
+																	  false,false,false,false,false,false,false,false,false,true,
+																	  false,false,false,false,false,false,false,false,false,true,
+																	  false,false,false,false,false,false,false,false,false,true,
+																	  false,false,false,false,false,false,false,false,false,true,
+																	  false,false,false,false,false,false,false,false,false,true,
+																	  false,false,false,false,false,false,false,false,false,true,
+																	  false,false,false,false,false,false,false,false,false,true,
+																	  false,false,false,false,false,false,false,false,false,true };
+
+		public static bool IsValidCreditCard(string cardNumber)
+		{
+			return GetLuhnAlgorithmNumber(cardNumber);
+		}
+
+		public static bool GetLuhnAlgorithmNumber(string cardNumber)
+		{
+			if (string.IsNullOrWhiteSpace(cardNumber))
+				return true;
+
+			// RSN Super cool optimized LuhnAlgo
+			// RSN see http://orb-of-knowledge.blogspot.com/2009/08/extremely-fast-luhn-function-for-c.html
+
+			int checksum = 0;
+			bool doubleDigit = false;
+
+			char[] chars = cardNumber.ToCharArray();
+
+			for (int i = chars.Length - 1; i > -1; i--)
+			{
+				int j = chars[i] ^ 0x30;
+
+				checksum += j;
+
+				if (doubleDigit)
+					checksum += m_anDELTAS[j];
+
+				doubleDigit = !doubleDigit;
+			}
+
+			return m_abChecksumAnswers[checksum];
+		}
+	}
 }

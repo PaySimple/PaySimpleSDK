@@ -54,7 +54,7 @@ namespace TestHarness
         {
             var apiKey = ConfigurationManager.AppSettings["apiKey"];
             var username = ConfigurationManager.AppSettings["username"];
-            settings = new PaySimpleSettings(apiKey, username, "https://api.qa2-paysimple.com");
+            settings = new PaySimpleSettings(apiKey, username, "https://sandbox-api.paysimple.com");
             accountService = new AccountService(settings);
             customerService = new CustomerService(settings);
             paymentService = new PaymentService(settings);
@@ -210,6 +210,36 @@ namespace TestHarness
                 Console.WriteLine("Failed to create Credit Card account");
                 return;
             }
+
+	        // Create Recurring Payment
+	        var recurringPayment2 = new RecurringPayment
+	        {
+		        AccountId = visa.Id,
+		        PaymentAmount = 10.00M,
+		        StartDate = DateTime.Now.AddDays(1),
+		        ExecutionFrequencyType = ExecutionFrequencyType.FirstOfMonth,
+	        };
+
+	        await DeleteCustomerAsync(warrior.Id);
+	        recurringPayment2 = await CreateRecurringPaymentAsync(recurringPayment2);
+
+			// create MC with new bin range
+			var newBinMc = new CreditCard
+			{
+				CustomerId = warrior.Id,
+				CreditCardNumber = "2223000048400011",
+				ExpirationDate = "12/2021",
+				Issuer = Issuer.Master,
+				BillingZipCode = "11111"
+			};
+
+			newBinMc = await CreateCreditCardAccountAsync(newBinMc);
+
+			if (newBinMc == null)
+			{
+				Console.WriteLine("Failed to create Credit Card account with new MasterCard bin");
+				return;
+			}
 
 			// Update Ach Account
 			ach.AccountNumber = "751111111";
@@ -536,8 +566,8 @@ namespace TestHarness
             {
                 exceptionThrown = true;
                 Debug.Assert(e.StatusCode == HttpStatusCode.BadRequest, "Status code should equal 400 / 'Bad Request'");
-                Debug.Assert(e.EndpointErrors.ResultData.Errors.ErrorMessages.First().Message ==
-                    "Before you can delete this customer, you must cancel all open recurring payments, payment plans, subscriptions, appointments, future payments and invoices associated with this record. ", 
+                Debug.Assert(e.EndpointErrors.ResultData.Errors.ErrorMessages.First().Message.Contains(
+					"Before you can delete this customer, you must cancel all open recurring payments, payment plans, billing schedules, appointments, future payments and invoices associated with this record."), 
                     "Error message should indicate customer has active recurring payments");
             }
 
