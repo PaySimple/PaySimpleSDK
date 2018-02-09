@@ -440,7 +440,21 @@ namespace PaySimpleSdkTests.AccountTests.ValidationTests
             Assert.False(result.Errors.Any(e => e.ErrorMessage == "CreditCardNumber is invalid"));
         }
 
-		[Fact]
+        [Fact]
+        public void CreditCardNumber_Is_19_Digits_Is_Valid()
+        {
+            // Arrange
+            var validator = new CreditCardValidator();
+            var account = new CreditCard { CreditCardNumber = "4916184755461012080" };
+
+            // Act
+            var result = validator.Validate(account);
+
+            // Assert
+            Assert.False(result.Errors.Any(e => e.ErrorMessage == "CreditCardNumber is invalid"));
+        }
+
+        [Fact]
 		public void CreditCardNumber_New_MasterCard_bin_Digits_Is_Valid()
 		{
 			// Arrange
