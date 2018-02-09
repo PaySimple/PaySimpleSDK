@@ -256,7 +256,7 @@ namespace PaySimpleSdkTests.PaymentScheduleTests
             await service.GetAllPaymentSchedulesAsync();
 
             // Assert
-            Assert.Equal(string.Format("{0}/v4/paymentschedule", settings.BaseUrl), endpoint.AbsoluteUri);
+            Assert.Equal(string.Format("{0}/v4/paymentschedule?page=1&pagesize=200", settings.BaseUrl), endpoint.AbsoluteUri);
         }
 
         [Fact]
