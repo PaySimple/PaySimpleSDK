@@ -92,7 +92,7 @@ namespace PaySimpleSdk.Payments
         public DateTime? ReturnDate { get; internal set; }
         [JsonProperty("EstimatedSettleDate"), JsonConverter(typeof(DateTimeConverter))]
         public DateTime? EstimatedSettleDate { get; internal set; }
-        [JsonProperty("ActualSettleDate"), JsonConverter(typeof(DateTimeConverter))]
+        [JsonProperty("ActualSettledDate"), JsonConverter(typeof(DateTimeConverter))]
         public DateTime? ActualSettleDate { get; internal set; }
         [JsonProperty("CanVoidUntil"), JsonConverter(typeof(DateTimeConverter))]
         public DateTime? CanVoidUntil { get; internal set; }
