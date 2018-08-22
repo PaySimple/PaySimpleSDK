@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>PaySimpleSdk</id>
-    <version>1.4.1</version>
+    <version>1.4.2</version>
     <title>PaySimple SDK</title>
     <authors>PaySimple</authors>
     <owners>PaySimple</owners>
@@ -10,7 +10,7 @@
     <projectUrl>https://github.com/PaySimple/PaySimpleSDK</projectUrl>
     <iconUrl>https://bitbucket.org/scottlance/paysimplesdk/avatar/128/?ts=1438640642</iconUrl>
     <description>PaySimple SDK is a fully asynchronous and validatable SDK designed around the PaySimple API v4</description>    
-    <copyright>Copyright 2017</copyright>
+    <copyright>Copyright 2018</copyright>
     <tags>PaySimple</tags>
     <dependencies>
       <dependency id="FluentValidation" version="6.2.1.0" />      

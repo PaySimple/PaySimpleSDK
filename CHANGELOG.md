@@ -1,5 +1,9 @@
 # PaySimple SDK Changelog
 
+## v1.4.2 - 8.22.2018
+
+Fixed a property name for serialization
+
 ## v1.4.1 - 2.9.2018
 
 Credit card validation now allows for 19 digit carts and new MasterCard bin ranges.
