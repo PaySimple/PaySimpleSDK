@@ -220,8 +220,7 @@ namespace TestHarness
 		        ExecutionFrequencyType = ExecutionFrequencyType.FirstOfMonth,
 	        };
 
-	        await DeleteCustomerAsync(warrior.Id);
-	        recurringPayment2 = await CreateRecurringPaymentAsync(recurringPayment2);
+
 
 			// create MC with new bin range
 			var newBinMc = new CreditCard
