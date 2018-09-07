@@ -211,10 +211,6 @@ namespace TestHarness
                 return;
             }
 
-	        var recurringPayment2 = new RecurringPayment
-	        await DeleteCustomerAsync(warrior.Id);
-	        recurringPayment2 = await CreateRecurringPaymentAsync(recurringPayment2);
-
 			// create MC with new bin range
 			var newBinMc = new CreditCard
 			{
