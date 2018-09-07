@@ -211,15 +211,7 @@ namespace TestHarness
                 return;
             }
 
-	        // Create Recurring Payment
 	        var recurringPayment2 = new RecurringPayment
-	        {
-		        AccountId = visa.Id,
-		        PaymentAmount = 10.00M,
-		        StartDate = DateTime.Now.AddDays(1),
-		        ExecutionFrequencyType = ExecutionFrequencyType.FirstOfMonth,
-	        };
-
 	        await DeleteCustomerAsync(warrior.Id);
 	        recurringPayment2 = await CreateRecurringPaymentAsync(recurringPayment2);
 
