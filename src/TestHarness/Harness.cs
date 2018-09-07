@@ -211,6 +211,16 @@ namespace TestHarness
                 return;
             }
 
+	        // Create Recurring Payment
+	        var recurringPayment2 = new RecurringPayment
+	        {
+		        AccountId = visa.Id,
+		        PaymentAmount = 10.00M,
+		        StartDate = DateTime.Now.AddDays(1),
+		        ExecutionFrequencyType = ExecutionFrequencyType.FirstOfMonth,
+	        };
+
+
 			// create MC with new bin range
 			var newBinMc = new CreditCard
 			{
