@@ -39,11 +39,11 @@ namespace PaySimpleSdk.PaymentSchedules
         [JsonProperty("TotalNumberOfPayments")]
         public int TotalNumberOfPayments { get; set; }
         [JsonProperty("BalanceRemaining")]
-        public decimal BalanceRemaining { get; internal set; }
+        public decimal BalanceRemaining { get; set; }
         [JsonProperty("NumberOfPaymentsMade")]
-        public int NumberOfPaymentsMade { get; internal set; }
+        public int NumberOfPaymentsMade { get; set; }
         [JsonProperty("NumberOfPaymentsRemaining")]
-        public int NumberOfPaymentsRemaining { get; internal set; }
+        public int NumberOfPaymentsRemaining { get; set; }
 
         public virtual new IEnumerable<ValidationError> Validate()
         {

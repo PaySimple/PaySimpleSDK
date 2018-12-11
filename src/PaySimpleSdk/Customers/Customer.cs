@@ -76,9 +76,9 @@ namespace PaySimpleSdk.Customers
         [JsonProperty("Notes")]
         public string Notes { get; set; }
         [JsonProperty("CreatedOn"), JsonConverter(typeof(DateTimeConverter))]
-        public DateTime? CreatedOn { get; internal set; }
+        public DateTime? CreatedOn { get; set; }
         [JsonProperty("LastModified"), JsonConverter(typeof(DateTimeConverter))]
-        public DateTime? LastModified { get; internal set; }
+        public DateTime? LastModified { get; set; }
 
         public IEnumerable<ValidationError> Validate()
         {

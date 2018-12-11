@@ -67,43 +67,43 @@ namespace PaySimpleSdk.Payments
         [JsonProperty("FaiureReceiptOptions")]
         public ReceiptOptions FailureReceiptOptions { get; set; }
         [JsonProperty("CustomerId")]
-        public int CustomerId { get; internal set; }
+        public int CustomerId { get; set; }
         [JsonProperty("CustomerFirstName")]
-        public string CustomerFirstName { get; internal set; }
+        public string CustomerFirstName { get; set; }
         [JsonProperty("CustomerLastName")]
-        public string CustomerLastName { get; internal set; }
+        public string CustomerLastName { get; set; }
         [JsonProperty("CustomerCompany")]
-        public string CustomerCompany { get; internal set; }
+        public string CustomerCompany { get; set; }
         [JsonProperty("ReferenceId")]
-        public int ReferenceId { get; internal set; }
+        public int ReferenceId { get; set; }
         [JsonProperty("Status"), JsonConverter(typeof(TypeEnumConverter<Status, BiLookup<Status, string>>))]
-        public Status? Status { get; internal set; }
+        public Status? Status { get; set; }
         [JsonProperty("RecurringScheduleId")]
-        public int RecurringScheduleId { get; internal set; }
+        public int RecurringScheduleId { get; set; }
         [JsonProperty("PaymentType"), JsonConverter(typeof(TypeEnumConverter<PaymentType, BiLookup<PaymentType, string>>))]
-        public PaymentType PaymentType { get; internal set; }
+        public PaymentType PaymentType { get; set; }
         [JsonProperty("ProviderAuthCode")]
-        public string ProviderAuthCode { get; internal set; }
+        public string ProviderAuthCode { get; set; }
         [JsonProperty("TraceNumber")]
-        public string TraceNumber { get; internal set; }
+        public string TraceNumber { get; set; }
         [JsonProperty("PaymentDate"), JsonConverter(typeof(DateTimeConverter))]
-        public DateTime? PaymentDate { get; internal set; }
+        public DateTime? PaymentDate { get; set; }
         [JsonProperty("ReturnDate"), JsonConverter(typeof(DateTimeConverter))]
-        public DateTime? ReturnDate { get; internal set; }
+        public DateTime? ReturnDate { get; set; }
         [JsonProperty("EstimatedSettleDate"), JsonConverter(typeof(DateTimeConverter))]
-        public DateTime? EstimatedSettleDate { get; internal set; }
+        public DateTime? EstimatedSettleDate { get; set; }
         [JsonProperty("ActualSettledDate"), JsonConverter(typeof(DateTimeConverter))]
-        public DateTime? ActualSettleDate { get; internal set; }
+        public DateTime? ActualSettleDate { get; set; }
         [JsonProperty("CanVoidUntil"), JsonConverter(typeof(DateTimeConverter))]
-        public DateTime? CanVoidUntil { get; internal set; }
+        public DateTime? CanVoidUntil { get; set; }
         [JsonProperty("FailureData")]
-        public FailureData FailureData { get; internal set; }
+        public FailureData FailureData { get; set; }
         [JsonProperty("IsDecline")]
-        public bool IsDecline { get; internal set; }
+        public bool IsDecline { get; set; }
         [JsonProperty("CreatedOn"), JsonConverter(typeof(DateTimeConverter))]
-        public DateTime? CreatedOn { get; internal set; }
+        public DateTime? CreatedOn { get; set; }
         [JsonProperty("LastModified"), JsonConverter(typeof(DateTimeConverter))]
-        public DateTime? LastModified { get; internal set; }
+        public DateTime? LastModified { get; set; }
         [JsonProperty("RequiresReceipt")]
         public bool RequiresReceipt { get; set; }
 		[JsonProperty(NullValueHandling = NullValueHandling.Ignore)]

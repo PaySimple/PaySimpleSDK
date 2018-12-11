@@ -32,8 +32,8 @@ namespace PaySimpleSdk.PaymentSchedules
     public class PaymentScheduleList
     {
         [JsonProperty("PaymentPlans")]
-        public IEnumerable<PaymentPlan> PaymentPlans { get; internal set; }
+        public IEnumerable<PaymentPlan> PaymentPlans { get; set; }
         [JsonProperty("RecurringPayments")]
-        public IEnumerable<RecurringPayment> RecurringPayments { get; internal set; }
+        public IEnumerable<RecurringPayment> RecurringPayments { get; set; }
     }
 }

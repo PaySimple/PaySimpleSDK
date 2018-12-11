@@ -32,10 +32,10 @@ namespace PaySimpleSdk.Exceptions
     [ExcludeFromCodeCoverage]
     public class ValidationError
     {
-        public object AttemptedValue { get; internal set; }
+        public object AttemptedValue { get; set; }
         public object CustomState { get; set; }
-        public string ErrorMessage { get; internal set; }
-        public string PropertyName { get; internal set; }
+        public string ErrorMessage { get; set; }
+        public string PropertyName { get; set; }
         public ValidationError(ValidationFailure error)
         {
             this.AttemptedValue = error.AttemptedValue;

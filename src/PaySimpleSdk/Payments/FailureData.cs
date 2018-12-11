@@ -31,12 +31,12 @@ namespace PaySimpleSdk.Payments
     public class FailureData
     {
         [JsonProperty("Code")]
-        public int? Code { get; internal set; }
+        public int? Code { get; set; }
         [JsonProperty("Description")]
-        public string Description { get; internal set; }
+        public string Description { get; set; }
         [JsonProperty("MerchantActionText")]
-        public string MerchantActionText { get; internal set; }
+        public string MerchantActionText { get; set; }
         [JsonProperty("IsDecline")]
-        public bool IsDecline { get; internal set; }
+        public bool IsDecline { get; set; }
     }
 }

@@ -41,15 +41,15 @@ namespace PaySimpleSdk.PaymentSchedules
         [JsonProperty("AccountId")]
         public int AccountId { get; set; }
         [JsonProperty("CustomerId")]
-        public string CustomerId { get; internal set; }
+        public string CustomerId { get; set; }
         [JsonProperty("PaymentAmount")]
         public decimal PaymentAmount { get; set; }
         [JsonProperty("CustomerFirstName")]
-        public string CustomerFirstName { get; internal set; }
+        public string CustomerFirstName { get; set; }
         [JsonProperty("CustomerLastName")]
-        public string CustomerLastName { get; internal set; }
+        public string CustomerLastName { get; set; }
         [JsonProperty("CustomerCompany")]
-        public string CustomerCompany { get; internal set; }
+        public string CustomerCompany { get; set; }
         [JsonProperty("PaymentSubType"), JsonConverter(typeof(TypeEnumConverter<PaymentSubType, BiLookup<PaymentSubType, string>>))]
         public PaymentSubType? PaymentSubType { get; set; }
         [JsonProperty("OrderId")]
@@ -65,27 +65,27 @@ namespace PaySimpleSdk.PaymentSchedules
         [JsonProperty("EndDate")]
         public DateTime? EndDate { get; set; }
         [JsonProperty("DateOfLastPaymentMade")]
-        public DateTime? DateOfLastPaymentMade { get; internal set; }
+        public DateTime? DateOfLastPaymentMade { get; set; }
         [JsonProperty("NextScheduleDate")]
-        public DateTime? NextScheduleDate { get; internal set; }
+        public DateTime? NextScheduleDate { get; set; }
         [JsonProperty("PauseUntilDate")]
-        public DateTime? PauseUntilDate { get; internal set; }
+        public DateTime? PauseUntilDate { get; set; }
         [JsonProperty("TotalAmountPaid")]
-        public decimal TotalAmountPaid { get; internal set; }
+        public decimal TotalAmountPaid { get; set; }
         [JsonProperty("FirstPaymentAmount")]
         public decimal? FirstPaymentAmount { get; set; }
         [JsonProperty("FirstPaymentDate")]
         public DateTime? FirstPaymentDate { get; set; }
         [JsonProperty("FirstPaymentDone")]
-        public bool FirstPaymentDone { get; internal set; }
+        public bool FirstPaymentDone { get; set; }
         [JsonProperty("ScheduleStatus")]
-        public ScheduleStatus ScheduleStatus { get; internal set; }
+        public ScheduleStatus ScheduleStatus { get; set; }
         [JsonProperty("Description")]
         public string Description { get; set; }
         [JsonProperty("CreatedOn")]
-        public DateTime? CreatedOn { get; internal set; }
+        public DateTime? CreatedOn { get; set; }
         [JsonProperty("LastModified")]
-        public DateTime? LastModified { get; internal set; }
+        public DateTime? LastModified { get; set; }
 
         public virtual IEnumerable<ValidationError> Validate()
         {
