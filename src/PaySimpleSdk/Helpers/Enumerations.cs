@@ -489,6 +489,52 @@ namespace PaySimpleSdk.Helpers
         RecurringPayment = 2
     }
 
+    /// <summary>
+    /// CoF payment type
+    /// </summary>
+    public enum CardOnFileType
+    {
+        /// <summary>
+        /// default
+        /// </summary>
+        None = 0,
+        /// <summary>
+        /// merch initiated txn with fixed or variable amt w/o regular interval or schedule - 'credentials on file'
+        /// </summary>
+        MerchantInitiated = 1,
+        /// <summary>
+        /// cardholder initiated txn with variable amount w/o regular interval or schedule
+        /// </summary>
+        CustomerInitiated = 2,
+        /// <summary>
+        /// merch initiated txn with variable amt over regular intervals
+        /// </summary>
+        Recurring = 3,
+        /// <summary>
+        /// merch initiated txn with fixed amt over fixed period of time
+        /// </summary>
+        Installment = 4,
+    }
+
+    /// <summary>
+    /// the ReAuthorization submission type exists, however PaySimple will not submit Re-Authorization to WorldPay
+    /// </summary>
+    public enum CardOnFileSubmissionType
+    {
+        /// <summary>
+        /// initial auth/sale for a <see cref="CardOnFileType"/>
+        /// </summary>
+        Initial = 0,
+        /// <summary>
+        /// used for any subsequent auth/sale for a <see cref="CardOnFileType"/>
+        /// </summary>
+        Subsequent = 1,
+        /// <summary>
+        /// used for resubmitting an auth that was declined due to insufficient funds after goods or services have been delivered
+        /// </summary>
+        Resubmission = 2,
+    }
+
     [ExcludeFromCodeCoverage]
     public static class EnumStrings
     {

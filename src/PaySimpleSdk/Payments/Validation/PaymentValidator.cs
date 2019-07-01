@@ -25,6 +25,7 @@
 #endregion
 
 using FluentValidation;
+using PaySimpleSdk.Helpers;
 
 namespace PaySimpleSdk.Payments.Validation
 {

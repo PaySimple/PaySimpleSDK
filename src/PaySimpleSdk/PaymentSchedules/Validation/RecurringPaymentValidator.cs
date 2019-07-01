@@ -45,6 +45,11 @@ namespace PaySimpleSdk.PaymentSchedules.Validation
             RuleFor(m => m.ExecutionFrequencyParameter).InclusiveBetween(1, 7).When(m => m.ExecutionFrequencyType == ExecutionFrequencyType.Weekly || m.ExecutionFrequencyType == ExecutionFrequencyType.BiWeekly).WithMessage("ExecutionFrequencyParameter must be a value 1-7 (Sunday - Saturday), when ExecutionFrequencyType is Weekly or BiWeekly");
             RuleFor(m => m.ExecutionFrequencyParameter).InclusiveBetween(1, 31).When(m => m.ExecutionFrequencyType == ExecutionFrequencyType.SpecificDayOfMonth).WithMessage("ExecutionFrequencyParameter must be a value 1-7 (Sunday - Saturday), when ExecutionFrequencyType is SpecificDayOfMonth.  Note: If you want to bill on the 30th or 31st, use the LastDayOfMonth ExecutionFrequencyType");
             RuleFor(m => m.Description).Length(0, 2048).WithMessage("Description can not exceed 2048 characters");
+            When(m => m.CardOnFileType !=  CardOnFileType.None, () =>
+            {
+                RuleFor(m => m.CardOnFileType)
+                    .Must(e => e == CardOnFileType.CustomerInitiated || e == CardOnFileType.MerchantInitiated).WithMessage($"CardOnFileType must be either 'MerchantInitiated', 'CustomerInitated', or 'None'");
+            });
         }
     }
 
