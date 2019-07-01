@@ -50,11 +50,9 @@ namespace TestHarness
         IPaymentService paymentService;
         IPaymentScheduleService paymentScheduleService;
 
-        public Harness()
+        public Harness(string apiKey, string apiUsername, string targetUrl)
         {
-            var apiKey = ConfigurationManager.AppSettings["apiKey"];
-            var username = ConfigurationManager.AppSettings["username"];
-            settings = new PaySimpleSettings(apiKey, username, "https://sandbox-api.paysimple.com");
+            settings = new PaySimpleSettings(apiKey, apiUsername, targetUrl);
             accountService = new AccountService(settings);
             customerService = new CustomerService(settings);
             paymentService = new PaymentService(settings);

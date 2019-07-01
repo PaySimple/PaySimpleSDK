@@ -25,17 +25,25 @@
 #endregion
 
 using System;
+using System.IO;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 
 namespace TestHarness
 {
-    class Program
+    public class Program
     {
         static void Main(string[] args)
         {
+
+            IConfiguration configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory()) // Directory where the json files are located
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .Build();
+            // Use configuration as in every web project
             // So we can scroll long lists of data
             Console.SetBufferSize(200, 5000);
-            var harness = new Harness();
+            var harness = new Harness(configuration["appsettings:apiKey"], configuration["appsettings:apiUsername"], configuration["appsettings:targetUrl"]);
             Task.WaitAll(harness.RunMethods());
             Console.WriteLine("Done");
             Console.ReadLine();
