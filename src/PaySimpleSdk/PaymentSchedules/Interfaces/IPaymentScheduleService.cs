@@ -89,5 +89,6 @@ namespace PaySimpleSdk.PaymentSchedules
         Task SuspendPaymentPlanAsync(int paymentPlanId);
         Task SuspendRecurringPaymentAsync(int recurringPaymentId);
         Task<RecurringPayment> UpdateRecurringPaymentAsync(RecurringPayment recurringPayment);
+        Task<PagedResult<IEnumerable<RecurringPayment>>> GetAllRecurringPaymentsAsync(int page);
     }
 }

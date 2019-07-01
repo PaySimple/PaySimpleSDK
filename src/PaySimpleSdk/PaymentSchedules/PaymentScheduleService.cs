@@ -113,6 +113,13 @@ namespace PaySimpleSdk.PaymentSchedules
             return newAccountRecurringPayment;
         }
 
+        public async Task<PagedResult<IEnumerable<RecurringPayment>>> GetAllRecurringPaymentsAsync(int page)
+        {
+            var endpoint = string.Format("{0}{1}?page={2}&status=Active", settings.BaseUrl, Endpoints.RecurringPayment, page);
+            var result = await webServiceRequest.GetDeserializedAsync<Result<IEnumerable<RecurringPayment>>>(new Uri(endpoint));
+            return PagedResult.ConvertToPagedResult<IEnumerable<RecurringPayment>>(result);
+        }
+
         public async Task<NewCustomerRecurringPayment<T>> CreateNewCustomerRecurringPaymentAsync<T>(NewCustomerRecurringPayment<T> customerRecurringPayment)
             where T : Account, new()
         {
