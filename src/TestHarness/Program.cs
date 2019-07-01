@@ -43,7 +43,7 @@ namespace TestHarness
             // Use configuration as in every web project
             // So we can scroll long lists of data
             Console.SetBufferSize(200, 5000);
-            var harness = new Harness(configuration["appsettings:apiKey"], configuration["appsettings:apiUsername"], configuration["appsettings:targetUrl"]);
+            var harness = new Harness(configuration["apiKey"], configuration["apiUsername"], configuration["targetUrl"]);
             Task.WaitAll(harness.RunMethods());
             Console.WriteLine("Done");
             Console.ReadLine();

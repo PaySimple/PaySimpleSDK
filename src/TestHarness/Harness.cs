@@ -132,7 +132,7 @@ namespace TestHarness
                 LastName = "Elf",
                 Email = "gelf@gauntlet.com"
             };
-
+            Console.WriteLine("Beginning the Gauntlet...");
             // Create Customer
             warrior = await CreateCustomerAsync(warrior);
 			valkyrie = await CreateCustomerAsync(valkyrie);
