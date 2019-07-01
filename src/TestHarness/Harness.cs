@@ -402,7 +402,9 @@ namespace TestHarness
                 return;
             }
 
+
             // Make payment with a payment token and a card on file type
+            paymentToken = await GetPaymentTokenAsync(tokenRequest);
             var cardOnFilePayment = new Payment
             {
                 AccountId = visa.Id,
@@ -420,6 +422,7 @@ namespace TestHarness
             }
 
             // Make payment with a payment token and a card on file type
+            paymentToken = await GetPaymentTokenAsync(tokenRequest);
             var cardOnFilePaymentWithNetworkTransactionId = new Payment
             {
                 AccountId = visa.Id,
@@ -438,6 +441,7 @@ namespace TestHarness
             }
 
             // Make payment with a payment token and a card on file type and resubmission true
+            paymentToken = await GetPaymentTokenAsync(tokenRequest);
             var cardOnFilePaymentWithResubmission = new Payment
             {
                 AccountId = visa.Id,

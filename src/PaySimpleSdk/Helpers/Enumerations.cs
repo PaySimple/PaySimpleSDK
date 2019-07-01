@@ -960,6 +960,15 @@ namespace PaySimpleSdk.Helpers
                 { PaymentScheduleType.RecurringPayment, "2" }
             };
 
+        public static BiLookup<CardOnFileType, string> CardOnFileTypeStrings =
+            new BiLookup<CardOnFileType, string>
+            {
+                { CardOnFileType.None, "None" },
+                { CardOnFileType.CustomerInitiated, "CustomerInitiated" },
+                { CardOnFileType.MerchantInitiated, "MerchantInitiated" },
+                { CardOnFileType.Installment, "Installment" },
+                { CardOnFileType.Recurring, "Recurring" }
+            };
         public static object GetEnumMappings<T>()
         {
             switch (typeof(T).Name)
@@ -986,6 +995,8 @@ namespace PaySimpleSdk.Helpers
                     return StateCodeStrings;
                 case "Status":
                     return StatusStrings;
+                case "CardOnFileType":
+                    return CardOnFileTypeStrings;
                 default:
                     return null;
             }
