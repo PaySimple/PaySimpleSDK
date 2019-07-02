@@ -517,7 +517,7 @@ namespace PaySimpleSdk.Helpers
     }
 
     /// <summary>
-    /// the ReAuthorization submission type exists, however PaySimple will not submit Re-Authorization to WorldPay
+    /// the ReAuthorization submission type exists, however PaySimple will not submit Re-Authorization to the processor
     /// </summary>
     public enum CardOnFileSubmissionType
     {
