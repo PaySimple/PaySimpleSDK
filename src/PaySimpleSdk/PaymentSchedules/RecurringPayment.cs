@@ -86,6 +86,8 @@ namespace PaySimpleSdk.PaymentSchedules
         public DateTime? CreatedOn { get; set; }
         [JsonProperty("LastModified")]
         public DateTime? LastModified { get; set; }
+        [JsonProperty("CardOnFileType"), JsonConverter(typeof(TypeEnumConverter<CardOnFileType, BiLookup<CardOnFileType, string>>))]
+        public CardOnFileType CardOnFileType { get; set; }
 
         public virtual IEnumerable<ValidationError> Validate()
         {

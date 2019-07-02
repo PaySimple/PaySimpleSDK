@@ -1,12 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>    
+    <TargetFrameworks>netstandard2.0;net45</TargetFrameworks>    
     <PackageVersion>1.5.0</PackageVersion>
     <Title>PaySimple SDK</Title>
     <Authors>PaySimple</Authors>
     <Description>PaySimple SDK is a fully asynchronous and validatable SDK designed around the PaySimple API v4</Description>
-    <Copyright>Copyright 2018</Copyright>
+    <Copyright>Copyright 2019</Copyright>
     <PackageIconUrl>https://bitbucket.org/scottlance/paysimplesdk/avatar/128/?ts=1438640642</PackageIconUrl>
   </PropertyGroup>
 

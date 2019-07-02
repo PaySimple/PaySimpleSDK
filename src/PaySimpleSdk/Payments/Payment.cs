@@ -109,7 +109,28 @@ namespace PaySimpleSdk.Payments
 		[JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
 		public string PaymentToken { get; set; }
 
-		public IEnumerable<ValidationError> Validate()
+        #region Card on File
+        /// <summary>
+        /// CoF required field for Express API for stored cards - unique number created by the card brand
+        /// </summary>
+        [JsonProperty("NetworkTransactionId", NullValueHandling = NullValueHandling.Ignore)]
+        public string NetworkTransactionId { get; set; }
+
+        /// <summary>
+        /// CoF required field for Express API - represents the CoF payment type
+        /// </summary>
+        [JsonProperty("CardOnFileType"), JsonConverter(typeof(TypeEnumConverter<CardOnFileType, BiLookup<CardOnFileType, string>>))]
+        public CardOnFileType CardOnFileType { get; set; }
+
+        /// <summary>
+        /// CoF field indicating the payment is a resubmission of previously declined auth
+        /// </summary>
+        [JsonProperty("Resubmission")]
+        public bool Resubmission { get; set; }
+
+        #endregion Card on File
+
+        public IEnumerable<ValidationError> Validate()
         {
             var errors = new List<ValidationError>();
             errors.AddRange(Validator.Validate<Payment, PaymentValidator>(this));

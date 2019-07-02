@@ -218,36 +218,46 @@ namespace TestHarness
                 return;
             }
 
-            // Create Recurring Payment
-            var recurringPayment2 = new RecurringPayment
+	        // Create Recurring Payment with card On File Type
+	        var recurringPayment2 = new RecurringPayment
+	        {
+		        AccountId = visa.Id,
+		        PaymentAmount = 10.00M,
+		        StartDate = DateTime.Now.AddDays(1),
+		        ExecutionFrequencyType = ExecutionFrequencyType.FirstOfMonth,
+                CardOnFileType = CardOnFileType.MerchantInitiated
+	        };
+
+            recurringPayment2 = await CreateRecurringPaymentAsync(recurringPayment2);
+
+            if (recurringPayment2 == null)
             {
-                AccountId = visa.Id,
-                PaymentAmount = 10.00M,
-                StartDate = DateTime.Now.AddDays(1),
-                ExecutionFrequencyType = ExecutionFrequencyType.FirstOfMonth,
-            };
+                Console.WriteLine("Failed to create recurring payment with card on file types");
+                return;
+            }
 
 
             // create MC with new bin range
             var newBinMc = new CreditCard
-            {
-                CustomerId = warrior.Id,
-                CreditCardNumber = "2223000048400011",
-                ExpirationDate = "12/2021",
-                Issuer = Issuer.Master,
-                BillingZipCode = "11111"
-            };
 
-            newBinMc = await CreateCreditCardAccountAsync(newBinMc);
+			{
+				CustomerId = warrior.Id,
+				CreditCardNumber = "2223000048400011",
+				ExpirationDate = "12/2021",
+				Issuer = Issuer.Master,
+				BillingZipCode = "11111"
+			};
 
-            if (newBinMc == null)
-            {
-                Console.WriteLine("Failed to create Credit Card account with new MasterCard bin");
-                return;
-            }
+			newBinMc = await CreateCreditCardAccountAsync(newBinMc);
 
-            // Update Ach Account
-            ach.AccountNumber = "751111111";
+			if (newBinMc == null)
+			{
+				Console.WriteLine("Failed to create Credit Card account with new MasterCard bin");
+				return;
+			}
+
+			// Update Ach Account
+			ach.AccountNumber = "751111111";
             ach.IsCheckingAccount = true;
             ach = await UpdateAchAccountAsync(ach);
 
@@ -397,6 +407,63 @@ namespace TestHarness
             if (tokenPayment == null)
             {
                 Console.WriteLine("Failed to make payment using token");
+                return;
+            }
+
+
+            // Make payment with a payment token and a card on file type
+            paymentToken = await GetPaymentTokenAsync(tokenRequest);
+            var cardOnFilePayment = new Payment
+            {
+                AccountId = visa.Id,
+                PaymentToken = paymentToken.Token,
+                Amount = 5.00M,
+                CardOnFileType = CardOnFileType.Installment
+            };
+
+            cardOnFilePayment = await CreatePaymentAsync(cardOnFilePayment);
+
+            if (cardOnFilePayment == null)
+            {
+                Console.WriteLine("Failed to make payment using token with a card on file type of 'Installment'");
+                return;
+            }
+
+            // Make payment with a payment token and a card on file type
+            paymentToken = await GetPaymentTokenAsync(tokenRequest);
+            var cardOnFilePaymentWithNetworkTransactionId = new Payment
+            {
+                AccountId = visa.Id,
+                PaymentToken = paymentToken.Token,
+                Amount = 5.00M,
+                CardOnFileType = CardOnFileType.Installment,
+                NetworkTransactionId = "1234524234234"
+            };
+
+            cardOnFilePaymentWithNetworkTransactionId = await CreatePaymentAsync(cardOnFilePaymentWithNetworkTransactionId);
+
+            if (cardOnFilePaymentWithNetworkTransactionId == null)
+            {
+                Console.WriteLine("Failed to make payment using token with a card on file type of 'Installment' and network transaction Id");
+                return;
+            }
+
+            // Make payment with a payment token and a card on file type and resubmission true
+            paymentToken = await GetPaymentTokenAsync(tokenRequest);
+            var cardOnFilePaymentWithResubmission = new Payment
+            {
+                AccountId = visa.Id,
+                PaymentToken = paymentToken.Token,
+                Amount = 5.00M,
+                CardOnFileType = CardOnFileType.Installment,
+                Resubmission = true
+            };
+
+            cardOnFilePaymentWithResubmission = await CreatePaymentAsync(cardOnFilePaymentWithResubmission);
+
+            if (cardOnFilePaymentWithResubmission == null)
+            {
+                Console.WriteLine("Failed to make payment using token with a card on file type of 'Installment' and resubmission = true");
                 return;
             }
 
@@ -745,13 +812,36 @@ namespace TestHarness
                 return;
             }
 
+            var voidTokenPaymentWithCardOnFileType = await VoidPaymentAsync(cardOnFilePayment.Id.Value);
 
+            if (voidTokenPaymentWithCardOnFileType == null)
+            {
+                Console.WriteLine("Failed to void Payment Token payment with Card on File Type");
+                return;
+            }
+
+            var voidCardOnFilePaymentWithNetworkTransactionId =
+                await VoidPaymentAsync(cardOnFilePaymentWithNetworkTransactionId.Id.Value);
+            if (voidCardOnFilePaymentWithNetworkTransactionId == null)
+            {
+                Console.WriteLine("Failed to void Payment Token payment with Card on File Type and network transaction ID");
+                return;
+            }
+
+            var voidCardOnFilePaymentWithResubmission =
+                await VoidPaymentAsync(cardOnFilePaymentWithResubmission.Id.Value);
+            if (voidCardOnFilePaymentWithResubmission == null)
+            {
+                Console.WriteLine("Failed to void Payment Token payment with Card on File Type and resubmission = true");
+                return;
+            }
 
             // Delete Payment Plans
             await DeletePaymentPlanAsync(paymentPlan.Id);
 
             // Delete Recurring Payments
             await DeleteRecurringPaymentAsync(recurringPayment.Id);
+            await DeleteRecurringPaymentAsync(recurringPayment2.Id);
 
             // Delete Accounts
             await DeleteAchAccountAsync(ach.Id);
