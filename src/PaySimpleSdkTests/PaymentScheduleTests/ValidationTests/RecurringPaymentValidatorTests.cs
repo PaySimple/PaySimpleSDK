@@ -707,5 +707,89 @@ namespace PaySimpleSdkTests.PaymentScheduleTests.ValidationTests
             // Assert
             Assert.False(result.Errors.Any(e => e.ErrorMessage == "TotalNumberOfPayments must be a integer between 1 and 99"));
         }
+
+        [Fact]
+        public void CardOnFileType_Null_No_Error()
+        {
+            // Arrange            
+            var validator = new PaymentPlanValidator();
+            var paymentPlan = new PaymentPlan { TotalNumberOfPayments = 10 };
+
+            // Act
+            var result = validator.Validate(paymentPlan);
+
+            // Assert
+            Assert.True(result.Errors.All(e => e.ErrorMessage != "CardOnFileType must be either 'MerchantInitiated', 'CustomerInitated', or 'None'"));
+        }
+
+        [Fact]
+        public void InvalidCardOnFileType_Recurring_Error()
+        {
+            // Arrange            
+            var validator = new PaymentPlanValidator();
+            var paymentPlan = new PaymentPlan { CardOnFileType = CardOnFileType.Recurring };
+
+            // Act
+            var result = validator.Validate(paymentPlan);
+
+            // Assert
+            Assert.True(result.Errors.Any(e => e.ErrorMessage == "CardOnFileType must be either 'MerchantInitiated', 'CustomerInitated', or 'None'"));
+        }
+
+        [Fact]
+        public void InvalidCardOnFileType_Installment_Error()
+        {
+            // Arrange            
+            var validator = new PaymentPlanValidator();
+            var paymentPlan = new PaymentPlan { CardOnFileType = CardOnFileType.Installment };
+
+            // Act
+            var result = validator.Validate(paymentPlan);
+
+            // Assert
+            Assert.True(result.Errors.Any(e => e.ErrorMessage == "CardOnFileType must be either 'MerchantInitiated', 'CustomerInitated', or 'None'"));
+        }
+
+        [Fact]
+        public void ValidCardOnFileType_MerchantIniated_No_Error()
+        {
+            // Arrange            
+            var validator = new PaymentPlanValidator();
+            var paymentPlan = new PaymentPlan { CardOnFileType = CardOnFileType.MerchantInitiated };
+
+            // Act
+            var result = validator.Validate(paymentPlan);
+
+            // Assert
+            Assert.True(result.Errors.All(e => e.ErrorMessage != "CardOnFileType must be either 'MerchantInitiated', 'CustomerInitated', or 'None'"));
+        }
+
+        [Fact]
+        public void ValidCardOnFileType_CustomerIniated_No_Error()
+        {
+            // Arrange            
+            var validator = new PaymentPlanValidator();
+            var paymentPlan = new PaymentPlan { CardOnFileType = CardOnFileType.CustomerInitiated };
+
+            // Act
+            var result = validator.Validate(paymentPlan);
+
+            // Assert
+            Assert.True(result.Errors.All(e => e.ErrorMessage != "CardOnFileType must be either 'MerchantInitiated', 'CustomerInitated', or 'None'"));
+        }
+
+        [Fact]
+        public void ValidCardOnFileType_NoneIniated_No_Error()
+        {
+            // Arrange            
+            var validator = new PaymentPlanValidator();
+            var paymentPlan = new PaymentPlan { CardOnFileType = CardOnFileType.None };
+
+            // Act
+            var result = validator.Validate(paymentPlan);
+
+            // Assert
+            Assert.True(result.Errors.All(e => e.ErrorMessage != "CardOnFileType must be either 'MerchantInitiated', 'CustomerInitated', or 'None'"));
+        }
     }
 }
