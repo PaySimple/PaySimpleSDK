@@ -1,5 +1,9 @@
 # PaySimple SDK Changelog
 
+## v1.4.4 - 7.10.2019
+
+Added Card on File support to the payment and recurring payment request objects. 
+
 ## v1.4.2 - 8.22.2018
 
 Fixed a property name for serialization
