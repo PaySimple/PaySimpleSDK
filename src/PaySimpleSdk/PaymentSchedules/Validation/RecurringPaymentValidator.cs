@@ -48,7 +48,7 @@ namespace PaySimpleSdk.PaymentSchedules.Validation
             When(m => m.CardOnFileType !=  CardOnFileType.None, () =>
             {
                 RuleFor(m => m.CardOnFileType)
-                    .Must(e => e == CardOnFileType.CustomerInitiated || e == CardOnFileType.MerchantInitiated).WithMessage($"CardOnFileType must be either 'MerchantInitiated', 'CustomerInitated', or 'None'");
+                    .Must(e => e == CardOnFileType.Recurring || e == CardOnFileType.Installment).WithMessage($"CardOnFileType must be either 'Recurring', 'Installment', or 'None'");
             });
         }
     }

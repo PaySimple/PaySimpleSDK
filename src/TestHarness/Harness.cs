@@ -218,7 +218,7 @@ namespace TestHarness
 		        PaymentAmount = 10.00M,
 		        StartDate = DateTime.Now.AddDays(1),
 		        ExecutionFrequencyType = ExecutionFrequencyType.FirstOfMonth,
-                CardOnFileType = CardOnFileType.MerchantInitiated
+                CardOnFileType = CardOnFileType.Recurring
 	        };
 
             recurringPayment2 = await CreateRecurringPaymentAsync(recurringPayment2);
