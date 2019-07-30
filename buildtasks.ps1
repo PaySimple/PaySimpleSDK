@@ -9,14 +9,14 @@ properties {
 	$xunit_path = "$src_directory\packages\xunit.runner.console.2.1.0\tools\xunit.console.exe"	
 	$nuget_path = "$src_directory\.nuget\nuget.exe"
 
-	$version = "1.4.4"
+	$version = "1.4.5"
 	$preRelease = ""
 }
 
 task default -depends Clean, RunTests, CreateNuGetPackage
 
 task Compile {
-	exec { msbuild /nologo /verbosity:quiet $sln_file /p:Configuration=$target_config /p:TargetFrameworkVersion=v4.5 }
+	exec { msbuild /nologo /verbosity:quiet $sln_file /p:Configuration=$target_config  /p:TargetFrameworkVersion=v4.5 }
 	mkdir $output_directory -ea SilentlyContinue > $null
 	copy-item $src_directory\PaySimpleSdk\bin\Release\PaySimpleSdk.dll $output_directory	
 }
