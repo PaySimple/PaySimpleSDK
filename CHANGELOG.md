@@ -1,5 +1,9 @@
 # PaySimple SDK Changelog
 
+## v1.4.5 - 7.30.2019
+
+Fixed exception, validation of CardOnFileType for recurring payments expected to be Recurring, Installment, or None.
+
 ## v1.4.4 - 7.10.2019
 
 Added Card on File support to the payment and recurring payment request objects. 
